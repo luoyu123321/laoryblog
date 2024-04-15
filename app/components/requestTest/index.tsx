@@ -57,9 +57,11 @@ const RequestTest: FC<mainProps> = ({ }) => {
   }
 
   return <div>
-    <Input style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="请输入姓名" prefix={<UserOutlined />} />
-    <Input style={{ width: '250px', marginRight: '10px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式" prefix={<WechatOutlined />} />
-    <Button type="primary" onClick={add}>add</Button>
+    <div style={{ margin: '20px 0' }} >
+      <Input style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="请输入姓名" prefix={<UserOutlined />} />
+      <Input style={{ width: '250px', marginRight: '10px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式" prefix={<WechatOutlined />} />
+      <Button type="primary" onClick={add}>add</Button>
+    </div>
     <div className="requestTest-card-container" >
       {userData.map(item => <div key={item.id} className="requestTest-card" >
         <div>{`姓名：${item.name}`}</div>

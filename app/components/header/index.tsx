@@ -7,7 +7,7 @@ const App: React.FC = () => {
 
   return (
     <Flex gap="middle" vertical>
-      <Flex vertical={false}>
+      <Flex justify='flex-end' align='center' >
         <div key={1} style={baseStyle} ><span className='header-nav' >首页</span></div>
         <div key={2} style={baseStyle} ><span className='header-nav' >个人博客</span></div>
         <div key={3} style={baseStyle} ><span className='header-nav' >小工具</span></div>
@@ -22,6 +22,7 @@ export default App;
 
 
 const baseStyle: React.CSSProperties = {
-  width: '20%',
+  width: 'fit-content',
+  margin: '0 20px',
   height: '100%',
 };

@@ -1,7 +1,8 @@
 .header-nav {
   display: inline-block;
+  color: rgb(71, 71, 71);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 55px;
 }
 
@@ -15,7 +16,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap; 
-  padding: 20px 20%;
+  padding: 10px 20%;
 }
 
 .requestTest-card{

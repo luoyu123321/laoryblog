@@ -10,7 +10,6 @@ const App: React.FC = () => (
     <Layout className='main-layout' style={layoutStyle}>
       <Header style={headerStyle}><HeaderContent /></Header>
       <Content style={contentStyle}><CenterContent /></Content>
-      <Footer style={footerStyle}>Footer</Footer>
     </Layout>
   </Flex>
 );
@@ -23,7 +22,7 @@ const headerStyle: React.CSSProperties = {
   top: 0,
   textAlign: 'center',
   color: 'black',
-  height: 64,
+  height: '6vh',
   padding: 0,
   lineHeight: '64px',
   backgroundColor: '#fff',
@@ -32,18 +31,10 @@ const headerStyle: React.CSSProperties = {
 
 const contentStyle: React.CSSProperties = {
   textAlign: 'center',
-  minHeight: 120,
-  maxHeight: '89vh',
-  lineHeight: '60px',
+  height: '94vh',
   overflow:'auto',
   color: '#fff',
-  backgroundColor: '#4096ff',
-};
-
-const footerStyle: React.CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#0958d9',
+  backgroundColor: '#d3e3fd',
 };
 
 const layoutStyle = {
