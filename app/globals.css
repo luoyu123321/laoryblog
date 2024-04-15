@@ -31,3 +31,14 @@
   box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.3);
   background-color: rgb(89, 94, 94);
 }
+
+.nav-container-back-btn{
+  position: absolute;
+  font-size: 20px;
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  background-color: rgb(248, 250, 252);
+  top: 15px;
+  right: 70px;
+}
