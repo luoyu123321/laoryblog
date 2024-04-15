@@ -18,26 +18,32 @@ const App: React.FC = () => (
 export default App;
 
 const headerStyle: React.CSSProperties = {
+  
+  position: 'sticky',
+  top: 0,
   textAlign: 'center',
-  color: '#fff',
+  color: 'black',
   height: 64,
   padding: 0,
   lineHeight: '64px',
-  backgroundColor: '#4096ff',
+  backgroundColor: '#fff',
+  boxShadow: '0px 2px 5px 3px rgba(0, 0, 0, 0.3)',
 };
 
 const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   minHeight: 120,
+  maxHeight: '89vh',
   lineHeight: '60px',
+  overflow:'auto',
   color: '#fff',
-  backgroundColor: '#0958d9',
+  backgroundColor: '#4096ff',
 };
 
 const footerStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#fff',
-  backgroundColor: '#4096ff',
+  backgroundColor: '#0958d9',
 };
 
 const layoutStyle = {
