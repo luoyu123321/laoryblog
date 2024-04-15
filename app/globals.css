@@ -1,4 +1,4 @@
-.header-nav {
+.header-nav span {
   display: inline-block;
   color: rgb(71, 71, 71);
   cursor: pointer;
@@ -6,8 +6,13 @@
   line-height: 55px;
 }
 
-.header-nav:hover {
+.header-nav span:hover {
   color: rgb(22, 119, 255);
+  border-top: 2px solid rgb(22, 119, 255);
+}
+
+.header-nav-active {
+  color: rgb(22, 119, 255)!important;
   border-top: 2px solid rgb(22, 119, 255);
 }
 
@@ -34,7 +39,7 @@
 
 .nav-container-back-btn{
   position: absolute;
-  font-size: 20px;
+  font-size: 26px;
   display: inline-block;
   height: 50px;
   line-height: 50px;

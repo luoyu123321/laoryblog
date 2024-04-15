@@ -8,16 +8,24 @@ import NavigationCollect from './navigation_collect';
 
 const App: React.FC = () => {
 
-  const [select, setSelect] = useState('nav')
+  const [select, setSelect] = useState<string>('nav')
+  const [windowHeights, setWindowHeights] = useState<number>(window.innerHeight)
+
+  useEffect(() => {
+    window.onresize = () => {
+      console.log(11111, window.innerHeight)
+      setWindowHeights(window.innerHeight)
+    }
+  }, [])
+
 
   return (
     <Flex gap="middle" wrap="wrap">
       <Layout className='main-layout' style={layoutStyle}>
-        <Header style={headerStyle}><HeaderContent /></Header>
-        <Content style={contentStyle}>
-          {select === 'dashborad' && <RequestTest />}
-          <div style={{display: select === 'nav'? 'block': 'none', width: '100%', height: '94vh'}} ><NavigationCollect /></div>
-          {/* {select === 'nav' && <NavigationCollect />} */}
+        <Header style={headerStyle}><HeaderContent select={select} setSelect={setSelect} /></Header>
+        <Content style={{ ...contentStyle, height: windowHeights - 64 }}>
+          {select === 'nav' && <NavigationCollect />}
+          {select === 'questtest' && <RequestTest />}
         </Content>
       </Layout>
     </Flex>
@@ -27,7 +35,6 @@ const App: React.FC = () => {
 export default App;
 
 const headerStyle: React.CSSProperties = {
-
   position: 'sticky',
   top: 0,
   textAlign: 'center',
@@ -43,10 +50,9 @@ const headerStyle: React.CSSProperties = {
 const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   width: '100%',
-  height: '94vh',
   overflow: 'auto',
   color: '#fff',
-  backgroundColor: '#d3e3fd',
+  backgroundColor: '#f8fafc',
 };
 
 const layoutStyle = {
