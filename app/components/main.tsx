@@ -8,8 +8,8 @@ import NavigationCollect from './navigation_collect';
 
 const App: React.FC = () => {
 
-  const [select, setSelect] = useState<string>('nav')
-  const [windowHeights, setWindowHeights] = useState<number>(0)
+  const [select, setSelect] = useState<string>('nav');
+  const [windowHeights, setWindowHeights] = useState<number>(1320);
 
   useEffect(() => {
     setWindowHeights(window.innerHeight);
