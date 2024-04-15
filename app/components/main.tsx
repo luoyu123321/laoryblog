@@ -9,13 +9,13 @@ import NavigationCollect from './navigation_collect';
 const App: React.FC = () => {
 
   const [select, setSelect] = useState<string>('nav')
-  const [windowHeights, setWindowHeights] = useState<number>(window.innerHeight)
+  const [windowHeights, setWindowHeights] = useState<number>(0)
 
   useEffect(() => {
+    setWindowHeights(window.innerHeight);
     window.onresize = () => {
-      console.log(11111, window.innerHeight)
       setWindowHeights(window.innerHeight)
-    }
+    };
   }, [])
 
 
