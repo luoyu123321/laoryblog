@@ -30,7 +30,11 @@ export const POST = async (req: Request) => {
 export const GET = async () => {
   try {
     await connectToDatabase();
-    const user = await prisma.user.findMany();
+    const user = await prisma.user.findMany({
+      orderBy: {
+        createdAt: 'desc' // 按时间倒序排序
+      }
+    });
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
 
