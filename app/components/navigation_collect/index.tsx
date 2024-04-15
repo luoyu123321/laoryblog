@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 function NavigationCollect() {
 
@@ -12,11 +12,8 @@ function NavigationCollect() {
         src="https://robin901118.gitee.io/homepage_navigation/"
         sandbox="allow-same-origin allow-scripts"
       ></iframe>
-      <a href="/" className='nav-container-back-btn' onClick={() => {
-        history.pushState(null, null, window.location.href);
-        window.history.back();
-      }}> 返回上一页 </a>
-    </div>
+      <a href="/" className='nav-container-back-btn' onClick={() => window.history.back()}> 返回上一页 </a>
+    </div >
   );
 }
 
