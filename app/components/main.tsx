@@ -5,10 +5,14 @@ const { Header, Content } = Layout;
 import HeaderContent from './header';
 import RequestTest from './requestTest';
 import NavigationCollect from './navigation_collect';
+import Guestbook from './guestbook';
+import Tools from './tools';
+import Blog from './blog';
+import Home from './home';
 
 const App: React.FC = () => {
 
-  const [select, setSelect] = useState<string>('nav');
+  const [select, setSelect] = useState<string>('guestbook');
   const [windowHeights, setWindowHeights] = useState<number>(1320);
 
   useEffect(() => {
@@ -24,7 +28,11 @@ const App: React.FC = () => {
       <Layout className='main-layout' style={layoutStyle}>
         <Header style={headerStyle}><HeaderContent select={select} setSelect={setSelect} /></Header>
         <Content style={{ ...contentStyle, height: windowHeights - 64 }}>
+          {select === 'home' && <Home />}
+          {select === 'blog' && <Blog />}
+          {select === 'tools' && <Tools />}
           {select === 'nav' && <NavigationCollect />}
+          {select === 'guestbook' && <Guestbook />}
           {select === 'questtest' && <RequestTest />}
         </Content>
       </Layout>
@@ -51,7 +59,7 @@ const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   width: '100%',
   overflow: 'auto',
-  color: '#fff',
+  // color: '#fff',
   backgroundColor: '#f8fafc',
 };
 
