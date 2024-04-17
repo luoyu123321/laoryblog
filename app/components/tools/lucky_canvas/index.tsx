@@ -1,24 +1,29 @@
- //@ts-ignore
-import React, { useState, useRef } from 'react';
-import { Button, Modal, Form, Input, Space, Checkbox, Radio } from 'antd';
+//@ts-ignore
+import React, { useState, useRef, useEffect } from 'react';
+import { Button, Modal, Form, Input, Space, Checkbox, Radio, notification } from 'antd';
 import { LuckyWheel, LuckyGrid, SlotMachine } from '@lucky-canvas/react';
 
-export default function App() {
+const COLORS = ['#DD4E15', '#F9B508', '#FDE429', '#76BA0A', '#008C9D', '#5AB2EB', '#7487D5'];
+
+export default function LuckCanvas() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [settingModal, setSettingModal] = useState<boolean>(false);
   const [bingoPrize, setBingoPrize] = useState<string>('');
+
+  const [api, contextHolder] = notification.useNotification();
+
   const [blocks] = useState([
     { padding: '10px', background: '#869cfa' }
   ])
   const [prizes, setPrizes] = useState([
-    { background: '#e9e8fe', fonts: [{ text: '0' }] },
-    { background: '#b8c5f2', fonts: [{ text: '1' }] },
-    { background: '#e9e8fe', fonts: [{ text: '2' }] },
-    { background: '#b8c5f2', fonts: [{ text: '3' }] },
-    { background: '#e9e8fe', fonts: [{ text: '4' }] },
-    { background: '#b8c5f2', fonts: [{ text: '5' }] },
+    { background: COLORS[0], fonts: [{ text: '0', top: 30 }] },
+    { background: COLORS[1], fonts: [{ text: '1', top: 30 }] },
+    { background: COLORS[2], fonts: [{ text: '2', top: 30 }] },
+    { background: COLORS[3], fonts: [{ text: '3', top: 30 }] },
+    { background: COLORS[4], fonts: [{ text: '4', top: 30 }] },
+    { background: COLORS[5], fonts: [{ text: '5', top: 30 }] },
   ])
-  const [settingPrizes, setSettingPrizes] = useState([0, 1, 2, 3, 4, 5]);
+  const [settingPrizes, setSettingPrizes] = useState<string[] | undefined[]>(['0', '1', '2', '3', '4', '5']);
   const [buttons] = useState([
     { radius: '40%', background: '#617df2' },
     { radius: '35%', background: '#afc8ff' },
@@ -29,7 +34,58 @@ export default function App() {
     }
   ])
   const myLucky = useRef<any>()
+
+  /**
+   * 添加奖项时滚到最底部
+   */
+  useEffect(() => {
+    const ele = document.getElementsByClassName('model-prize-form');
+    if (ele?.length) {
+      ele[0].scrollTop = ele[0].scrollHeight;
+    }
+  }, [settingPrizes])
+
+  /**
+   * 删除奖项
+   */
+  const deletePrize = () => {
+    if (settingPrizes.length <= 2) {
+      api.info({
+        message: `提示`,
+        description:
+          '最少需要两个奖品',
+        placement: 'top',
+        duration: 1.5,
+      });
+      return
+    }
+    setSettingPrizes(settingPrizes.slice(0, settingPrizes.length - 1))
+  }
+
+  const confirmPrize = () => {
+    if (settingPrizes.some(item => !item)) {
+      api.info({
+        message: `提示`,
+        description:
+          '请将未填写的奖项删除哦',
+        placement: 'top',
+        duration: 1.5,
+      });
+      return
+    }
+    const prizesList = settingPrizes.map((item, index) => {
+      return {
+        background: COLORS[index % 7],
+        fonts: [{ text: item, top: 30 }]
+      }
+    })
+    setPrizes(prizesList);
+    setSettingModal(false)
+  };
+
+
   return <div>
+    {contextHolder}
     <Radio.Group>
       <Radio.Button value="small">大转盘抽奖</Radio.Button>
       <Radio.Button value="default">九宫格抽奖</Radio.Button>
@@ -57,33 +113,24 @@ export default function App() {
       title="设置奖项"
       open={settingModal}
       onCancel={() => setSettingModal(false)}
-      footer={
-        <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => { setSettingPrizes(settingPrizes.concat([settingPrizes.length + 1])) }}>增加奖品</Button>
-          <Button type="primary" style={{ marginLeft: '15px' }} onClick={() => {
-            if (settingPrizes.length <= 2) {
-              alert('最少需要两个奖品');
-              return
-            }
-            setSettingPrizes(settingPrizes.slice(0, settingPrizes.length - 1))
-          }}>删除奖品</Button>
-          <Button type="primary" style={{ marginLeft: '15px' }}>确认</Button>
-        </div>
-      }
+      footer={<div style={{ textAlign: 'center' }}>
+        <Button type="primary" onClick={() => setSettingPrizes(settingPrizes.concat([undefined]))}>增加奖品</Button>
+        <Button type="primary" style={{ marginLeft: '15px' }} onClick={deletePrize}>删除奖品</Button>
+        <Button type="primary" style={{ marginLeft: '15px' }} onClick={confirmPrize}>确认</Button>
+      </div>}
     >
       <div style={{ padding: '30px 30px 0' }}>
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
-          initialValues={{}}
-          onFinish={(values) => { console.log(1111, values) }}
-          onValuesChange={(changedValues, allValues) => { setSettingPrizes(Object.values(allValues)); console.log('allValues', allValues) }}
-          style={{ maxWidth: 600, maxHeight: '400px', overflow: 'auto' }}
+          className='model-prize-form'
+          onValuesChange={(_, allValues) => { setSettingPrizes(Object.values(allValues)) }}
+          style={{ maxWidth: 600, height: '350px', overflow: 'auto' }}
         >
           {settingPrizes.map((item, index) => {
             return <Form.Item key={index} name={`jiangpin${index + 1}`} label={`奖品${index + 1}`}>
-              <Input style={{ width: '300px' }} />
+              <Input style={{ width: '300px' }} maxLength={25} />
             </Form.Item>
           })}
         </Form>
@@ -108,7 +155,7 @@ export default function App() {
       }}
       onEnd={prize => { // 抽奖结束会触发end回调
         setIsModalOpen(true)
-        setBingoPrize('恭喜你抽到 ' + prize.fonts[0].text + ' 号奖品')
+        setBingoPrize('恭喜你抽到奖品： ' + prize.fonts[0].text)
       }}
     />
   </div>
