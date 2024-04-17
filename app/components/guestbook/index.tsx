@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState, useRef } from "react";
-import { Button, Alert, Input, Card, message } from 'antd';
+import { Button, Alert, Input, Card, message, Spin } from 'antd';
 import { UserOutlined, MailOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -8,23 +8,28 @@ import moment from 'moment';
 const { TextArea } = Input;
 
 interface guestbookProps {
-
+  isShow: boolean
 }
 
-const Guestbook: FC<guestbookProps> = ({ }) => {
+const Guestbook: FC<guestbookProps> = ({ isShow = false }) => {
 
   const [guestBookList, setGuestBookList] = useState<{ id: number, name: string, email: string, ip: any, message: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputMessage, setInputMessage] = useState<string>('');
-  const [getloading, setGetLoading] = useState<boolean>(true);
+  const [getloading, setGetLoading] = useState<boolean>(false);
   const [postloading, setPostLoading] = useState<boolean>(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const ipRef = useRef<string>('');
 
   useEffect(() => {
     // 获取当前操作人ip
-    fetch('https://ipinfo.io/json')
+    fetch('https://ipinfo.io/json', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
       .then(response => response.json())
       .then(data => {
         ipRef.current = data;
@@ -32,18 +37,6 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       .catch(error => {
         console.error('Error:', error);
       });
-
-    // fetch('http://ip-api.com/json/')
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log('IP地址: ' + data.query);
-    //     console.log('国家: ' + data.country);
-    //     console.log('地区: ' + data.regionName);
-    //     console.log('城市: ' + data.city);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
     getData();
   }, [])
 
@@ -70,10 +63,28 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
    */
   const add = () => {
     if (!inputName) {
-      return <Alert message={'请输入阁下大名'} type="error" />
+      messageApi.open({
+        type: 'warning',
+        content: '请输入阁下大名',
+        duration: 2,
+        style: {
+          fontSize: '18px',
+          marginTop: '20vh',
+        },
+      });
+      return;
     }
     if (!inputMessage) {
-      return <Alert message={'请输入留言'} type="error" />
+      messageApi.open({
+        type: 'warning',
+        content: '请输入留言再提交',
+        duration: 2,
+        style: {
+          fontSize: '18px',
+          marginTop: '20vh',
+        },
+      });
+      return;
     }
     setPostLoading(true);
     fetch('/api/guestbook', {
@@ -88,6 +99,15 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       .then(() => {
         getData();
         resetData();
+        messageApi.open({
+          type: 'success',
+          content: '添加成功',
+          duration: 1.5,
+          style: {
+            fontSize: '18px',
+            marginTop: '20vh',
+          },
+        });
       })
       .catch(err => {
         <Alert message={err.message} type="error" />
@@ -101,17 +121,19 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     setInputMessage('');
   }
 
-  return <div>
-    <div style={{ margin: '20px 0' }} >
-      <Input showCount style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="请输入您的名号" prefix={<UserOutlined />} />
-      <Input showCount style={{ width: '300px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式" prefix={<MailOutlined />} />
-      <div>
-        <TextArea showCount style={{ width: '560px', marginTop: '10px' }} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="说两句呗" />
+  return <div style={{ display: isShow ? 'block' : 'none' }} >
+    <Spin spinning={postloading}>
+      <div style={{ margin: '20px 0' }} >
+        <Input showCount style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />
+        <Input showCount style={{ width: '300px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式，不会泄漏" prefix={<MailOutlined />} />
+        <div>
+          <TextArea showCount style={{ width: '560px', marginTop: '10px' }} value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="您说两句" />
+        </div>
+        <Button style={{ width: '560px', marginTop: '20px' }} type="primary" onClick={add}>add</Button>
       </div>
-      <Button style={{ width: '560px', marginTop: '20px' }} type="primary" onClick={add}>add</Button>
-    </div>
+    </Spin>
     <div className="requestTest-card-container" >
-      {(getloading || postloading) && <Card type="inner" title={<span>Card title</span>} style={{ width: '100%' }} className="requestTest-card" loading={true}></Card>}
+      {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%' }} className="requestTest-card" loading={true}></Card>}
       {guestBookList.map(item => <Card
         key={item.id}
         type="inner"
@@ -122,7 +144,8 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
             <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</span>
             <span style={{ marginLeft: '10px', fontSize: '12px', color: '#8f8f8f' }} >{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
           </span>
-          <span>{item.email}</span>
+          <span>{item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
+            item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`}</span>
           <span>{'IP：' + item.ip?.city}</span>
         </div>}
       >
@@ -130,6 +153,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       </Card>)
       }
     </div >
+    {contextHolder}
   </div >
 }
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@lucky-canvas/react": "latest",
     "@prisma/client": "^5.12.1",
     "antd": "^5.16.1",
     "less": "^4.2.0",

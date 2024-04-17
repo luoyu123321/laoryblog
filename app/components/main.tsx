@@ -12,7 +12,7 @@ import Home from './home';
 
 const App: React.FC = () => {
 
-  const [select, setSelect] = useState<string>('guestbook');
+  const [select, setSelect] = useState<string>('tools');
   const [windowHeights, setWindowHeights] = useState<number>(1320);
 
   useEffect(() => {
@@ -28,12 +28,12 @@ const App: React.FC = () => {
       <Layout className='main-layout' style={layoutStyle}>
         <Header style={headerStyle}><HeaderContent select={select} setSelect={setSelect} /></Header>
         <Content style={{ ...contentStyle, height: windowHeights - 64 }}>
-          {select === 'home' && <Home />}
-          {select === 'blog' && <Blog />}
-          {select === 'tools' && <Tools />}
-          {select === 'nav' && <NavigationCollect />}
-          {select === 'guestbook' && <Guestbook />}
-          {select === 'questtest' && <RequestTest />}
+          <Home isShow={select === 'home'} />
+          <Blog isShow={select === 'blog'} />
+          <Tools isShow={select === 'tools'} />
+          <NavigationCollect isShow={select === 'nav'} />
+          <Guestbook isShow={select === 'guestbook'} />
+          <RequestTest isShow={select === 'questtest'} />
         </Content>
       </Layout>
     </Flex>
@@ -59,7 +59,6 @@ const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   width: '100%',
   overflow: 'auto',
-  // color: '#fff',
   backgroundColor: '#f8fafc',
 };
 
