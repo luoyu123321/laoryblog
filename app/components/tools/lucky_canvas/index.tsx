@@ -1,3 +1,4 @@
+ //@ts-ignore
 import React, { useState, useRef } from 'react';
 import { Button, Modal, Form, Input, Space, Checkbox, Radio } from 'antd';
 import { LuckyWheel, LuckyGrid, SlotMachine } from '@lucky-canvas/react';
@@ -9,19 +10,15 @@ export default function App() {
   const [blocks] = useState([
     { padding: '10px', background: '#869cfa' }
   ])
-  const [prizes] = useState([
+  const [prizes, setPrizes] = useState([
     { background: '#e9e8fe', fonts: [{ text: '0' }] },
     { background: '#b8c5f2', fonts: [{ text: '1' }] },
     { background: '#e9e8fe', fonts: [{ text: '2' }] },
     { background: '#b8c5f2', fonts: [{ text: '3' }] },
     { background: '#e9e8fe', fonts: [{ text: '4' }] },
     { background: '#b8c5f2', fonts: [{ text: '5' }] },
-    { background: '#e9e8fe', fonts: [{ text: '6' }] },
-    { background: '#b8c5f2', fonts: [{ text: '7' }] },
-    { background: '#e9e8fe', fonts: [{ text: '8' }] },
-    { background: '#b8c5f2', fonts: [{ text: '9' }] },
-
   ])
+  const [settingPrizes, setSettingPrizes] = useState([0, 1, 2, 3, 4, 5]);
   const [buttons] = useState([
     { radius: '40%', background: '#617df2' },
     { radius: '35%', background: '#afc8ff' },
@@ -31,7 +28,7 @@ export default function App() {
       fonts: [{ text: '开始', top: '-10px' }]
     }
   ])
-  const myLucky = useRef()
+  const myLucky = useRef<any>()
   return <div>
     <Radio.Group>
       <Radio.Button value="small">大转盘抽奖</Radio.Button>
@@ -60,38 +57,35 @@ export default function App() {
       title="设置奖项"
       open={settingModal}
       onCancel={() => setSettingModal(false)}
-      footer={<div style={{ textAlign: 'center' }}>
-        <Button type="primary" onClick={() => setSettingModal(false)}>确定</Button>
-        <Button type="primary" style={{ marginLeft: '15px' }} onClick={() => setSettingModal(false)}>取消</Button>
-      </div>}
+      footer={
+        <div style={{ textAlign: 'center' }}>
+          <Button type="primary" onClick={() => { setSettingPrizes(settingPrizes.concat([settingPrizes.length + 1])) }}>增加奖品</Button>
+          <Button type="primary" style={{ marginLeft: '15px' }} onClick={() => {
+            if (settingPrizes.length <= 2) {
+              alert('最少需要两个奖品');
+              return
+            }
+            setSettingPrizes(settingPrizes.slice(0, settingPrizes.length - 1))
+          }}>删除奖品</Button>
+          <Button type="primary" style={{ marginLeft: '15px' }}>确认</Button>
+        </div>
+      }
     >
-      <div style={{ padding: '30px' }}>
+      <div style={{ padding: '30px 30px 0' }}>
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
           initialValues={{}}
-          onValuesChange={() => { }}
-          style={{ maxWidth: 600, maxHeight: '520px', overflow: 'auto' }}
+          onFinish={(values) => { console.log(1111, values) }}
+          onValuesChange={(changedValues, allValues) => { setSettingPrizes(Object.values(allValues)); console.log('allValues', allValues) }}
+          style={{ maxWidth: 600, maxHeight: '400px', overflow: 'auto' }}
         >
-          <Form.Item label="奖品1">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
-          <Form.Item label="奖品2">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
-          <Form.Item label="奖品3">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
-          <Form.Item label="奖品4">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
-          <Form.Item label="奖品5">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
-          <Form.Item label="奖品6">
-            <Input style={{ width: '300px' }} />
-          </Form.Item>
+          {settingPrizes.map((item, index) => {
+            return <Form.Item key={index} name={`jiangpin${index + 1}`} label={`奖品${index + 1}`}>
+              <Input style={{ width: '300px' }} />
+            </Form.Item>
+          })}
         </Form>
       </div>
     </Modal>
@@ -106,10 +100,10 @@ export default function App() {
       buttons={buttons}
       onStart={() => { // 点击抽奖按钮会触发star回调
         setBingoPrize('');
-        myLucky.current.play()
+        myLucky.current?.play()
         setTimeout(() => {
           const index = Math.random() * 6 >> 0
-          myLucky.current.stop(index)
+          myLucky.current?.stop(index)
         }, 2500)
       }}
       onEnd={prize => { // 抽奖结束会触发end回调
