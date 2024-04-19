@@ -10,7 +10,9 @@ const { TextArea } = Input;
 interface guestbookProps {
 }
 
-const Guestbook: FC<guestbookProps> = ({ }) => {
+// export const revalidate = 30
+
+const Guestbook: FC<guestbookProps> = ({}) => {
 
   const [guestBookList, setGuestBookList] = useState<{ id: number, name: string, email: string, ip: any, message: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
@@ -41,6 +43,15 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     getData();
   }, [])
 
+  // useEffect(() => {
+  //   console.log('useEffect',data)
+  //   if(data?.length){
+  //     setGuestBookList(data);
+
+  //   }
+  // }, [data])
+  
+
   /**
    * 获取留言数据
    */
@@ -49,8 +60,10 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     fetch('/api/guestbook', {
       method: 'GET',
       headers: {
-        'Cache-Control': 'max-age=120',
+        'Cache-Control': 'max-age=60',
       },
+      //  ----- todo  缓存待了解，目前知道缓存一般指静态资源js啥的     getInitialProps之前说的服务端渲染方法
+      cache: 'force-cache'
     })
       .then(res => res.json())
       .then(({ guestbook = [] }) => {
@@ -160,5 +173,14 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     {contextHolder}
   </div >
 }
+
+// Guestbook.getInitialProps = async () => {
+//   const data = await fetch('/api/guestbook', {
+//     method: 'GET',
+//   })
+//   const data1 = await data.json()
+//     console.log(111111,data,data1)
+//   return {data}
+// }
 
 export default Guestbook
