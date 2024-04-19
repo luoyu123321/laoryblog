@@ -1,23 +1,24 @@
 
+'use client';
 import React from 'react';
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { Flex } from 'antd';
 
 interface HeaderProps {
-  select: string,
-  setSelect: (select: string) => void
 }
 
-const Header: React.FC<HeaderProps> = ({ select, setSelect }) => {
+const Header: React.FC<HeaderProps> = ({ }) => {
+  const pathname = usePathname()
+  console.log('pathname', pathname)
 
   return (
     <Flex gap="middle" vertical>
       <Flex justify='flex-end' align='center' className='header-nav' >
-        <div key={1} style={baseStyle} ><span onClick={() => setSelect('home')} className={select === 'home' ? 'header-nav-active' : ''}>首页</span></div>
-        <div key={2} style={baseStyle} ><span onClick={() => setSelect('blog')} className={select === 'blog' ? 'header-nav-active' : ''} >个人博客</span></div>
-        <div key={3} style={baseStyle} ><span onClick={() => setSelect('tools')} className={select === 'tools' ? 'header-nav-active' : ''} >小工具</span></div>
-        <div key={4} style={baseStyle} ><span onClick={() => setSelect('nav')} className={select === 'nav' ? 'header-nav-active' : ''} >前端导航集合</span></div>
-        <div key={5} style={baseStyle} ><span onClick={() => setSelect('guestbook')} className={select === 'guestbook' ? 'header-nav-active' : ''} >留言板</span></div>
-        <div key={6} style={baseStyle} ><span onClick={() => setSelect('questtest')} className={select === 'questtest' ? 'header-nav-active' : ''} >请求测试</span></div>
+        <div style={baseStyle} ><Link href={'/'}><span className={pathname === '/' ? 'header-nav-active' : ''}>首页</span></Link></div>
+        {navList.map((item, index) =>
+          <div key={index} style={baseStyle} ><Link href={item.url} prefetch={true} ><span className={pathname.startsWith(item.url) ? 'header-nav-active' : ''}> {item.name}</span></Link></div>)
+        }
       </Flex>
     </Flex>
   );
@@ -25,6 +26,25 @@ const Header: React.FC<HeaderProps> = ({ select, setSelect }) => {
 
 export default Header;
 
+/**
+ * 导航栏
+ */
+const navList = [{
+  name: '个人博客',
+  url: '/blog'
+}, {
+  name: '小工具',
+  url: '/tools'
+}, {
+  name: '前端导航集合',
+  url: '/navigation_collect'
+}, {
+  name: '留言板',
+  url: '/guestbook'
+}, {
+  name: '请求测试',
+  url: '/requesttest'
+}];
 
 const baseStyle: React.CSSProperties = {
   width: 'fit-content',

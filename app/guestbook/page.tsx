@@ -8,10 +8,9 @@ import moment from 'moment';
 const { TextArea } = Input;
 
 interface guestbookProps {
-  isShow: boolean
 }
 
-const Guestbook: FC<guestbookProps> = ({ isShow = false }) => {
+const Guestbook: FC<guestbookProps> = ({ }) => {
 
   const [guestBookList, setGuestBookList] = useState<{ id: number, name: string, email: string, ip: any, message: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
@@ -24,11 +23,13 @@ const Guestbook: FC<guestbookProps> = ({ isShow = false }) => {
   const ipRef = useRef<string>('');
 
   useEffect(() => {
+    console.log(11111111)
     // 获取当前操作人ip
     fetch('https://ipinfo.io/json', {
       headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'max-age=30',
+      },
     })
       .then(response => response.json())
       .then(data => {
@@ -46,7 +47,10 @@ const Guestbook: FC<guestbookProps> = ({ isShow = false }) => {
   const getData = () => {
     setGetLoading(true);
     fetch('/api/guestbook', {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'max-age=120',
+      },
     })
       .then(res => res.json())
       .then(({ guestbook = [] }) => {
@@ -121,7 +125,7 @@ const Guestbook: FC<guestbookProps> = ({ isShow = false }) => {
     setInputMessage('');
   }
 
-  return <div style={{ display: isShow ? 'block' : 'none' }} >
+  return <div>
     <Spin spinning={postloading}>
       <div style={{ margin: '20px 0' }} >
         <Input showCount style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />

@@ -6,10 +6,9 @@ import { UserOutlined, WechatOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 interface mainProps {
-  isShow: boolean
 }
 
-const RequestTest: FC<mainProps> = ({ isShow = false }) => {
+const RequestTest: FC<mainProps> = ({ }) => {
 
   const [userData, setUserData] = useState<{ id: number, name: string, email: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
@@ -62,7 +61,7 @@ const RequestTest: FC<mainProps> = ({ isShow = false }) => {
       .finally(() => setPostLoading(false))
   }
 
-  return <div style={{ display: isShow ? 'block' : 'none' }}>
+  return <div>
     <div style={{ margin: '20px 0' }} >
       <Input style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="请输入姓名" prefix={<UserOutlined />} />
       <Input style={{ width: '250px', marginRight: '10px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式" prefix={<WechatOutlined />} />

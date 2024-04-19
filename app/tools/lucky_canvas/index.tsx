@@ -35,6 +35,16 @@ export default function LuckCanvas() {
   ])
   const myLucky = useRef<any>()
 
+  useEffect(() => {
+    
+  
+    return () => {
+      setIsModalOpen(false)
+      setSettingModal(false)
+    }
+  }, [])
+  
+
   /**
    * 添加奖项时滚到最底部
    */
@@ -91,10 +101,9 @@ export default function LuckCanvas() {
       <Radio.Button value="default">九宫格抽奖</Radio.Button>
       <Radio.Button value="large">老虎机抽奖</Radio.Button>
     </Radio.Group>
-    <Button type="primary" onClick={() => { setSettingModal(true) }}>
-      设置奖项
-    </Button>
+    <Button type="primary" onClick={() => { setSettingModal(true) }}>设置奖项</Button>
 
+    {/* 抽奖结果 */}
     <Modal
       title="抽奖结果"
       open={isModalOpen}
@@ -103,7 +112,7 @@ export default function LuckCanvas() {
         <Button type="primary" onClick={() => setIsModalOpen(false)}>确定</Button>
       </div>}
     >
-      <div style={{ textAlign: 'center', fontSize: '30px', lineHeight: '100px', minHeight: '100px' }}>
+      <div style={{ textAlign: 'center', fontSize: '20px', lineHeight: '100px', minHeight: '100px' }}>
         {bingoPrize}
       </div>
     </Modal>
