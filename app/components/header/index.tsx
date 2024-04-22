@@ -10,7 +10,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ }) => {
   const pathname = usePathname()
-  console.log('pathname', pathname)
 
   return (
     <Flex gap="middle" vertical>

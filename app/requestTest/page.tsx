@@ -13,12 +13,17 @@ const RequestTest: FC<mainProps> = ({ }) => {
   const [userData, setUserData] = useState<{ id: number, name: string, email: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
-  const [num, setNum] = useState<number>(1);
   const [getloading, setGetLoading] = useState<boolean>(false);
   const [postloading, setPostLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getData();
+    // 优化初始化数据获取，当前页面缓存数据，如果存在则直接使用缓存数据
+    const cachedData = sessionStorage.getItem('cachedRequestTest');
+    if (cachedData) {
+      setUserData(JSON.parse(cachedData));
+    } else {
+      getData();
+    };
   }, [])
 
   const getData = () => {
@@ -28,8 +33,8 @@ const RequestTest: FC<mainProps> = ({ }) => {
     })
       .then(res => res.json())
       .then(({ user }) => {
-        setNum(user.length + 1);
         setUserData(user);
+        sessionStorage.setItem('cachedRequestTest', JSON.stringify(user));
       })
       .catch(err => {
         <Alert message={err.message} type="error" />

@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState, useRef } from "react";
-import { Button, Alert, Input, Card, message, Spin } from 'antd';
+import { Button, Input, Card, message, Spin } from 'antd';
 import { UserOutlined, MailOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -10,9 +10,7 @@ const { TextArea } = Input;
 interface guestbookProps {
 }
 
-// export const revalidate = 30
-
-const Guestbook: FC<guestbookProps> = ({}) => {
+const Guestbook: FC<guestbookProps> = ({ }) => {
 
   const [guestBookList, setGuestBookList] = useState<{ id: number, name: string, email: string, ip: any, message: string, createdAt: string }[]>([]);
   const [inputName, setInputName] = useState<string>('');
@@ -25,7 +23,6 @@ const Guestbook: FC<guestbookProps> = ({}) => {
   const ipRef = useRef<string>('');
 
   useEffect(() => {
-    console.log(11111111)
     // 获取当前操作人ip
     fetch('https://ipinfo.io/json', {
       headers: {
@@ -40,17 +37,16 @@ const Guestbook: FC<guestbookProps> = ({}) => {
       .catch(error => {
         console.error('Error:', error);
       });
-    getData();
+
+    // 优化初始化数据获取，当前页面缓存数据，如果存在则直接使用缓存数据
+    const cachedData = sessionStorage.getItem('cachedGuestBook');
+    if (cachedData) {
+      setGuestBookList(JSON.parse(cachedData));
+    } else {
+      getData();
+    };
   }, [])
 
-  // useEffect(() => {
-  //   console.log('useEffect',data)
-  //   if(data?.length){
-  //     setGuestBookList(data);
-
-  //   }
-  // }, [data])
-  
 
   /**
    * 获取留言数据
@@ -59,18 +55,22 @@ const Guestbook: FC<guestbookProps> = ({}) => {
     setGetLoading(true);
     fetch('/api/guestbook', {
       method: 'GET',
-      headers: {
-        'Cache-Control': 'max-age=60',
-      },
-      //  ----- todo  缓存待了解，目前知道缓存一般指静态资源js啥的     getInitialProps之前说的服务端渲染方法
-      cache: 'force-cache'
     })
       .then(res => res.json())
       .then(({ guestbook = [] }) => {
         setGuestBookList(guestbook);
+        sessionStorage.setItem('cachedGuestBook', JSON.stringify(guestbook));
       })
       .catch(err => {
-        <Alert message={err.message} type="error" />
+        messageApi.open({
+          type: 'error',
+          content: err.message,
+          duration: 2,
+          style: {
+            fontSize: '18px',
+            marginTop: '20vh',
+          },
+        });
       })
       .finally(() => setGetLoading(false))
   }
@@ -127,7 +127,15 @@ const Guestbook: FC<guestbookProps> = ({}) => {
         });
       })
       .catch(err => {
-        <Alert message={err.message} type="error" />
+        messageApi.open({
+          type: 'error',
+          content: err.message,
+          duration: 2,
+          style: {
+            fontSize: '18px',
+            marginTop: '20vh',
+          },
+        });
       })
       .finally(() => setPostLoading(false))
   }
@@ -173,14 +181,5 @@ const Guestbook: FC<guestbookProps> = ({}) => {
     {contextHolder}
   </div >
 }
-
-// Guestbook.getInitialProps = async () => {
-//   const data = await fetch('/api/guestbook', {
-//     method: 'GET',
-//   })
-//   const data1 = await data.json()
-//     console.log(111111,data,data1)
-//   return {data}
-// }
 
 export default Guestbook
