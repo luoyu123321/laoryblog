@@ -47,6 +47,6 @@ const navList = [{
 
 const baseStyle: React.CSSProperties = {
   width: 'fit-content',
-  marginRight: '50px',
+  marginRight: '1.5rem',
   height: '100%',
 };

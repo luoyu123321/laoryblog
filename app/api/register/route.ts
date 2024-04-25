@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
 
     console.error(error);
 
-    return NextResponse.json({ message: "Server Error" }, { status: 500 });
+    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -38,7 +38,7 @@ export const GET = async () => {
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
 
-    return NextResponse.json({ message: "Server Error" }, { status: 500 });
+    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

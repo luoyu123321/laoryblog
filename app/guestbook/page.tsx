@@ -40,7 +40,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
 
     // 优化初始化数据获取，当前页面缓存数据，如果存在则直接使用缓存数据
     const cachedData = sessionStorage.getItem('cachedGuestBook');
-    if (cachedData) {
+    if (cachedData?.length > 0) {
       setGuestBookList(JSON.parse(cachedData));
     } else {
       getData();

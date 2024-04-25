@@ -19,7 +19,7 @@ const RequestTest: FC<mainProps> = ({ }) => {
   useEffect(() => {
     // 优化初始化数据获取，当前页面缓存数据，如果存在则直接使用缓存数据
     const cachedData = sessionStorage.getItem('cachedRequestTest');
-    if (cachedData) {
+    if (cachedData?.length > 0) {
       setUserData(JSON.parse(cachedData));
     } else {
       getData();

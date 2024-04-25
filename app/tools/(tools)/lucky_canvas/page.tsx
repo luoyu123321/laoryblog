@@ -1,4 +1,5 @@
 //@ts-ignore
+'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Form, Input, Space, Flex, Radio, notification } from 'antd';
 import { LuckyWheel, LuckyGrid, SlotMachine } from '@lucky-canvas/react';
@@ -176,12 +177,12 @@ export default function LuckCanvas() {
   };
 
   useEffect(() => {
-    console.log('settingPrizes',settingPrizes)
+    console.log('settingPrizes', settingPrizes)
   }, [settingPrizes])
-  
 
 
-  return <div>
+
+  return <div style={{ marginTop: '30px', fontSize: '20px' }}>
     {contextHolder}
     <Radio.Group style={{ marginBottom: '20px' }} size='large' value={luckyType} onChange={(e) => setLuckyType(e.target.value)}>
       <Radio.Button checked value="luckyWheel" onClick={() => setSettingPrizes(settingZCPrizes)} >大转盘抽奖</Radio.Button>
@@ -238,9 +239,9 @@ export default function LuckCanvas() {
             </Form.Item>
           })}
         </Form>
-          {luckyType === 'slotMachine' && <Form.Item name={`jiangpingailv`} label={`中奖概率`}>
-            <Input value={ probability} onChange={(e) => {setProbability(Number(e.target.value))}} style={{ width: '300px' }} placeholder='请填1-100之间的整数' />
-          </Form.Item>}
+        {luckyType === 'slotMachine' && <Form.Item name={`jiangpingailv`} label={`中奖概率`}>
+          <Input value={probability} onChange={(e) => { setProbability(Number(e.target.value)) }} style={{ width: '300px' }} placeholder='请填1-100之间的整数' />
+        </Form.Item>}
       </div>
     </Modal>
 
@@ -333,9 +334,9 @@ export default function LuckCanvas() {
         onEnd={prize => { // 抽奖结束会触发end回调
           console.log('prize', prize)
           setIsModalOpen(true)
-          if(prize){
+          if (prize) {
             setBingoPrize('恭喜你抽到奖品： ' + prize?.fonts[0]?.text)
-          }else {
+          } else {
             setBingoPrize('很遗憾，没有抽到奖品!')
           }
         }}
