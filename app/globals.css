@@ -134,9 +134,10 @@
   background-color: #f6f7f8;
   border: 1px solid #e2e8f0;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+  transition: .3s;
   margin: 20px;
 
 }
 .tools-mod-panel:hover {
-  box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: -8px 8px 10px 3px rgba(0, 0, 0, 0.3);
 }
