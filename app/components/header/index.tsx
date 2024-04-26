@@ -78,5 +78,5 @@ const navList = [{
   url: '/guestbook'
 }, {
   name: '请求测试',
-  url: '/requesttest'
+  url: '/request_test'
 }];

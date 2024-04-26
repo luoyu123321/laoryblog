@@ -20,7 +20,7 @@ export default function LuckCanvas() {
   const [settingZCPrizes, setSettingZCPrizes] = useState<string[] | undefined[]>(['0', '1', '2', '3', '4', '5']);
 
   const [blocks] = useState([
-    { padding: '10px', background: '#869cfa' },
+    { padding: '10px', background: '#869cfa'},
   ])
   const [prizes, setPrizes] = useState([
     { background: COLORS[0], fonts: [{ text: '0', top: 30 }] },
@@ -66,9 +66,14 @@ export default function LuckCanvas() {
 
   const [slotMachineBlocks] = useState([
     { padding: '30px', background: '#617df2', borderRadius: '50px' },
-    { padding: '25px', background: '#869cfa', borderRadius: '40px' },
+    { padding: '25px', background: '#869cfa', borderRadius: '30px' },
     { padding: '20px', background: '#afc8ff', borderRadius: '30px' },
-    { padding: '15px', background: '#e9e8fe', borderRadius: '20px' },
+    { padding: '15px', background: '#e9e8fe', borderRadius: '30px',
+    imgs: [{
+      src: '/slot-bg.jpg',
+      width: '100%',
+      height: '100%'
+    }]  },
   ])
 
   const [slotMachinePrizes, setSlotMachinePrizes] = useState([
@@ -316,8 +321,8 @@ export default function LuckCanvas() {
     {luckyType === 'slotMachine' && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <SlotMachine
         ref={slotMachineRef}
-        width="27rem"
-        height="18rem"
+        width="28rem"
+        height="21rem"
         blocks={slotMachineBlocks}
         prizes={slotMachinePrizes}
         buttons={slotMachineButtons}
