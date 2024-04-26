@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useEffect, useState, useRef } from "react";
-import { Button, Input, Card, message, Spin } from 'antd';
+import { Button, Input, Card, message, Spin, Flex } from 'antd';
 import { UserOutlined, MailOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -58,8 +58,15 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     })
       .then(res => res.json())
       .then(({ guestbook = [] }) => {
-        setGuestBookList(guestbook);
-        sessionStorage.setItem('cachedGuestBook', JSON.stringify(guestbook));
+        const cachedData = guestbook.map(item=>{
+          return {
+            ...item,
+            email:item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
+            item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`,
+          }
+        })
+        setGuestBookList(cachedData);
+        sessionStorage.setItem('cachedGuestBook', JSON.stringify(cachedData));
       })
       .catch(err => {
         messageApi.open({
@@ -149,28 +156,29 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
   return <div>
     <Spin spinning={postloading}>
       <div style={{ margin: '20px 0' }} >
-        <Input showCount style={{ width: '250px', marginRight: '10px' }} value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />
-        <Input showCount style={{ width: '300px' }} value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式，不会泄漏" prefix={<MailOutlined />} />
+        <Flex justify='center' align='center' wrap="wrap" gap='10px'>
+        <Input showCount className="guestbook-search"  value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />
+        <Input showCount className="guestbook-search"  value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式，不会泄漏" prefix={<MailOutlined />} />
+        </Flex>
         <div>
-          <TextArea showCount style={{ width: '560px', marginTop: '10px' }} value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="您说两句" />
+          <TextArea className="guestbook-search-textarea" showCount value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="您说两句" />
         </div>
-        <Button style={{ width: '560px', marginTop: '20px' }} type="primary" onClick={add}>add</Button>
+        <Button className="guestbook-search-btn" type="primary" onClick={add}>add</Button>
       </div>
     </Spin>
-    <div className="requestTest-card-container" >
+    <div className="guestbook-card-container" >
       {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%' }} className="requestTest-card" loading={true}></Card>}
       {guestBookList.map(item => <Card
         key={item.id}
         type="inner"
         style={{ width: '100%' }}
-        className="requestTest-card"
+        className="guestbook-card"
         title={<div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'normal' }} >
           <span>
             <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</span>
             <span style={{ marginLeft: '10px', fontSize: '12px', color: '#8f8f8f' }} >{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
           </span>
-          <span>{item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
-            item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`}</span>
+          <span>{item.email}</span>
           <span>{'IP：' + item.ip?.city}</span>
         </div>}
       >
