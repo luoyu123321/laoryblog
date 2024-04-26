@@ -6,6 +6,7 @@ import { Layout, Flex } from 'antd';
 const { Header, Content } = Layout;
 import HeaderContent from './components/header';
 import Loading from './components/css_cool_loading';
+import Colorful from './components/bg_group/Colorful_embellishments';
 
 import "./globals.css";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
               {load && <Loading />}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
+                <Colorful />
                 {children}
               </Content>
             </Layout>
