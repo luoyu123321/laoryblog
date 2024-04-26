@@ -70,7 +70,7 @@ export default function LuckCanvas() {
     { padding: '20px', background: '#afc8ff', borderRadius: '30px' },
     { padding: '15px', background: '#e9e8fe', borderRadius: '30px',
     imgs: [{
-      src: '/slot-bg.jpg',
+      src: '/slot-bg1.jpg',
       width: '100%',
       height: '100%'
     }]  },
@@ -329,8 +329,8 @@ export default function LuckCanvas() {
           fontColor: '#333'
         }}
         defaultConfig={{
-          rowSpacing: '30px',
-          colSpacing: '10px'
+          rowSpacing: '15px',
+          colSpacing: '15px'
         }}
         onEnd={prize => { // 抽奖结束会触发end回调
           setIsModalOpen(true)

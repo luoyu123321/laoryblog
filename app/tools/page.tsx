@@ -32,11 +32,13 @@ const Tools: FC<toolsProps> = ({ }) => {
         <Link href={item.path} prefetch={true}>
           <animated.div className='tools-mod-panel' style={style}>
             <Image
-            width={'50%'}
+              alt={item.name}
+              preview={false}
+              width={'50%'}
               src="/choujiang.jpg"
             />
             <div>
-            {item.name}
+              {item.name}
             </div>
           </animated.div>
         </Link>
