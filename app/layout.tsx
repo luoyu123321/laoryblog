@@ -1,10 +1,11 @@
 'use client'
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Layout, Flex } from 'antd';
 const { Header, Content } = Layout;
 import HeaderContent from './components/header';
+import Loading from './components/css_cool_loading';
 
 import "./globals.css";
 
@@ -15,6 +16,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [load, setLoad] = useState<boolean>(true)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      clearTimeout(timeout);
+      setLoad(false);
+    }, 2000)
+  }, [])
 
   return (
     <html lang="en">
@@ -22,6 +31,7 @@ export default function RootLayout({
         <AntdRegistry>
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
+              {load && <Loading />}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
                 {children}
