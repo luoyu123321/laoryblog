@@ -181,12 +181,6 @@ export default function LuckCanvas() {
     }, 2500);
   };
 
-  useEffect(() => {
-    console.log('settingPrizes', settingPrizes)
-  }, [settingPrizes])
-
-
-
   return <div style={{ marginTop: '30px', fontSize: '20px' }}>
     {contextHolder}
     <Radio.Group style={{ marginBottom: '20px' }} size='large' value={luckyType} onChange={(e) => setLuckyType(e.target.value)}>
@@ -264,7 +258,6 @@ export default function LuckCanvas() {
           luckyWheelRef.current?.play()
           setTimeout(() => {
             const index = Math.random() * prizes.length >> 0
-            console.log('index', index)
             luckyWheelRef.current?.stop(index)
           }, 2500)
         }}
@@ -340,7 +333,6 @@ export default function LuckCanvas() {
           colSpacing: '10px'
         }}
         onEnd={prize => { // 抽奖结束会触发end回调
-          console.log('prize', prize)
           setIsModalOpen(true)
           if (prize) {
             setBingoPrize('恭喜你抽到奖品： ' + prize?.fonts[0]?.text)
