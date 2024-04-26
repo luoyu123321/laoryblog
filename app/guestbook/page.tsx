@@ -178,7 +178,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
             <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</span>
             <span style={{ marginLeft: '10px', fontSize: '12px', color: '#8f8f8f' }} >{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
           </span>
-          <span>{item.email}</span>
+          {/* <span>{item.email}</span> */}
           <span>{'IP：' + item.ip?.city}</span>
         </div>}
       >

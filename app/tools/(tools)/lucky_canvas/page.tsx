@@ -234,7 +234,7 @@ export default function LuckCanvas() {
         >
           {settingPrizes.map((item, index) => {
             return <Form.Item key={index} name={`jiangpin${index + 1}`} label={`奖品${index + 1}`}>
-              <Input style={{ width: '300px' }} maxLength={25} />
+              <Input style={{ width: '80%' }} maxLength={25} />
             </Form.Item>
           })}
         </Form>
