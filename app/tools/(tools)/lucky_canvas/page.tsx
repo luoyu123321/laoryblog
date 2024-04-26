@@ -47,7 +47,7 @@ export default function LuckCanvas() {
   ])
 
   const [gridPrizes, setGridPrizes] = useState([
-    { x: 0, y: 0, background: COLORS[0], fonts: [{ text: '0', top: '40%' }], },
+    { x: 0, y: 0, background: COLORS[0], fonts: [{ text: '0', top: '40%', fontSize: '0.6rem' }], },
     { x: 1, y: 0, background: COLORS[1], fonts: [{ text: '1', top: '40%' }], },
     { x: 2, y: 0, background: COLORS[2], fonts: [{ text: '2', top: '40%' }], },
     { x: 2, y: 1, background: COLORS[3], fonts: [{ text: '3', top: '40%' }], },
@@ -60,7 +60,7 @@ export default function LuckCanvas() {
     {
       x: 1, y: 1,
       background: '#9c9dd8',
-      fonts: [{ text: '开始', top: '35%', fontSize: '40px' }],
+      fonts: [{ text: '开始', top: '35%', fontSize: '1.1rem' }],
     },
   ])
 
@@ -134,7 +134,7 @@ export default function LuckCanvas() {
       const prizesList = settingPrizes.map((item, index) => {
         return {
           background: COLORS[index % 7],
-          fonts: [{ text: item ? item : '无奖品', top: 30 }]
+          fonts: [{ text: item ? item : '无奖品', top: 30, fontSize: '0.8rem' }]
         }
       })
       setPrizes(prizesList);
@@ -142,7 +142,7 @@ export default function LuckCanvas() {
       const prizesList = settingPrizes.map((item, index) => {
         return {
           ...gridPrizes[index],
-          fonts: [{ text: item ? item : '无奖品', top: '40%' }]
+          fonts: [{ text: item ? item : '无奖品', top: '35%', fontSize: '0.8rem' }]
         }
       })
       setGridPrizes(prizesList);
@@ -150,7 +150,7 @@ export default function LuckCanvas() {
       const prizesList = settingPrizes.map((item, index) => {
         return {
           background: COLORS[index % 7],
-          fonts: [{ text: item ? item : '无奖品', top: '35%' }],
+          fonts: [{ text: item ? item : '无奖品', top: '35%', fontSize: '0.8rem' }],
           borderRadius: `${index % 5 * 25}px`,
         }
       })
@@ -249,8 +249,8 @@ export default function LuckCanvas() {
     {luckyType === 'luckyWheel' && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <LuckyWheel
         ref={luckyWheelRef}
-        width="600px"
-        height="600px"
+        width="22rem"
+        height="22rem"
         blocks={blocks}
         prizes={prizes}
         buttons={buttons}
@@ -278,15 +278,19 @@ export default function LuckCanvas() {
     {luckyType === 'luckyGrid' && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <LuckyGrid
         ref={luckyGridRef}
-        width="600px"
-        height="600px"
+        width="22rem"
+        height="22rem"
         rows="3"
         cols="3"
         blocks={gridBlocks}
         prizes={gridPrizes}
         buttons={gridButtons}
         defaultStyle={
-          { background: '#b8c5f2', borderRadius: '30px' }
+          {
+            background: '#b8c5f2',
+            fontSize: '1rem',
+            borderRadius: '30px'
+          }
         }
         onStart={() => { // 点击抽奖按钮会触发star回调
           setBingoPrize('');
@@ -312,8 +316,8 @@ export default function LuckCanvas() {
     {luckyType === 'slotMachine' && <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <SlotMachine
         ref={slotMachineRef}
-        width="720px"
-        height="480px"
+        width="27rem"
+        height="18rem"
         blocks={slotMachineBlocks}
         prizes={slotMachinePrizes}
         buttons={slotMachineButtons}
@@ -324,7 +328,6 @@ export default function LuckCanvas() {
         ]}
         defaultStyle={{
           background: '#bac5ee',
-          fontSize: '32px',
           fontColor: '#333'
         }}
         defaultConfig={{
