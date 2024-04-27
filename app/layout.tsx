@@ -7,6 +7,9 @@ const { Header, Content } = Layout;
 import HeaderContent from './components/header';
 import Loading from './components/css_cool_loading';
 import Colorful from './components/bg_group/Colorful_embellishments';
+import InSea from './components/bg_group/inSea';
+
+import { usePathname } from 'next/navigation'
 
 import "./globals.css";
 
@@ -18,6 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [load, setLoad] = useState<boolean>(true)
+
+  const pathname = usePathname()
+  const isShow = pathname === '/' || pathname === '/guestbook'
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -33,9 +39,10 @@ export default function RootLayout({
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
               {load && <Loading />}
+              {isShow && <InSea />}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
-                <Colorful />
+                {!isShow && <Colorful />}
                 {children}
               </Content>
             </Layout>
@@ -56,16 +63,16 @@ const headerStyle: React.CSSProperties = {
   height: '64px',
   padding: 0,
   lineHeight: '64px',
-  backgroundColor: '#fff',
+  backgroundColor: 'rgba(256, 256, 256, 0.3)',
   boxShadow: '0px 2px 5px 3px rgba(0, 0, 0, 0.3)',
   zIndex: 1010,
 };
 
 const contentStyle: React.CSSProperties = {
+  position: 'relative',
   textAlign: 'center',
   width: '100%',
   overflow: 'auto',
-  backgroundColor: '#f8fafc',
 };
 
 const layoutStyle = {

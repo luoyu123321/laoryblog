@@ -10,7 +10,6 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   
   useEffect(() => {
   const canvas = document.querySelector("canvas"),
-  // console.log('canvas',canvas)
   ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
