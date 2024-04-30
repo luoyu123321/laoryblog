@@ -56,7 +56,7 @@ const ChatGPT = () => {
       let isFastShow = false;
       // 请求开始时间
       let startTime = new Date().getTime();
-      const response = await fetch("https://api.chatanywhere.tech/v1/chat/completions", requestOptions)
+      const response = await fetch("https://api.chatanywhere.tech/v1/chat/completions", requestOptions as any)
       // 请求使用时间
       let useTime = new Date().getTime() - startTime;
       // 如果请求事件超过十秒秒，则快速展示回答
