@@ -7,8 +7,9 @@ import './index.css';
 const ChatGPT = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [content, setContent] = useState<{ msg: string, isAnswer?: boolean }[]>([
-    { msg: '你好，有什么可以帮助您的', isAnswer: true },
-    { msg: '好的' }]);
+    { msg: '你好，快和我聊个天吧', isAnswer: true },
+    { msg: '有什么问题都可以问我哦', isAnswer: true },
+  ]);
   const [inputMsg, setInputMsg] = useState('');
   const [displayText, setDisplayText] = useState('');
   const [loading, setLoading] = useState(false);
