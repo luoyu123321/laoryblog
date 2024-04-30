@@ -1,16 +1,19 @@
 import { FC } from 'react'
+import ChatGPT from './components/chatGPT'
 
 interface homeProps {
 }
 
 export const metadata = {
-  title: "Blogtest",
+  title: "LaoryBlog",
   description: "博客页面测试",
 };
 
 const Home: FC<homeProps> = ({ }) => {
 
   return (
+    <>
+    <ChatGPT />
     <div style={{ marginTop: '30px', fontSize: '20px' }}>
       <div> 敬请期待</div>
       <p>1、搭建next项目的博客编写</p>
@@ -21,6 +24,7 @@ const Home: FC<homeProps> = ({ }) => {
       <p>6、预加载优化待学习完善（主要是服务端渲染，请求服务端处理）</p>
       <p>7、缓存敏感数据处理问题---（已完成）</p>
     </div>
+    </>
   )
 }
 

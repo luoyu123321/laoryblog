@@ -40,6 +40,7 @@ export default function RootLayout({
             <Layout className='main-layout' style={layoutStyle}>
               {load && <Loading />}
               {isShow && <InSea />}
+              {/* <InSea /> */}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
                 {!isShow && <Colorful />}

@@ -58,11 +58,11 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     })
       .then(res => res.json())
       .then(({ guestbook = [] }) => {
-        const cachedData = guestbook.map(item=>{
+        const cachedData = guestbook.map(item => {
           return {
             ...item,
-            email:item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
-            item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`,
+            email: item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
+              item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`,
           }
         })
         setGuestBookList(cachedData);
@@ -157,8 +157,8 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     <Spin spinning={postloading}>
       <div style={{ margin: '20px 0' }} >
         <Flex justify='center' align='center' wrap="wrap" gap='10px'>
-        <Input showCount className="guestbook-search"  value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />
-        <Input showCount className="guestbook-search"  value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式，不会泄漏" prefix={<MailOutlined />} />
+          <Input showCount className="guestbook-search" value={inputName} onChange={(e) => setInputName(e.target.value)} maxLength={10} placeholder="如何称呼您" prefix={<UserOutlined />} />
+          <Input showCount className="guestbook-search" value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} maxLength={30} placeholder="请输入联系方式，不会泄漏" prefix={<MailOutlined />} />
         </Flex>
         <div>
           <TextArea className="guestbook-search-textarea" showCount value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="您说两句" />
