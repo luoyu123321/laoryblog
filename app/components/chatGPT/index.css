@@ -77,7 +77,7 @@
 }
 
 .chat-box-content-item-answer p {
-  background-color: rgba(256, 256, 256, 0.5);
+  background-color: rgba(256, 256, 256, 0.7);
 }
 
 .chat-box-content-item-question {
@@ -85,7 +85,7 @@
 }
 
 .chat-box-content-item-question p {
-  background-color: rgba(137, 217, 97, 0.5);
+  background-color: rgba(137, 217, 97, 0.7);
 }
 
 
