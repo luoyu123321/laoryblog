@@ -113,7 +113,7 @@
   box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.3);
 }
 
-.nav-container-back-btn{
+/* .nav-container-back-btn{
   position: absolute;
   font-size: 26px;
   display: inline-block;
@@ -123,7 +123,7 @@
   color: #69b1ff;
   top: 18px;
   right: 18%;
-}
+} */
 
 .tools-mod-panel {
   display: inline-block;
