@@ -9,9 +9,8 @@ interface toolsProps {
 
 const Tools: FC<toolsProps> = ({ }) => {
   const arr = [
-    { path: '/tools/lucky_canvas', name: '抽奖(转盘)' },
-    { path: '/tools/lucky_canvas', name: '抽奖(九宫格)' },
-    { path: '/tools/lucky_canvas', name: '抽奖(老虎机)' },
+    { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl:'/choujiang.jpg' },
+    { path: '/tools/next_chat', name: 'chatGPT', imgUrl:'/next_chat.jpg' },
 
   ]
 
@@ -35,7 +34,7 @@ const Tools: FC<toolsProps> = ({ }) => {
               alt={item.name}
               preview={false}
               width={'50%'}
-              src="/choujiang.jpg"
+              src={item.imgUrl}
             />
             <div>
               {item.name}

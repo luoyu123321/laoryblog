@@ -23,7 +23,8 @@ export default function RootLayout({
   const [load, setLoad] = useState<boolean>(true)
 
   const pathname = usePathname()
-  const isShow = pathname === '/' || pathname === '/guestbook'
+  const isShowInSea = pathname === '/' || pathname === '/guestbook';
+  const isShowColorful = pathname === '/blog';
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -39,11 +40,11 @@ export default function RootLayout({
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
               {load && <Loading />}
-              {isShow && <InSea />}
+              {isShowInSea && <InSea />}
               {/* <InSea /> */}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
-                {!isShow && <Colorful />}
+                {isShowColorful && <Colorful />}
                 {children}
               </Content>
             </Layout>

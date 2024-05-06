@@ -348,5 +348,6 @@ export default function LuckCanvas() {
       {luckyType === 'slotMachine' && <Button type="primary" size='large' style={{ width: '200px', marginTop: '20px' }} onClick={startGame}>开始游戏</Button>}
       <Button type="primary" size='large' style={{ width: '200px' }} onClick={() => { setSettingModal(true) }}>设置奖项</Button>
     </Flex>
+      <span className='nav-container-back-btn' onClick={() => { window.history.back() }}> 返回上一页 </span>
   </div>
 }
