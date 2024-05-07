@@ -25,7 +25,7 @@ const Tools: FC<toolsProps> = ({ }) => {
     }
   })
 
-  return <div style={{ marginTop: '30px', fontSize: '20px' }}>
+  return <div style={{ paddingTop: '30px', fontSize: '20px', height: window.innerHeight - 64 , overflow: 'auto' }}>
     {transition((style, item) => {
       return (
         <Link href={item.path} prefetch={true}>

@@ -22,7 +22,7 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   };
 
   const dots = {
-    nb: 100,
+    nb: window.innerWidth/15,
     distance: 150,
     d_radius: 100,
     array: [],
@@ -68,7 +68,6 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
     this.radius = Math.random() * 2;
 
     this.color = new Color('');
-    console.log(this);
   }
 
   Dot.prototype = {

@@ -8,6 +8,7 @@ import HeaderContent from './components/header';
 import Loading from './components/css_cool_loading';
 import Colorful from './components/bg_group/Colorful_embellishments';
 import InSea from './components/bg_group/inSea';
+import ParticleWave from './components/bg_group/particleWave';
 
 import { usePathname } from 'next/navigation'
 
@@ -25,6 +26,7 @@ export default function RootLayout({
   const pathname = usePathname()
   const isShowInSea = pathname === '/' || pathname === '/guestbook';
   const isShowColorful = pathname === '/blog';
+  const isShowParticelWave = pathname === '/tools';
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -45,6 +47,7 @@ export default function RootLayout({
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
                 {isShowColorful && <Colorful />}
+                {isShowParticelWave && <ParticleWave />}
                 {children}
               </Content>
             </Layout>
