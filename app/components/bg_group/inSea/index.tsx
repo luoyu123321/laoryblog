@@ -11,7 +11,7 @@ const InSea: React.FC<indexProps> = ({ }): ReactElement => {
   useEffect(() => {
     const HAMMERHEAD_RENDERER = {
       HAMMERHEAD_COUNT: 10,
-      ADD_INTERVAL: 3,
+      ADD_INTERVAL: 40,
       DELTA_THETA: Math.PI / 1000,
       ADJUST_DISTANCE: 50,
       ADJUST_OFFSET: 10,

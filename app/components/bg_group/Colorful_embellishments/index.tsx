@@ -22,8 +22,8 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   };
 
   const dots = {
-    nb: 750,
-    distance: 50,
+    nb: 100,
+    distance: 150,
     d_radius: 100,
     array: [],
   };
@@ -148,12 +148,27 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
     requestAnimationFrame(animateDots);
   }
 
+  let movetime = null;
+  /* 节流 */
+  function throttle(func, delay) {
+    if(movetime){
+      return;
+    }
+    movetime = setTimeout(()=>{
+      func();
+      clearTimeout(movetime);
+      movetime = null;
+    }, delay)
+  }
 
-    canvas.addEventListener('mousemove', (e)=>{
-      mousePosition.x = e.pageX;
-      mousePosition.y = e.pageY;
+    const bodyEle = document.querySelector('body');
+    bodyEle.addEventListener('mousemove', (e)=>{
+      throttle(function() {
+        mousePosition.x = e.offsetX;
+        mousePosition.y = e.offsetY;
+      }, 100);
     })
-    canvas.addEventListener('mouseleave', (e)=>{
+    bodyEle.addEventListener('mouseleave', (e)=>{
       mousePosition.x = canvas.width / 2;
       mousePosition.y = canvas.height / 2;
     })
@@ -163,7 +178,8 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   
 
   return (
-    <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}></canvas>
+    <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, 
+    background: 'rgb(0,0,0)' }}></canvas>
   );
 }
 

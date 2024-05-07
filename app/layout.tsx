@@ -40,11 +40,11 @@ export default function RootLayout({
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
               {load && <Loading />}
-              {/* {isShowInSea && <InSea />} */}
+              {isShowInSea && <InSea />}
               {/* <InSea /> */}
               <Header style={headerStyle}><HeaderContent /></Header>
               <Content style={contentStyle}>
-                {/* {isShowColorful && <Colorful />} */}
+                {isShowColorful && <Colorful />}
                 {children}
               </Content>
             </Layout>
