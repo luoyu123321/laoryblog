@@ -1,5 +1,5 @@
 'use client';
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Link from 'next/link';
 import { Image } from 'antd';
 import { animated, useTransition } from '@react-spring/web'
@@ -8,13 +8,16 @@ interface toolsProps {
 }
 
 const Tools: FC<toolsProps> = ({ }) => {
+
+  const [bodyHeight, setBodyHeight] = useState<number>(0)
+
   const arr = [
     { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/choujiang.jpg' },
     { path: '/tools/next_chat', name: 'chatGPT', imgUrl: '/next_chat.jpg' },
   ]
 
-  const bodyHeight = useMemo(() => {
-    return window.innerHeight - 64
+  useEffect(() => {
+    setBodyHeight(window.innerHeight - 64)
   }, [])
 
   //动画
@@ -28,7 +31,7 @@ const Tools: FC<toolsProps> = ({ }) => {
     }
   })
 
-  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight, overflow: 'auto' }}>
+  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto' }}>
     {transition((style, item) => {
       return (
         <Link href={item.path} prefetch={true}>
