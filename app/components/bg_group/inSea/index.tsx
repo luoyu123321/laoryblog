@@ -10,10 +10,10 @@ const InSea: React.FC<indexProps> = ({ }): ReactElement => {
 
   useEffect(() => {
     const HAMMERHEAD_RENDERER = {
-      HAMMERHEAD_COUNT: window.innerWidth/150,
-      ADD_INTERVAL: 40,
+      HAMMERHEAD_COUNT: Math.round(window.innerWidth / 200),
+      ADD_INTERVAL: window.innerWidth > 600 ? 50 : 200,
       DELTA_THETA: Math.PI / 1000,
-      ADJUST_DISTANCE: 50,
+      ADJUST_DISTANCE: 50 ,
       ADJUST_OFFSET: 10,
 
       init: function () {
@@ -87,7 +87,7 @@ const InSea: React.FC<indexProps> = ({ }): ReactElement => {
     };
     HAMMERHEAD.prototype = {
       COLOR: 'hsl(220, %s%, 30%)',
-      ANGLE_RANGE: { min: -Math.PI / 8, max: Math.PI / 8 },
+      ANGLE_RANGE: { min: -Math.PI / 10, max: Math.PI / 10 },
       INIT_SCALE: 0.1,
       MAX_Z: 10,
       DELTA_PHI: Math.PI / 80,
