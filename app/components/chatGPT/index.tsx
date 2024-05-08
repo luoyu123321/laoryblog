@@ -37,7 +37,7 @@ const ChatGPT = () => {
     const requestOptions = {
       method: 'POST',
       headers: {
-        "Authorization": "Bearer sk-5kW0ndcydGBef6qX9jbtk4ac8qL1bJN8lr3cxUo8X8QxVO6U",
+        "Authorization": "Bearer " + process.env.NEXT_PUBLIC_API_KEY,
         "User-Agent": "Apifox/1.0.0 (https://apifox.com)",
         "Content-Type": "application/json",
       },
