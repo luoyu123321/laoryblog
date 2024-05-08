@@ -12,8 +12,8 @@ const Tools: FC<toolsProps> = ({ }) => {
   const [bodyHeight, setBodyHeight] = useState<number>(0)
 
   const arr = [
-    { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/choujiang.jpg' },
     { path: '/tools/next_chat', name: 'chatGPT', imgUrl: '/next_chat.jpg' },
+    { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/choujiang.jpg' },
   ]
 
   useEffect(() => {

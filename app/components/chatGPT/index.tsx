@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import Link from 'next/link'
 import './index.css';
 
 const ChatGPT = () => {
@@ -83,13 +84,13 @@ const ChatGPT = () => {
   const outputAnswer = (text, isFastShow, callback) => {
     let index = 0;
     let addNbr = 1;
-    addNbr = Math.round(text.length / 200)
+    addNbr = Math.round(text.length / 200) || 1;
     // 如果是快速展示结果，就按照一秒输出完，四十次输出完，否则按照正常速度输出
     if (isFastShow) {
       addNbr = text.length / 40 > 1 ? Math.round(text.length / 40) : 1;
     }
     // 如果是快速展示结果，25ms输出一次，否则按照结果长短，分段控制展示速度
-    const times = isFastShow ? 25 : text.length < 1000 ? 50 : text.length < 2000 ? 35 : 22;
+    const times = isFastShow ? 25 : text.length < 2000 ? 50 : 30;
     const timer = setInterval(() => {
       if (index < text.length) {
         setDisplayText(text.slice(0, index + addNbr));
@@ -100,7 +101,7 @@ const ChatGPT = () => {
         callback()
       }
     }, times);
-    if (index > 2000) {
+    if (index > 4000) {
       setDisplayText('');
       clearInterval(timer);
       callback()
@@ -137,7 +138,8 @@ const ChatGPT = () => {
         <footer className='chat-box-footer'>
           <div className='chat-box-footer-content'>
             <textarea ref={textareaRef} className='chat-box-footer-content-input' placeholder='请输入内容，  Enter 发送，Shift + Enter 换行' value={inputMsg} onChange={(e) => setInputMsg(e.target.value)} onKeyDown={enterSend} />
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: "center" }}>
+              <Link href={'/tools'}><Button size='small' type="primary" style={{marginRight:'15px'}} >体验完整版</Button></Link>
               <Button type="primary" onClick={() => {
                 sendQuestion()
               }}>发送</Button>
