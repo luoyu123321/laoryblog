@@ -37,7 +37,7 @@ const ChatGPT = () => {
     const requestOptions = {
       method: 'POST',
       headers: {
-        "Authorization": "Bearer " + process.env.NEXT_PUBLIC_API_KEY,
+        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         "User-Agent": "Apifox/1.0.0 (https://apifox.com)",
         "Content-Type": "application/json",
       },
@@ -57,7 +57,7 @@ const ChatGPT = () => {
       let isFastShow = false;
       // 请求开始时间
       let startTime = new Date().getTime();
-      const response = await fetch("https://api.chatanywhere.tech/v1/chat/completions", requestOptions as any)
+      const response = await fetch(process.env.NEXT_PUBLIC_OPENAI_URL, requestOptions as any)
       // 请求使用时间
       let useTime = new Date().getTime() - startTime;
       // 如果请求事件超过十秒秒，则快速展示回答
@@ -83,12 +83,13 @@ const ChatGPT = () => {
   const outputAnswer = (text, isFastShow, callback) => {
     let index = 0;
     let addNbr = 1;
+    addNbr = Math.round(text.length / 200)
     // 如果是快速展示结果，就按照一秒输出完，四十次输出完，否则按照正常速度输出
     if (isFastShow) {
       addNbr = text.length / 40 > 1 ? Math.round(text.length / 40) : 1;
     }
     // 如果是快速展示结果，25ms输出一次，否则按照结果长短，分段控制展示速度
-    const times = isFastShow ? 25 : text.length < 300 ? 100 : text.length < 600 ? 75 : text.length < 1200 ? 50 : text.length < 2000 ? 35 : 22;
+    const times = isFastShow ? 25 : text.length < 1000 ? 50 : text.length < 2000 ? 35 : 22;
     const timer = setInterval(() => {
       if (index < text.length) {
         setDisplayText(text.slice(0, index + addNbr));
