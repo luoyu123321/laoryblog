@@ -62,7 +62,7 @@ const ChatGPT = () => {
       // 请求使用时间
       let useTime = new Date().getTime() - startTime;
       // 如果请求事件超过十秒秒，则快速展示回答
-      isFastShow = useTime > 10000;
+      isFastShow = useTime > 15000;
       const result = await response.text();
       const answerRes = JSON.parse(result);
       outputAnswer(answerRes?.choices[0]?.message?.content, isFastShow, () => setContent(msgList.concat({ msg: answerRes?.choices[0]?.message?.content, isAnswer: true })))
