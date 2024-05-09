@@ -178,7 +178,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
           <span>{'IP：' + ipInfo.city}</span>
         </div>}
       >
-        <div>author is looking for a good job，  Looking forward to your message.</div>
+        <div className="guestbook-card-content">author is looking for a good job，  Looking forward to your message.</div>
       </Card>
       {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%' }} className="guestbook-card" loading={true}></Card>}
       {guestBookList.map(item => <Card
@@ -191,11 +191,10 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
             <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{item.name}</span>
             <span style={{ marginLeft: '10px', fontSize: '12px', color: '#8f8f8f' }} >{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
           </span>
-          {/* <span>{item.email}</span> */}
           <span>{'IP：' + item.ip?.city}</span>
         </div>}
       >
-        <div>{item.message}</div>
+        <div className="guestbook-card-content">{item.message}</div>
       </Card>)
       }
     </div >
