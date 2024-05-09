@@ -16,12 +16,14 @@
     "@prisma/client": "^5.12.1",
     "@react-spring/web": "^9.7.3",
     "antd": "^5.16.1",
+    "axios": "^1.6.8",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "moment": "^2.30.1",
     "next": "14.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20",

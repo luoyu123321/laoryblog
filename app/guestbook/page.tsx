@@ -61,8 +61,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
         const cachedData = guestbook.map(item => {
           return {
             ...item,
-            email: item.email.length > 8 ? `${item.email.slice(0, 2)}***${item.email.slice(-4)}` :
-              item.email.length > 4 ? `${item.email.slice(0, 1)}***${item.email.slice(-3)}` : `***`,
+            email: '',
           }
         })
         setGuestBookList(cachedData);

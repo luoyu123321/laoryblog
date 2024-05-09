@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import Link from 'next/link'
+import axios from 'axios';
 import './index.css';
 
 const ChatGPT = () => {
@@ -35,40 +36,19 @@ const ChatGPT = () => {
     setContent(msgList);
     setInputMsg('');
     setLoading(true);
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
-        "User-Agent": "Apifox/1.0.0 (https://apifox.com)",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        "model": "gpt-3.5-turbo",
-        "messages": [
-          {
-            "role": "user",
-            "content": inputMsg
-          }
-        ]
-      }),
-      redirect: 'follow'
-    };
     try {
       // 是否快速展示回答标识
       let isFastShow = false;
       // 请求开始时间
       let startTime = new Date().getTime();
-      const response = await fetch(process.env.NEXT_PUBLIC_OPENAI_URL, requestOptions as any)
+      const { data: answer } = await axios.post('/api/chatgpt', { message: inputMsg });
       // 请求使用时间
       let useTime = new Date().getTime() - startTime;
       // 如果请求事件超过十秒秒，则快速展示回答
       isFastShow = useTime > 15000;
-      const result = await response.text();
-      const answerRes = JSON.parse(result);
-      outputAnswer(answerRes?.choices[0]?.message?.content, isFastShow, () => setContent(msgList.concat({ msg: answerRes?.choices[0]?.message?.content, isAnswer: true })))
+      outputAnswer(answer, isFastShow, () => setContent(msgList.concat({ msg: answer, isAnswer: true })))
 
     } catch (error) {
-      console.error('Error:', error);
       messageApi.error('对话建立失败，请重试！');
     } finally {
       setLoading(false);
