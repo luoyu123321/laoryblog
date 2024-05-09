@@ -18,9 +18,8 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
   const [inputMessage, setInputMessage] = useState<string>('');
   const [getloading, setGetLoading] = useState<boolean>(false);
   const [postloading, setPostLoading] = useState<boolean>(false);
+  const [ipInfo, setIpInfo] = useState<{ [key: string]: string }>({});
   const [messageApi, contextHolder] = message.useMessage();
-
-  const ipRef = useRef<string>('');
 
   useEffect(() => {
     // 获取当前操作人ip
@@ -32,7 +31,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
     })
       .then(response => response.json())
       .then(data => {
-        ipRef.current = data;
+        setIpInfo(data);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -116,7 +115,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
         name: inputName,
         email: inputEmail,
         message: inputMessage,
-        ip: ipRef.current,
+        ip: ipInfo,
       })
     })
       .then(() => {
@@ -166,6 +165,21 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       </div>
     </Spin>
     <div className="guestbook-card-container" >
+      <Card
+        key={999}
+        type="inner"
+        style={{ width: '100%' }}
+        className="guestbook-card"
+        title={<div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'normal' }} >
+          <span>
+            <span style={{ fontWeight: 'bold', fontSize: '16px' }}>置顶</span>
+            <span style={{ marginLeft: '10px', fontSize: '12px', color: '#8f8f8f' }} >刚刚</span>
+          </span>
+          <span>{'IP：' + ipInfo.city}</span>
+        </div>}
+      >
+        <div>author is looking for a good job，  Looking forward to your message.</div>
+      </Card>
       {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%' }} className="guestbook-card" loading={true}></Card>}
       {guestBookList.map(item => <Card
         key={item.id}
