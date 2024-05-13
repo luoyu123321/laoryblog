@@ -26,46 +26,56 @@
 
 @media screen and (min-width: 660px) {
   .guestbook-search {
-    width: 275px!important;
+    width: 275px !important;
   }
+
   .guestbook-search-textarea {
-    width: 560px!important;
+    width: 560px !important;
     margin-top: 10px;
   }
+
   .guestbook-search-btn {
-    width: 560px!important;
+    width: 560px !important;
     margin-top: 20px;
   }
+
   .blog {
-    padding: 30px 16px 10px;
+    padding: 25px 0px 0px;
   }
 }
+
 @media screen and (max-width: 659px) {
   .guestbook-search {
-    width: 80%!important;
+    width: 80% !important;
   }
+
   .guestbook-search-textarea {
-    width: 80%!important;
+    width: 80% !important;
     margin-top: 10px;
   }
+
   .guestbook-search-btn {
-    width: 80%!important;
+    width: 80% !important;
     margin-top: 20px;
   }
-  .guestbook-card-container{
+
+  .guestbook-card-container {
     padding: 10px 2%;
   }
+
   .blog {
     padding: 20px 10px 8px;
   }
 }
-@media screen and (min-width: 800px){
-  .guestbook-card-container{
+
+@media screen and (min-width: 800px) {
+  .guestbook-card-container {
     padding: 10px 20%;
   }
 }
-@media screen and (max-width: 799px){
-  .guestbook-card-container{
+
+@media screen and (max-width: 799px) {
+  .guestbook-card-container {
     padding: 10px 5%;
   }
 }
@@ -85,26 +95,26 @@
 }
 
 .header-nav-active {
-  color: rgb(22, 119, 255)!important;
+  color: rgb(22, 119, 255) !important;
   border-top: 2px solid rgb(22, 119, 255);
 }
 
-.guestbook-card-container{
+.guestbook-card-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   width: 100%;
 }
 
-.guestbook-card{
+.guestbook-card {
   display: inline-block;
   text-align: left;
   min-width: 215px;
   max-width: 100%;
-  min-height: 150px!important;
-  line-height: 40px!important;
-  margin: 10px 0!important;
+  min-height: 150px !important;
+  line-height: 40px !important;
+  margin: 10px 0 !important;
   padding: 3px;
   border: 1px solid green;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
@@ -120,22 +130,22 @@
   overflow: auto;
 }
 
-.requestTest-card-container{
+.requestTest-card-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   width: 100%;
 }
 
-.requestTest-card{
+.requestTest-card {
   display: inline-block;
   text-align: left;
   min-width: 215px;
   max-width: 100%;
-  height: 150px!important;
-  line-height: 40px!important;
-  margin: 10px 0 5px 30px!important;
+  height: 150px !important;
+  line-height: 40px !important;
+  margin: 10px 0 5px 30px !important;
   padding: 3px;
   border: 1px solid green;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
@@ -146,7 +156,7 @@
   box-shadow: 2px 2px 10px 3px rgba(0, 0, 0, 0.3);
 }
 
-.nav-container-back-btn{
+.nav-container-back-btn {
   position: absolute;
   font-size: 20px;
   display: inline-block;
@@ -165,12 +175,13 @@
   font-size: 40px;
   padding-top: 40px;
   color: green;
-  background-color: rgba(246, 247, 248,0.3);
-  border: 1px solid rgba(226, 232, 240,0.3);
+  background-color: rgba(246, 247, 248, 0.3);
+  border: 1px solid rgba(226, 232, 240, 0.3);
   box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.5);
   margin: 20px;
 
 }
+
 .tools-mod-panel:hover {
   box-shadow: -2px 2px 10px 3px rgba(255, 255, 255, 0.5);
 }
@@ -182,10 +193,69 @@
 
 .blog-body {
   display: inline-block;
-  width: 100%;
+  width: 880px;
+  min-height: 80vh;
   max-height: inherit;
   overflow: auto;
-  background-color: rgba(246, 247, 248,0.2);
-  padding: 0 16px;
+  background-color: rgba(246, 247, 248, 0.2);
   text-align: start;
+}
+
+.blog-body-title {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  padding: 0 20px;
+}
+
+.blog-body-content {
+}
+
+.blog-body-content-box-bg {
+  display: block;
+  padding: 0 16px;
+}
+
+.blog-body-content-box-bg:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.blog-body-content-box {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 155px;
+  padding: 15px 0;
+  border-bottom: 1px solid #000;
+}
+
+.blog-body-content-left {
+  width: 72%;
+}
+
+.blog-body-content-left-title {
+  color: #ddd;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 44px;
+  max-height: 44px;
+}
+
+.blog-body-content-left-content {
+  color: #999;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.blog-body-content-left-foot {
+  display: flex;
+  justify-content: space-between;
+  color: #ccc;
+  padding: 10px 0;
+}
+
+.blog-body-content-right {
+  width: 25%;
+  background-color: #888;
 }
