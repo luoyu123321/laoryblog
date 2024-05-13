@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 针对谷歌浏览器 */
+/* 隐藏默认的滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+  background: #f6f6f6;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 2px;
+}
+
+/* 滚动条滑块悬停状态 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+}
+
 @media screen and (min-width: 660px) {
   .guestbook-search {
     width: 275px!important;
@@ -13,6 +35,9 @@
   .guestbook-search-btn {
     width: 560px!important;
     margin-top: 20px;
+  }
+  .blog {
+    padding: 30px 16px 10px;
   }
 }
 @media screen and (max-width: 659px) {
@@ -29,6 +54,9 @@
   }
   .guestbook-card-container{
     padding: 10px 2%;
+  }
+  .blog {
+    padding: 20px 10px 8px;
   }
 }
 @media screen and (min-width: 800px){
@@ -145,4 +173,19 @@
 }
 .tools-mod-panel:hover {
   box-shadow: -2px 2px 10px 3px rgba(255, 255, 255, 0.5);
+}
+
+.blog {
+  position: relative;
+  z-index: 1;
+}
+
+.blog-body {
+  display: inline-block;
+  width: 100%;
+  max-height: inherit;
+  overflow: auto;
+  background-color: rgba(246, 247, 248,0.2);
+  padding: 0 16px;
+  text-align: start;
 }

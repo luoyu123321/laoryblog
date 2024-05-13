@@ -1,0 +1,154 @@
+序言：
+
+大家好，这是一篇快速入门nextjs前后端开发的文章，适用于新手想直接开发全栈个人页面并部署的同学，更加深入的next特性和优化会在其他文章讨论哦
+
+之前在B站还有官方文档上学习Next开发，但发现学习视频少不说，Next版本变化还非常大，看了几个老师的教学视频都不一样，越学越迷糊，甚至一度想要放弃学习这个；但一直又想要做一个包括前后端的个人网站，在搁置了两个月后，我又重新开始学习Next，并转换了一种学习方式。
+
+这是一种另类的学习线路，接下来让我们开始吧
+
+## next入门学习如何高效开始
+
+对于我这种学习能力有点差的人，每当开始学习一个新的开发框架时，总会有点迷糊、不适应的感觉，导致新的框架学习效率很低，也很难运用起来。这里提供了一种新的学习方案，就是`面向需求学习`，从自己想要实现的功能开始学习。我当时是为了能写API接口，写个全栈的个人页面，所以我们很快会说到完成一个包含前后端的完整页面
+
+学习next的同学想必应该都有React的基础，这个是需要的，毕竟他是一个轻量级的 React 服务端渲染应用框架
+
+#### 1、搭建Next项目
+
+首先最简单的需要，咱们写一个最简单 hello world 页面，在这之前咱们还是一笔带过一下next项目搭建：
+
+和react项目创建一样，在任意文件夹中打开CMD或者git bash 执行：
+~~~ Terminal
+npx create-next-app@latest helloWorld
+~~~
+会有很多选择，直接一路回车等待包安装就搭建好了，咱们先完成简单页面
+
+#### 2、hello world
+首先next项目的目录是有固定的规则，但也很简单，清晰；项目创建好，咱们先找到**page.tsx**文件，没错，这就是语义化的页面的意思，咱们暂且就把他当做入口文件（暂时不要动**layout**文件），他就是个hook组件，直接就可以开始写页面了，如图，hello world页面就完成了：
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/921c4bc32af549079b8a9357c43ee07b~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1019&h=398&s=46669&e=png&b=1d1d1d)
+终端输入`npm run dev` 就可以预览效果啦
+
+依此类推，我们可以先什么都不管，按照react开发思维，直接开发复杂些的页面（需要注意的是在使用react hook时，需要在文件最上面添加`"use client"`,它代表客户端组件）
+
+#### 3、简单的实现API接口开发
+实际上，在next应用中，API接口开发也是非常的方便，接下来就说说API开发：
+
+next给我们提供了固定的文件名`route.ts`来开发接口，我们一般放在api文件里，这样比较方便查看；一般我们这样管理文件，api/接口名/route.ts，如下图：
+
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9a5f8372fa64dddb766bee84f55948d~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=305&h=191&s=8812&e=png&b=181818)
+
+然后就是route.js里面怎么编写了，官网提供了以下 HTTP 方法：`GET`、`POST` `PUT` `PATCH` `DELETE` `HEAD` 和 `OPTIONS`，也比较简单明了，需要写哪种类型的请求，直接导出该类型名的函数，下面举一个最简单的`GET`和`POST`的例子：
+~~~ ts
+import { NextResponse } from "next/server";
+
+export const GET = async () => {
+
+  try {
+    // 数据库查询
+    // .............
+
+    // 返回数据库数据，这里演示直接返回 hello world
+    return NextResponse.json('hello world', { status: 200 });
+  } catch (error) {
+    // 返回错误信息
+    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+  }
+}
+
+export const POST = async (req: Request) => {
+  // 取请求参数
+  const { params } = await req.json();
+  // 如果参数值为空，则直接返回错误信息，422表示参数错误
+  if (!params) return NextResponse.json({ message: "Invalid Data" }, { status: 422 });
+  // 然后一样数据库操作，返回数据
+  try {
+    // 数据库查询
+    // .............
+
+    // 返回数据库数据，这里演示直接返回 hello world, 这里返回时可以返回一个对象，包含状态和其他
+    return NextResponse.json({ message: 'successful' }, { status: 200 });
+  } catch (error) {
+    // 返回错误信息
+    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+  }
+}
+~~~
+
+#### 4、API接口的调用
+这个和我们平时调用接口一样，可以用axios，或者react自带的fetch方法，这里我们都说最简单的，直接说一下fetch方法调用，下面是示例代码：
+~~~ ts
+  // GET请求获取数据
+  const getData = async () => {
+    const res = await fetch('/api/helloworld', {
+      method: 'GET'
+    });
+    const data = await res.json();
+    console.log(data); // 输出接口返回数据
+  }
+
+  // POST请求数据
+  const POSTData = async () => {
+    const res = await fetch('/api/helloworld', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: inputValue
+      })
+    });
+    const data = await res.json();
+    console.log(data); // 输出接口返回状态或其他数据
+  }
+~~~
+
+到这，恭喜你，我们基本就学会了前后端最基础的开发了，依靠咱们React坚实的基础，基本就可以开发任何包含前后端的页面了，这里给一个最简单的 hello world 请求数据页面例子：
+~~~ tsx
+'use client';
+import React, { useEffect, useState} from 'react';
+
+const HelloWorld: React.FC = ({}) => {
+
+  const [data, setData] = useState<string>('');
+
+  useEffect(() => {
+    getData()
+  }, [])
+  
+  // GET请求获取数据
+  const getData = async () => {
+    const res = await fetch('/api/helloworld', {
+      method: 'GET'
+    });
+    const data = await res.json();
+    setData(data);
+  }
+
+  return (
+    <div>
+      GET数据：{data}
+    </div>
+  );
+}
+
+export default HelloWorld;
+~~~
+
+#### 5、免费一键部署个人网站页面
+上文中我们已经学会了next前后端的基础开发，接下来我们就要说到，如何把我们刚写的页面，直接部署到服务器上，让别人也能看到你的网站
+
+首先需要我们把代码上传到`git hub`上，这个最基础的代码上传库不会可以自己去找教程。
+
+然后就要说到与`NextJS`配套的免费部署网站`vercel`，[vercel网址](https://vercel.com/)， 点开网站后，按照下图步骤操作：
+
+1、部署步骤：
+
+![部署步骤](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e29114eac19547fb93a54c72fd074111~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1597&h=972&s=739379&e=png&b=fbfafa)
+
+2、上线成功
+![部署成功](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/621c893ac5164bf8bb96a4a694b31098~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1541&h=880&s=177336&e=png&b=fcfcfc)
+
+到这，我们的极简教程就结束了，我们也能够成功的从入门到部署个人网站了。
+
+**感谢大家的阅读，求点赞，关注！！！**
+
+下期咱们开始更深入一点NextJS的一些专属特性和优化，以及一些UI组件库的使用。
+
+还有这期没来的及说的**免费的数据库**与API操作和现在比较火的自己的**ChatGPT搭建**

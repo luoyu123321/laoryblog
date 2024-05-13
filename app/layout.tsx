@@ -41,13 +41,15 @@ export default function RootLayout({
         <AntdRegistry>
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
+              {/* loading和背景 */}
               {load && <Loading />}
               {isShowInSea && <InSea />}
-              {/* <InSea /> */}
+              {isShowColorful && <Colorful />}
+              {isShowParticelWave && <ParticleWave />}
+              {/* 头部导航部分 */}
               <Header style={headerStyle}><HeaderContent /></Header>
+              {/* 内容主体 */}
               <Content style={contentStyle}>
-                {isShowColorful && <Colorful />}
-                {isShowParticelWave && <ParticleWave />}
                 {children}
               </Content>
             </Layout>

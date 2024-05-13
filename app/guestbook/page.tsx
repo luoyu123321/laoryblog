@@ -180,7 +180,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       >
         <div className="guestbook-card-content">author is looking for a good job，  Looking forward to your message.</div>
       </Card>
-      {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%' }} className="guestbook-card" loading={true}></Card>}
+      {(getloading || postloading) && <Card type="inner" title={<span>name</span>} style={{ width: '100%', height: '150px' }} className="guestbook-card" loading={true}></Card>}
       {guestBookList.map(item => <Card
         key={item.id}
         type="inner"

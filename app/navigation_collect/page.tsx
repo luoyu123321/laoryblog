@@ -10,7 +10,7 @@ function NavigationCollect({ }) {
         name='NavigationCollect'
         width={'100%'}
         height={'99%'}
-        src="https://homepage-navigation.laory.cn"
+        src="https://navigation.laory.cn"
       // sandbox="allow-same-origin allow-scripts"  // 会禁止里面url跳转
       ></iframe>
       {/* 悬浮的返回按钮，页面优化不需要了，后期需要可以重新添加，记得样式也要取消注释 */}

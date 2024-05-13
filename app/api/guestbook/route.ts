@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
         ip: ipjson
       }
     });
-    return NextResponse.json({ message: "User Created", guestbook: newMessage }, { status: 200 });
+    return NextResponse.json({ message: "successful"}, { status: 200 });
   } catch (error) {
 
     console.error(error);

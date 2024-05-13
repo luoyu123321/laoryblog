@@ -13,7 +13,7 @@ export const POST = async (req: Request) => {
         name
       }
     });
-    return NextResponse.json({ message: "User Created", user: newuser }, { status: 201 });
+    return NextResponse.json({ message: "User Created" }, { status: 201 });
   } catch (error) {
 
     console.error(error);
