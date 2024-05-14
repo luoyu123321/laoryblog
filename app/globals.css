@@ -80,6 +80,18 @@
   }
 }
 
+@media screen and (min-width: 900px) {
+  .blog-body {
+    width: 880px;
+  }
+}
+
+@media screen and (max-width: 899px) {
+  .blog-body {
+    width: 95%;
+  }
+}
+
 .header-nav span {
   display: inline-block;
   color: rgb(45, 45, 45);
@@ -193,7 +205,6 @@
 
 .blog-body {
   display: inline-block;
-  width: 880px;
   min-height: 80vh;
   max-height: inherit;
   overflow: auto;

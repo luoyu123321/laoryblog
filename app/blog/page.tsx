@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, Suspense } from 'react';
 import Image from 'next/image'
 import postsList from './posts';
 
@@ -35,12 +35,15 @@ const Blog: FC<blogProps> = ({ }) => {
                   </div>
                 </div>
                 <div className='blog-body-content-right'>
-                  <Image
-                    src={item.imgSrc}
-                    width={170}
-                    height={125}
-                    alt=''
-                  />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Image
+                      src={item.imgSrc}
+                      width={170}
+                      height={125}
+                      alt=''
+                      layout="fixed"
+                    />
+                  </Suspense>
                 </div>
               </div>
             </a>
