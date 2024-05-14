@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ }) => {
       <Flex justify='center' wrap="wrap" gap="40px" align='center' className='header-nav' >
         <div><Link href={'/'}><span className={pathname === '/' ? 'header-nav-active' : ''}>首页</span></Link></div>
         {navList.slice(0, showNbr).map((item, index) =>
-          <div key={index}><Link href={item.url} prefetch={true} ><span className={pathname.startsWith(item.url) ? 'header-nav-active' : ''}> {item.name}</span></Link></div>)
+          <div key={index}><Link href={item.url} prefetch={item.isPrefetch} ><span className={pathname.startsWith(item.url) ? 'header-nav-active' : ''}> {item.name}</span></Link></div>)
         }
 
         {(showNbr < 10 && !isInit) && <Dropdown menu={{ items }}>
@@ -66,17 +66,22 @@ export default Header;
  */
 const navList = [{
   name: '个人博客',
-  url: '/blog'
+  url: '/blog',
+  isPrefetch: true,
 }, {
   name: '小工具',
-  url: '/tools'
+  url: '/tools',
+  isPrefetch: true,
 }, {
   name: '前端导航集合',
-  url: '/navigation_collect'
+  url: '/navigation_collect',
+  isPrefetch: false,
 }, {
   name: '留言板',
-  url: '/guestbook'
+  url: '/guestbook',
+  isPrefetch: false,
 }, {
   name: '请求测试',
-  url: '/request_test'
+  url: '/request_test',
+  isPrefetch: false,
 }];

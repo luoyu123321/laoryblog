@@ -38,10 +38,9 @@ const Blog: FC<blogProps> = ({ }) => {
                   <Suspense fallback={<div>Loading...</div>}>
                     <Image
                       src={item.imgSrc}
-                      width={170}
-                      height={125}
                       alt=''
-                      layout="fixed"
+                      layout="fill"
+                      loading="lazy"
                     />
                   </Suspense>
                 </div>

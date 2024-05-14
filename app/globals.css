@@ -274,6 +274,7 @@
 }
 
 .blog-body-content-right {
+  position: relative;
   width: 20%;
   background-color: #888;
 }
