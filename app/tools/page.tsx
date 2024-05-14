@@ -12,8 +12,9 @@ const Tools: FC<toolsProps> = ({ }) => {
   const [bodyHeight, setBodyHeight] = useState<number>(0)
 
   const arr = [
-    { path: '/tools/next_chat', name: 'chatGPT', imgUrl: '/next_chat.jpg' },
-    { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/choujiang.jpg' },
+    { path: '/tools/next_chat', name: 'chatGPT', imgUrl: '/next_chat.jpg', width: '50%' },
+    { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/choujiang.jpg', width: '50%' },
+    { path: '/tools/programmer_Inn', name: '程序员客栈', imgUrl: '/programmer_Inn.png', width: '100%' },
   ]
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Tools: FC<toolsProps> = ({ }) => {
     }
   })
 
-  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto' }}>
+  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto', display: 'flex', justifyContent: 'center' }}>
     {transition((style, item) => {
       return (
         <Link href={item.path} prefetch={true}>
@@ -39,7 +40,7 @@ const Tools: FC<toolsProps> = ({ }) => {
             <Image
               alt={item.name}
               preview={false}
-              width={'50%'}
+              width={item.width}
               src={item.imgUrl}
             />
             <div>
