@@ -220,7 +220,7 @@
   min-height: 80vh;
   max-height: inherit;
   overflow: auto;
-  background-color: rgba(246, 247, 248, 0.2);
+  background-color: rgba(246, 247, 248, 0.15);
   text-align: start;
 }
 
