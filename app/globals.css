@@ -231,7 +231,7 @@
 }
 
 .blog-body-content-left {
-  width: 72%;
+  width: 77%;
 }
 
 .blog-body-content-left-title {
@@ -255,7 +255,14 @@
   padding: 10px 0;
 }
 
+.blog-body-content-left-tag {
+  background-color: #555;
+  padding: 2px 6px;
+  margin-left: 4px;
+  border-radius: 3px;
+}
+
 .blog-body-content-right {
-  width: 25%;
+  width: 20%;
   background-color: #888;
 }

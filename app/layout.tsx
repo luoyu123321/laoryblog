@@ -42,7 +42,7 @@ export default function RootLayout({
           <Flex gap="middle" wrap="wrap">
             <Layout className='main-layout' style={layoutStyle}>
               {/* loading和背景 */}
-              {/* {load && <Loading />} */}
+              {load && <Loading />}
               {isShowInSea && <InSea />}
               {isShowColorful && <Colorful />}
               {isShowParticelWave && <ParticleWave />}

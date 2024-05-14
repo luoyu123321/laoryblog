@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
 import Image from 'next/image'
-
+import postsList from './posts';
 
 interface blogProps {
 }
@@ -15,30 +15,36 @@ const Blog: FC<blogProps> = ({ }) => {
           最新发布
         </div>
         <div className='blog-body-content'>
-          <a className='blog-body-content-box-bg' href='https://juejin.cn/post/7367552374335176755' target="_blank" >
-            <div className='blog-body-content-box'>
-              <div className='blog-body-content-left'>
-                <div className='blog-body-content-left-title'>
-                  东方战虎.辉(优质博客)
+          {postsList.map((item, index) => {
+            return <a key={index} className='blog-body-content-box-bg' href={item.href} target="_blank" >
+              <div className='blog-body-content-box'>
+                <div className='blog-body-content-left'>
+                  <div className='blog-body-content-left-title'>
+                    {item.title}
+                  </div>
+                  <div className='blog-body-content-left-content'>
+                    {item.content}
+                  </div>
+                  <div className='blog-body-content-left-foot'>
+                    <span>{item.date}</span>
+                    <span>
+                      {item.tags.map((tag, index) => {
+                        return <span key={index} className='blog-body-content-left-tag'>{tag}</span>
+                      })}
+                    </span>
+                  </div>
                 </div>
-                <div className='blog-body-content-left-content'>
-                  这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客这是一篇博客
-                </div>
-                <div className='blog-body-content-left-foot'>
-                  <span>2024-05-14</span>
-                  <span style={{ backgroundColor: "#555", padding: "2px 6px" }}>前端成长</span>
+                <div className='blog-body-content-right'>
+                  <Image
+                    src={item.imgSrc}
+                    width={170}
+                    height={125}
+                    alt=''
+                  />
                 </div>
               </div>
-              <div className='blog-body-content-right'>
-                <Image
-                  src={"/slot-bg1.jpg"}
-                  width={212}
-                  height={125}
-                  alt=''
-                />
-              </div>
-            </div>
-          </a>
+            </a>
+          })}
         </div>
       </div>
       <footer style={{ position: "fixed", bottom: "20px", right: "5%", color: "#fff", textAlign: "center" }}>

@@ -163,8 +163,8 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
     const bodyEle = document.querySelector('body');
     bodyEle.addEventListener('mousemove', (e)=>{
       throttle(function() {
-        mousePosition.x = e.offsetX;
-        mousePosition.y = e.offsetY;
+        mousePosition.x = e.clientX;
+        mousePosition.y = e.clientY;
       }, 100);
     })
     bodyEle.addEventListener('mouseleave', (e)=>{
