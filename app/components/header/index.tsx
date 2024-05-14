@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ }) => {
   const [items, setItems] = useState<any[]>(navList.map((item, index) => {
     return {
       key: index,
-      label: <Link href={item.url} prefetch={true} >{item.name}</Link>,
+      label: <Link href={item.url} prefetch={item.isPrefetch} >{item.name}</Link>,
       url: item.url
     }
   }))

@@ -15,7 +15,63 @@ const Blog: FC<blogProps> = ({ }) => {
           最新发布
         </div>
         <div className='blog-body-content'>
-          {postsList.map((item, index) => {
+          <BlogContent postsList={postsList} />
+        </div>
+      </div>
+      <footer style={{ position: "fixed", bottom: "20px", right: "5%", color: "#fff", textAlign: "center" }}>
+        <p>友情链接</p>
+        <a href="https://www.wujunhui.com/" target="_blank">东方战虎.辉(优质博客)</a>
+      </footer>
+    </div>
+  )
+}
+
+export default Blog
+
+const BlogContent = ({ postsList }) => {
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 660);
+  }, [])
+
+
+  return (
+    <>
+      {
+        isMobile !== undefined ? isMobile ? postsList.map((item, index) => {
+          return <a key={index} className='blog-body-content-box-bg' href={item.href} target="_blank" >
+            <div className='blog-body-content-title-mb'>
+              {item.title}
+            </div>
+            <div className='blog-body-content-box-mb'>
+              <div className='blog-body-content-box-center'>
+                <div className='blog-body-content-left'>
+                  <div className='blog-body-content-left-content-mb'>
+                    {item.content}
+                  </div>
+                </div>
+                <div className='blog-body-content-right'>
+                  <Image
+                    src={item.imgSrc}
+                    alt=''
+                    fill={true}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div className='blog-body-content-left-foot-mb'>
+                <span>{item.date}</span>
+                <span>
+                  {item.tags.map((tag, index) => {
+                    return <span key={index} className='blog-body-content-left-tag-mb'>{tag}</span>
+                  })}
+                </span>
+              </div>
+            </div>
+          </a>
+        }) :
+          postsList.map((item, index) => {
             return <a key={index} className='blog-body-content-box-bg' href={item.href} target="_blank" >
               <div className='blog-body-content-box'>
                 <div className='blog-body-content-left'>
@@ -35,26 +91,19 @@ const Blog: FC<blogProps> = ({ }) => {
                   </div>
                 </div>
                 <div className='blog-body-content-right'>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Image
-                      src={item.imgSrc}
-                      alt=''
-                      layout="fill"
-                      loading="lazy"
-                    />
-                  </Suspense>
+                  <Image
+                    src={item.imgSrc}
+                    alt=''
+                    fill={true}
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </a>
-          })}
-        </div>
-      </div>
-      <footer style={{ position: "fixed", bottom: "20px", right: "5%", color: "#fff", textAlign: "center" }}>
-        <p>友情链接</p>
-        <a href="https://www.wujunhui.com/" target="_blank">东方战虎.辉(优质博客)</a>
-      </footer>
-    </div>
+          })
+          : <></>
+      }
+    </>
   )
-}
 
-export default Blog
+}
