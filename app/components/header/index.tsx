@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({ }) => {
   return (
     <Flex gap="middle" vertical>
       <Flex justify='center' wrap="wrap" gap="40px" align='center' className='header-nav' >
-        <div><Link href={'/'}><span className={pathname === '/' ? 'header-nav-active' : ''}>首页</span></Link></div>
+        <div><Link prefetch={true} href={'/'}><span className={pathname === '/' ? 'header-nav-active' : ''}>首页</span></Link></div>
         {navList.slice(0, showNbr).map((item, index) =>
           <div key={index}><Link href={item.url} prefetch={item.isPrefetch} ><span className={pathname.startsWith(item.url) ? 'header-nav-active' : ''}> {item.name}</span></Link></div>)
         }
@@ -67,7 +67,7 @@ export default Header;
 const navList = [{
   name: '个人博客',
   url: '/blog',
-  isPrefetch: false,
+  isPrefetch: true,
 }, {
   name: '小工具',
   url: '/tools',
