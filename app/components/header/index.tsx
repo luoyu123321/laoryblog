@@ -67,7 +67,7 @@ export default Header;
 const navList = [{
   name: '个人博客',
   url: '/blog',
-  isPrefetch: true,
+  isPrefetch: false,
 }, {
   name: '小工具',
   url: '/tools',
@@ -79,7 +79,7 @@ const navList = [{
 }, {
   name: '留言板',
   url: '/guestbook',
-  isPrefetch: false,
+  isPrefetch: true,
 }, {
   name: '请求测试',
   url: '/request_test',
