@@ -7,6 +7,7 @@ interface indexProps {
 const Index: React.FC<indexProps> = ({ }): ReactElement => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  let AnimationID = useRef(null);
   
   useEffect(() => {
   const canvas = document.querySelector("canvas"),
@@ -139,12 +140,14 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   }
 
   function animateDots() {
+    console.log(3);
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     moveDots();
     connectDots();
     drawDots();
 
-    requestAnimationFrame(animateDots);
+    AnimationID.current = requestAnimationFrame(animateDots);
   }
 
   let movetime = null;
@@ -172,7 +175,11 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
       mousePosition.y = canvas.height / 2;
     })
   createDots();
-  requestAnimationFrame(animateDots);
+  AnimationID.current = requestAnimationFrame(animateDots);
+
+  return () => {
+    cancelAnimationFrame(AnimationID.current);
+  };
   }, [])
   
 

@@ -3,6 +3,7 @@ import './index.css'
 
 
 const ParticleWave = ({}) => {
+  let AnimationID = useRef(null);
   
   useEffect(() => {
     class ShaderProgram {
@@ -479,7 +480,7 @@ const ParticleWave = ({}) => {
     
         this.onUpdate( delta )
     
-        requestAnimationFrame( this.update )
+        AnimationID.current = requestAnimationFrame( this.update )
     
       }
     
@@ -564,6 +565,10 @@ const ParticleWave = ({}) => {
     
       },
     } )
+
+    return () => {
+      cancelAnimationFrame(AnimationID.current);
+    };
   }, []);
   
   return (

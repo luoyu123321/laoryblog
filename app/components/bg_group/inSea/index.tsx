@@ -7,6 +7,7 @@ interface indexProps {
 const InSea: React.FC<indexProps> = ({ }): ReactElement => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  let AnimationID = useRef(null);
 
   useEffect(() => {
     const HAMMERHEAD_RENDERER = {
@@ -44,7 +45,7 @@ const InSea: React.FC<indexProps> = ({ }): ReactElement => {
         }
       },
       render: function () {
-        requestAnimationFrame(this.render);
+        AnimationID.current = requestAnimationFrame(this.render);
 
         let gradient = this.context.createRadialGradient(this.width / 2, this.height / 2, 0, this.width / 2, this.height / 2, this.distance),
           rate = (1 + 0.2 * Math.sin(this.theta));
@@ -158,6 +159,10 @@ const InSea: React.FC<indexProps> = ({ }): ReactElement => {
     };
 
     HAMMERHEAD_RENDERER.init()
+
+    return () => {
+      cancelAnimationFrame(AnimationID.current);
+    };
 
   }, []);
 
