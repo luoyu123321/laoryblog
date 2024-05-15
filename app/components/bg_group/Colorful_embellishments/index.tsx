@@ -140,7 +140,6 @@ const Index: React.FC<indexProps> = ({ }): ReactElement => {
   }
 
   function animateDots() {
-    console.log(3);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     moveDots();

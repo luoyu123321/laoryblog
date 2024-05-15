@@ -217,7 +217,6 @@ const ParticleWave = ({}) => {
     
         } else {
     
-          console.log( gl.getShaderInfoLog( shader ) )
           gl.deleteShader( shader )
     
         }
@@ -244,7 +243,6 @@ const ParticleWave = ({}) => {
     
         } else {
     
-          console.log( gl.getProgramInfoLog( program ) )
           gl.deleteProgram( program )
     
         }
