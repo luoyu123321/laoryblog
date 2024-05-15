@@ -75,7 +75,7 @@ const navList = [{
 }, {
   name: '前端导航集合',
   url: '/navigation_collect',
-  isPrefetch: false,
+  isPrefetch: true,
 }, {
   name: '留言板',
   url: '/guestbook',
@@ -83,5 +83,5 @@ const navList = [{
 }, {
   name: '请求测试',
   url: '/request_test',
-  isPrefetch: false,
+  isPrefetch: true,
 }];
