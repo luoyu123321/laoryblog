@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 function ProgrammerInn({ }) {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {/* <Suspense fallback={<Loading />}> */}
       <iframe
         id='ProgrammerInn'
         name='ProgrammerInn'
@@ -12,6 +13,7 @@ function ProgrammerInn({ }) {
         height={'99%'}
         src="http://cxy521.com/"
       ></iframe>
+      {/* </Suspense> */}
       <span className='nav-container-back-btn' onClick={() => { window.history.back() }}> 返回上一页 </span>
     </div >
   );
