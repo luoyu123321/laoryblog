@@ -32,7 +32,7 @@ const Tools: FC<toolsProps> = ({ }) => {
     }
   })
 
-  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto', display: 'flex', justifyContent: 'center' }}>
+  return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto', display: 'flex', justifyContent: 'center', flexWrap: "wrap" }}>
     {transition((style, item) => {
       return (
         <Link href={item.path} prefetch={true}>
