@@ -7,7 +7,7 @@ const postsList = [
     date: '2024-05-12',
     tags: ['前端成长'],
     href: 'https://juejin.cn/post/7367552374335176755',
-    imgSrc: '/img/blog/20240512001.png',
+    imgSrc: '/img/blog/20240512001.jpg',
   },
   {
     id: '20240514001',
@@ -16,7 +16,7 @@ const postsList = [
     date: '2024-05-14',
     tags: ['AI大模型', '工具探索'],
     href: 'https://juejin.cn/post/7368293534375624713',
-    imgSrc: '/img/blog/20240514001.png',
+    imgSrc: '/img/blog/20240514001.jpg',
   },
 ]
 
