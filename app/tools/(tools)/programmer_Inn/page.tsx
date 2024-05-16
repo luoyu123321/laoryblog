@@ -12,7 +12,7 @@ function ProgrammerInn({ }) {
         width={'100%'}
         height={'99%'}
         src="https://cxy521.com/"
-        sandbox="allow-forms allow-scripts"
+        // sandbox="allow-forms allow-scripts"
       ></iframe>
       {/* </Suspense> */}
       <span className='nav-container-back-btn' onClick={() => { window.history.back() }}> 返回上一页 </span>

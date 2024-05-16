@@ -70,7 +70,7 @@ export default function LuckCanvas() {
     { padding: '20px', background: '#afc8ff', borderRadius: '30px' },
     { padding: '15px', background: '#e9e8fe', borderRadius: '30px',
     imgs: [{
-      src: '/slot-bg1.jpg',
+      src: '/img/tools/slot-bg1.jpg',
       width: '100%',
       height: '100%'
     }]  },
