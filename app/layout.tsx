@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Layout, Flex } from 'antd';
@@ -50,7 +50,9 @@ export default function RootLayout({
               <Header style={headerStyle}><HeaderContent /></Header>
               {/* 内容主体 */}
               <Content style={contentStyle}>
-                {children}
+                <Suspense>
+                  {children}
+                </Suspense>
               </Content>
             </Layout>
           </Flex>
