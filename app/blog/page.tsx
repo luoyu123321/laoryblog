@@ -69,7 +69,7 @@ const Blog: FC<blogProps> = ({ }) => {
           <BlogContent postsList={postsList} />
         </div>
       </div>
-      <footer style={{ position: "fixed", bottom: "20px", right: "5%", color: "#fff", textAlign: "center" }}>
+      <footer style={{ paddingBottom:'20px', color: "#fff", textAlign: "center" }}>
         <p>友情链接</p>
         <a href="https://www.wujunhui.com/" target="_blank">东方战虎.辉(优质博客)</a>
       </footer>
