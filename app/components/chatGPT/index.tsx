@@ -19,7 +19,7 @@ const ChatGPT = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (textareaRef.current && window.innerWidth > 660) {
       textareaRef.current.focus();
     }
   }, []);
