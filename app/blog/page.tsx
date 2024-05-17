@@ -20,7 +20,6 @@ const Blog: FC<blogProps> = ({ }) => {
       let interval = setInterval(() => {
         time += 100;
         const postele = document.getElementById(postId as string);
-        console.log('postele', postele)
         if (postele) {
           postele.scrollIntoView();
           hovers(postele)
