@@ -2,11 +2,62 @@
 import React, { FC, useEffect, useState, Suspense } from 'react';
 import Image from 'next/image'
 import postsList from './posts';
+import { useSearchParams } from 'next/navigation'
 
 interface blogProps {
 }
 
 const Blog: FC<blogProps> = ({ }) => {
+  const searchParams = useSearchParams()
+
+  /**
+   * 如果是首页跳转，滚动到指定文章
+   */
+  useEffect(() => {
+    const postId = searchParams.get('postId');
+    if (postId) {
+      let time = 0;
+      let interval = setInterval(() => {
+        time += 100;
+        const postele = document.getElementById(postId as string);
+        console.log('postele', postele)
+        if (postele) {
+          postele.scrollIntoView();
+          hovers(postele)
+          clearInterval(interval);
+        }
+      }, 100);
+      if (time > 5000) {
+        clearInterval(interval);
+      }
+    }
+  }, [searchParams]);
+
+  /**
+   * 跳转的元素高亮闪烁效果
+   * @param ele 滚动到的元素
+   */
+  const hovers = (ele) => {
+    let time = 0;
+    let interval1 = setInterval(() => {
+      if (time > 300) {
+        clearInterval(interval1);
+      }
+      time += 300;
+      if (time / 300 % 2 === 1) {
+        // 添加hover样式类
+        ele.classList.add('blog-body-content-box-bg-hover');
+      } else if (time / 300 % 2 === 0) {
+        // 移除hover样式类
+        ele.classList.remove('blog-body-content-box-bg-hover');
+      }
+    }, 300);
+    let timeout =setTimeout(() => {
+      clearTimeout(timeout);
+      // 移除hover样式类
+      ele.classList.remove('blog-body-content-box-bg-hover');
+    }, 5000);
+  }
 
   return (
     <div className='blog' style={{ color: '#fff' }}>
@@ -40,7 +91,7 @@ const BlogContent = ({ postsList }) => {
     <>
       {
         isMobile !== undefined ? isMobile ? postsList.map((item, index) => {
-          return <a key={index} className='blog-body-content-box-bg' href={item.href} target="_blank" >
+          return <a key={index} id={item.id} className='blog-body-content-box-bg' href={item.href} target="_blank" >
             <div className='blog-body-content-title-mb'>
               {item.title}
             </div>
@@ -55,8 +106,12 @@ const BlogContent = ({ postsList }) => {
                   <Image
                     src={item.imgSrc}
                     alt=''
-                    fill={true}
+                    fill
                     loading="lazy"
+                    sizes='72px'
+                    style={{
+                      objectFit: 'cover',
+                    }}
                   />
                 </div>
               </div>
@@ -72,7 +127,7 @@ const BlogContent = ({ postsList }) => {
           </a>
         }) :
           postsList.map((item, index) => {
-            return <a key={index} className='blog-body-content-box-bg' href={item.href} target="_blank" >
+            return <a key={index} id={item.id} className='blog-body-content-box-bg' href={item.href} target="_blank" >
               <div className='blog-body-content-box'>
                 <div className='blog-body-content-left'>
                   <div className='blog-body-content-left-title'>
@@ -96,6 +151,10 @@ const BlogContent = ({ postsList }) => {
                     alt=''
                     fill={true}
                     loading="lazy"
+                    sizes='170px'
+                    style={{
+                      objectFit: 'cover',
+                    }}
                   />
                 </div>
               </div>

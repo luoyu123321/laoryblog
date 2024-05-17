@@ -25,16 +25,35 @@
   height: 600px;
   border-radius: 10px;
   /* background-color: rgba(0,  0, 0, 0.5); */
-  margin: 30px auto;
+  margin: 10px auto;
   overflow: hidden;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
+}
+
+.home-hot-title {
+  width: 500px;
+  font-size: 16px;
+  font-family: fangsong;
+  font-weight: bold;
+  line-height: 32px;
+  border-radius: 16px;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
 }
 
 @media screen and (max-width: 659px) {
 
   .chat-box {
-    width: 90%;
-    height: 600px;
+    width: 100%;
+    height: 520px;
+  }
+
+  .chat-box-footer-content-input {
+    height: 45px!important;
+  }
+  
+  .home-hot-title {
+    width: 100%;
+    margin: 0 auto;
   }
 }
 

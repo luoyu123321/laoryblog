@@ -35,7 +35,7 @@ const Tools: FC<toolsProps> = ({ }) => {
   return <div style={{ paddingTop: '30px', fontSize: '20px', height: bodyHeight !== 0 ? bodyHeight : '', overflow: 'auto', display: 'flex', justifyContent: 'center', flexWrap: "wrap" }}>
     {transition((style, item) => {
       return (
-        <Link href={item.path} prefetch={true}>
+        <Link href={item.path} prefetch={true} style={{ width: "fit-content", height: "fit-content" }} >
           <animated.div className='tools-mod-panel' style={style}>
             <Image
               alt={item.name}

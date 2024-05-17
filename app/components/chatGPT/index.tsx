@@ -96,9 +96,10 @@ const ChatGPT = () => {
   }
 
   return (
-    <>
-      {contextHolder}
+    <div>
+      <div className='home-hot-title'>小工具推荐试用</div>
       <div className='chat-box' >
+        {contextHolder}
         <header className='chat-box-header'>Your chatGPT</header>
         <div ref={contentRef} className='chat-box-content'>
           {
@@ -119,7 +120,7 @@ const ChatGPT = () => {
           <div className='chat-box-footer-content'>
             <textarea ref={textareaRef} className='chat-box-footer-content-input' placeholder='请输入内容，  Enter 发送，Shift + Enter 换行' value={inputMsg} onChange={(e) => setInputMsg(e.target.value)} onKeyDown={enterSend} />
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: "center" }}>
-              <Link href={'/tools'}><Button size='small' type="primary" style={{marginRight:'15px'}} >体验完整版</Button></Link>
+              <Link href={'/tools'}><Button size='small' type="primary" style={{ marginRight: '15px' }} >体验完整版</Button></Link>
               <Button type="primary" onClick={() => {
                 sendQuestion()
               }}>发送</Button>
@@ -127,7 +128,7 @@ const ChatGPT = () => {
           </div>
         </footer>
       </div>
-    </>
+    </div>
   );
 }
 export default ChatGPT

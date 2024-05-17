@@ -1,20 +1,22 @@
 import { FC } from 'react'
 import ChatGPT from './components/chatGPT'
+import HomeMod from './components/homeMod';
 
 interface homeProps {
 }
 
 export const metadata = {
   title: "LaoryBlog",
-  description: "博客页面测试",
+  description: "个人博客",
 };
 
 const Home: FC<homeProps> = ({ }) => {
 
   return (
-    <>
-    <ChatGPT />
-    </>
+    <div className='Home-body'>
+      <ChatGPT />
+      <HomeMod />
+    </div>
   )
 }
 

@@ -48,6 +48,11 @@
     line-height: 60px;
     font-size: 20px;
   }
+
+  .home-hot-blog-body {
+    width: 500px;
+    height: 600px;
+  }
 }
 
 @media screen and (max-width: 659px) {
@@ -72,11 +77,21 @@
   .blog {
     padding: 20px 10px 8px;
   }
-  
+
   .blog-body-title {
     height: 40px;
     line-height: 40px;
     font-size: 16px;
+  }
+
+  .Home-body > div {
+    width: 100%;
+    padding: 0 5%;
+    margin-bottom: 20px;
+  }
+
+  .home-hot-blog-body {
+    width: 100%;
   }
 }
 
@@ -233,8 +248,7 @@
   color: #d8496f;
 }
 
-.blog-body-content {
-}
+.blog-body-content {}
 
 .blog-body-content-box-bg {
   display: block;
@@ -242,6 +256,11 @@
 }
 
 .blog-body-content-box-bg:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 用于页面跳转时高亮背景色 */
+.blog-body-content-box-bg-hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -323,4 +342,52 @@
   position: relative;
   width: 20%;
   background-color: #888;
+}
+
+.Home-body {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10%;
+  margin-top: 30px;
+}
+
+.home-hot-blog-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-height: 600px;
+  overflow: hidden;
+  border-radius: 16px;
+  margin: 10px auto;
+  padding: 20px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.home-hot-blog-item {
+  text-align: left;
+}
+
+.home-hot-blog-item div:nth-child(1) {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.home-hot-blog-item div:nth-child(2) {
+  font-size: 14px;
+  text-decoration: underline;
+  font-style: italic;
+  font-family: fantasy;
+}
+
+.home-hot-blog-body-more-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  color: #fff;
+  font-size: 18px;
+  font-style: italic;
+  font-family: cursive;
 }
