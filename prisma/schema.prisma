@@ -30,3 +30,23 @@ model Guestbook {
   name      String
   ip        String?
 }
+
+model Counter {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  countergroup Countergroup @relation(fields: [groupName], references: [groupName])
+  groupName    String
+  title        String
+  type         String
+  accumulate   Int
+}
+
+model Countergroup {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  groupName String    @unique
+  typeList  String
+  counters  Counter[]
+}

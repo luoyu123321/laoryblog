@@ -1,11 +1,15 @@
 import Link from 'next/link'
- 
+import { Button, Result } from 'antd';
+
 export default function NotFound() {
   return (
     <div>
-      <h1>Not Found</h1>
-      <p>Could not find requested resource</p>
-      <Link href="/"><h3>返回首页</h3></Link>
+      <Result
+        status="404"
+        title="404"
+        subTitle="抱歉，没有找到页面"
+        extra={<Link href="/"><Button type="primary">返回首页</Button></Link>}
+      />
     </div>
   )
 }
