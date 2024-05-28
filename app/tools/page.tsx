@@ -15,6 +15,7 @@ const Tools: FC<toolsProps> = ({ }) => {
     { path: '/tools/next_chat', name: 'chatGPT', imgUrl: '/img/tools/next_chat.jpg', width: '50%' },
     { path: '/tools/lucky_canvas', name: '抽奖(三种玩法)', imgUrl: '/img/tools/choujiang.jpg', width: '50%' },
     { path: '/tools/programmer_Inn', name: '程序员客栈', imgUrl: '/img/tools/programmer_Inn.png', width: '100%' },
+    { path: '/tools/counter', name: '记录小工具', imgUrl: '/img/tools/counter.jpg', width: '70%' },
   ]
 
   useEffect(() => {
