@@ -10,7 +10,7 @@ import prisma from '@/prisma';
  * type  按计数类型查询
  */
 export const POST = async (req: Request) => {
-  const { opttyp = 'edit', title, groupName, type,  } = await req.json();
+  const { opttyp, title, groupName, type, } = await req.json();
   try {
     if (!opttyp) return NextResponse.json({ message: "Invalid Data" }, { status: 422 });
     await connectToDatabase();
@@ -21,16 +21,11 @@ export const POST = async (req: Request) => {
         include: { counters: true },
         orderBy: { createdAt: 'desc' }// 按时间倒序排序
       });
-    return NextResponse.json({ counter: counter.map(item => { return { ...item, typeList: JSON.parse(item.typeList || '[]') } }) }, { status: 200 });
-    } else if (opttyp === 'title') {
-      counter = await prisma.counter.findMany({
-        where: { title, groupName },
-        orderBy: { createdAt: 'desc' }// 按时间倒序排序
-      });
+      return NextResponse.json({ counter: counter.map(item => { return { ...item, typeList: JSON.parse(item.typeList || '[]') } }) }, { status: 200 });
     } else {
       counter = await prisma.counter.findMany({
-        where: { type, groupName },
-        orderBy: { createdAt: 'desc' } // 按时间倒序排序
+        where: { groupName, ...(title ? { title } : null), ...(type ? { type } : null) },
+        orderBy: { createdAt: 'desc' }// 按时间倒序排序
       });
     }
 
