@@ -392,6 +392,17 @@
   font-family: cursive;
 }
 
+.counter-body {
+  padding: 20px 7%;
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  margin: 10px auto;
+}
+
+.counter-query-body {
+  width: 96%;
+  margin: 0 auto;
+}
 
 .queryCounter-table-title {
   display: block;

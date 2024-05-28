@@ -40,7 +40,7 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
   };
 
   return (
-    <div style={{ padding: '20px 10% 0px', }}>
+    <div className='counter-body'>
       <Spin tip="Loading..." spinning={loading}>
           <Form
             form={form}

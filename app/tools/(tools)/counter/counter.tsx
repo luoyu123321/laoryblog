@@ -137,8 +137,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   ]
 
   return (
-    <div style={{ padding: '20px 10% 0px', }}>
-
+    <div  className='counter-body'>
       <Flex gap="60px" justify='center' vertical >
         <Flex gap="large" justify='center' vertical >
           <Flex gap="small" justify='center'>

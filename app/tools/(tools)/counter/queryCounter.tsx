@@ -129,7 +129,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
   const searchBtn = () => search({ groupName, title, type, isSearch: true });
 
   return (
-    <>
+    <div>
       <div style={{ padding: '10px 5%' }}>
         <Flex gap={'small'} vertical align='center' style={{ maxWidth: '500px', margin: '0 auto' }}>
           <Input value={groupName} onPressEnter={searchBtn} onChange={(e) => setGroupName(e.target.value)} maxLength={25} placeholder='在此输入集合名(必填)' />
@@ -140,6 +140,8 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           <Button loading={loading} onClick={searchBtn} type="primary" style={{ width: '100%' }}>查询</Button>
         </Flex>
       </div>
+      
+      <div className='counter-query-body'>
       <ConfigProvider
         theme={{
           components: {
@@ -180,8 +182,8 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           }} />
         <span className='queryCounter-table-title'>当前记录项数据</span>
         <Table loading={typeDataLoading} columns={titleColumns as any} dataSource={typeTableData} size="small" pagination={{ pageSize: 5 }} />
-      </ConfigProvider>
-    </>
+      </ConfigProvider></div>
+    </div>
   );
 }
 
