@@ -8,7 +8,7 @@ import CounterMod from './counter';
 import QueryCounter from './queryCounter';
 
 const Counter = ({ }) => {
-  const [radioSelect, setRadioSelect] = useState<string>('query');
+  const [radioSelect, setRadioSelect] = useState<string>('add');
 
   useEffect(() => {
   }, []);
