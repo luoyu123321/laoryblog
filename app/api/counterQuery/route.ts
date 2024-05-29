@@ -10,15 +10,19 @@ import prisma from '@/prisma';
  * type  按计数类型查询
  */
 export const POST = async (req: Request) => {
-  const { opttyp, title, groupName, type, } = await req.json();
+  const { opttyp, title: title1, groupName: groupName1, type: type1, } = await req.json();
+  /* 去除空格 */
+  const title = title1?.trim();
+  const groupName = groupName1?.trim();
+  const type = type1?.trim();
   try {
-    if (!opttyp) return NextResponse.json({ message: "Invalid Data" }, { status: 422 });
+    if (!opttyp) return NextResponse.json({ message: "查询类型不能为空，请稍后重试！" }, { status: 422 });
     await connectToDatabase();
     let counter: any;
     if (opttyp === 'groupName') {
       counter = await prisma.countergroup.findMany({
         where: { groupName },
-        include: { counters: true },
+        include: { counters: { orderBy: { createdAt: 'desc' } } },
         orderBy: { createdAt: 'desc' }// 按时间倒序排序
       });
       return NextResponse.json({ counter: counter.map(item => { return { ...item, typeList: JSON.parse(item.typeList || '[]') } }) }, { status: 200 });
@@ -31,10 +35,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json({ counter }, { status: 200 });
   } catch (error) {
-
-    console.error(error);
-
-    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

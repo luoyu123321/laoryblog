@@ -394,9 +394,13 @@
 
 .counter-body {
   padding: 20px 7%;
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.3);
   width: 90%;
-  margin: 10px auto;
+  margin: 15px auto;
+}
+
+.counter-body .ant-form-item-row {
+  justify-content: center;
 }
 
 .counter-query-body {

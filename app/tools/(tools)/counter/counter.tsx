@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { Button, Input, Flex, message, Modal, Table, InputNumber, Spin } from 'antd';
+import { Button, Input, Flex, message, Modal, Table, InputNumber, Spin, ConfigProvider } from 'antd';
 import { MinusOutlined, PlusOutlined, CheckOutlined } from '@ant-design/icons';
+import { dialogError } from '@/app/utils';
 
 import axios from 'axios';
 import moment from 'moment';
@@ -67,8 +68,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       sessionStorage.setItem('counterTitle', title);
       setIsModalOpen('');
     } catch (error) {
-      console.log(error);
-      message.error({ content: error, duration: 2, style: { marginTop: '10vh' }, })
+      dialogError(error);
     } finally {
       setLoading(false);
     }
@@ -94,8 +94,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       sessionStorage.setItem('counterTypeList', JSON.stringify(res.data?.counter[0]?.typeList || '[]'));
       setIsModalOpen('title');
     } catch (error) {
-      console.log(error);
-      message.error({ content: error, duration: 2, style: { marginTop: '10vh' }, })
+      dialogError(error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +136,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   ]
 
   return (
-    <div  className='counter-body'>
+    <div className='counter-body'>
       <Flex gap="60px" justify='center' vertical >
         <Flex gap="large" justify='center' vertical >
           <Flex gap="small" justify='center'>
@@ -153,11 +152,20 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
               })
             }
           </Flex>
-          {loading && <Spin tip="加载中..." size="large">...</Spin>}
         </Flex>
 
         {/* 表格全数据展示 */}
-        {tableData.length > 0 && <Table columns={columns as any} dataSource={tableData} size="small" pagination={{ pageSize: 5 }} />}
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                cellPaddingBlockSM: 2,
+              },
+            },
+          }}
+        >
+          <Table loading={loading} columns={columns as any} dataSource={tableData} size="small" pagination={{ pageSize: 5 }} />
+        </ConfigProvider>
       </Flex>
 
       {/* 弹框部分 */}
@@ -206,12 +214,12 @@ const CounterModel = ({ dataSource, onOk }) => {
     const groupName = sessionStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     if (!groupName || !title) {
-      message.warning({content:'记录集或标题不存在，请重新进入标题', duration: 2, style: { marginTop: '10vh' },})
+      message.warning({ content: '记录集或标题不存在，请重新进入标题', duration: 2, style: { marginTop: '10vh' }, })
       return;
     }
     /* 如果记录项或值不存在，不允许操作 */
     if (!initText || !val) {
-      message.warning({content:'记录项或值不存在，请稍后重试', duration: 2, style: { marginTop: '10vh' },})
+      message.warning({ content: '记录项或值不存在，请稍后重试', duration: 2, style: { marginTop: '10vh' }, })
       return;
     }
     setNum(val);
@@ -224,10 +232,10 @@ const CounterModel = ({ dataSource, onOk }) => {
         accumulate: val,
       })
       saveValue.current = val;
-      message.success({content:'操作成功', duration: 1.5, style: { marginTop: '10vh' },})
+      message.success({ content: '操作成功', duration: 1.5, style: { marginTop: '10vh' }, })
       onOk?.();
     } catch (error) {
-      message.error({content:'操作失败，请稍后重试！', duration: 2, style: { marginTop: '10vh' },})
+      dialogError(error);
       setNum(saveValue.current);
     } finally {
       setloading(false);

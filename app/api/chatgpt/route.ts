@@ -35,8 +35,7 @@ export const POST = async (req: Request) => {
       return NextResponse.json("Sorry, I don't know the answer to that question.", { status: 200 });
     }
   } catch (error) {
-    console.error(error);
-    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   }
 
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { Button, Flex, Input, message, Table, ConfigProvider } from 'antd';
+import { dialogError } from '@/app/utils';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -74,14 +75,13 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
         title,
         type,
       })
-      isSearchAll && setColumns(columnFormat(res.data.counter[0]?.typeList))
-      isSearchAll && setAllTableData(allDataFormat(res.data.counter[0]?.counters))
+      isSearchAll && setColumns(columnFormat(res.data.counter[0]?.typeList || []))
+      isSearchAll && setAllTableData(allDataFormat(res.data.counter[0]?.counters || [], res.data.counter[0]?.typeList))
       isSearchTitle && setTitleTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
       isSearchType && setTypeTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
 
     } catch (error) {
-      console.log(error);
-      message.error({ content: error, duration: 2, style: { marginTop: '10vh' }, })
+      dialogError(error);
     } finally {
       isSearchAll && setAllDataLoading(false)
       isSearchTitle && setTitleDataLoading(false)
@@ -90,7 +90,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
     }
   }
 
-  const allDataFormat = (formatData: any) => {
+  const allDataFormat = (formatData: any, typeList =[]) => {
     let data = {}
     let resArr = []
     /* 首先将同一标题的数据整合 */
@@ -356,12 +356,4 @@ const testData = [
     "type": "罗赢",
     "accumulate": 1
   }
-]
-
-const typeList = [
-  "刘赢",
-  "罗赢",
-  "连进三球",
-  "连进四球",
-  "连进五球"
 ]

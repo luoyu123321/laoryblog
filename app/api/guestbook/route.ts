@@ -18,10 +18,7 @@ export const POST = async (req: Request) => {
     });
     return NextResponse.json({ message: "successful"}, { status: 200 });
   } catch (error) {
-
-    console.error(error);
-
-    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -38,8 +35,7 @@ export const GET = async () => {
     });
     return NextResponse.json({ guestbook: guestbook.map(item => { return { ...item, ip: JSON.parse(item.ip || '{}') } }) }, { status: 200 });
   } catch (error) {
-
-    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

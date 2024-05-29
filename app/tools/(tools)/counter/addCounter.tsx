@@ -1,5 +1,6 @@
 import React, { useState, ReactElement } from 'react';
 import { Button, Flex, Form, Input, Spin, message } from 'antd';
+import { dialogError } from '@/app/utils';
 import axios from 'axios';
 
 interface addCounterProps {
@@ -20,19 +21,27 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
     setLoading(true);
     try {
       const values = await form.validateFields();
+      if (values.length < 2) {
+        message.error({ content: '请至少添加一个计数项', duration: 2, style: { marginTop: '10vh' }, })
+        return
+      }
+      const typeList = Object.values(values).slice(1);
+      /* 去重计数项 */
+      const newTypeList = Array.from(new Set(typeList));
       const params = {
         opttyp: 'add',
         groupName: values.groupName,
-        typeList: Object.values(values).slice(1)
+        typeList: newTypeList
       }
       await axios.post('/api/counterAdd', params)
-      message.success({content:'保存成功', duration: 2, style: { marginTop: '10vh' },})
+      const msgTip = newTypeList.length === typeList.length ? '保存成功!' : '保存成功，计数项有重复，已自动去重！';
+      message.success({ content: msgTip, duration: 3, style: { marginTop: '10vh' }, })
       sessionStorage.setItem('counterTitle', '');
       sessionStorage.setItem('counterGroupName', values.groupName);
       sessionStorage.setItem('counterTypeList', JSON.stringify(Object.values(values).slice(1) || '[]'));
       onOk?.();
     } catch (error) {
-      console.log('error:', error);
+      dialogError(error);
     } finally {
       setLoading(false);
     }
@@ -42,28 +51,33 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
   return (
     <div className='counter-body'>
       <Spin tip="Loading..." spinning={loading}>
-          <Form
-            form={form}
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 14 }}
-            layout="vertical"
-            style={{ maxWidth: 600, maxHeight: '600px', overflow: 'auto' }}
-          >
-            <Form.Item key={'groupName'} name={`groupName`} label={`计数集合名`}
-              rules={[{ required: true, message: '集合名不能为空!' }]}>
-              <Input maxLength={25} placeholder='例如：日常运动、学习'/>
+        <Form
+          form={form}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          // layout="vertical"
+          style={{ width: "", maxWidth: 600, maxHeight: '600px', overflow: 'auto', margin: '0 auto' }}
+        >
+          <Form.Item key={'groupName'} name={`groupName`} label={`计数集合名`}
+            rules={[{ required: true, message: '集合名不能为空!' },
+            { pattern: /(^\S)((.)*\S)?(\S*$)/, message: '前后不能有空格' }
+            ]}>
+            <Input maxLength={25} placeholder='例如：日常运动、学习' />
+          </Form.Item>
+          {settingFormItem.map((_, index) => {
+            return <Form.Item key={index} name={`type${index + 1}`} label={`计数项${index + 1}`}
+              rules={[{ required: true, message: `计数项${index + 1}不能为空！请删除或填写` },
+              { pattern: /(^\S)((.)*\S)?(\S*$)/, message: '前后不能有空格' }
+              ]}>
+              <Input maxLength={25} />
             </Form.Item>
-            {settingFormItem.map((_, index) => {
-              return <Form.Item key={index} name={`type${index + 1}`} label={`计数项${index + 1}`}>
-                <Input maxLength={25} />
-              </Form.Item>
-            })}
-          </Form>
-          <Flex gap="small" justify='center'>
-            <Button type='primary' onClick={() => { setSettingFormItem([...settingFormItem, settingFormItem.length + 1]) }}>增加计数项</Button>
-            <Button type='primary' onClick={() => { setSettingFormItem(settingFormItem.slice(0, settingFormItem.length - 1)) }}>删除计数项</Button>
-            <Button type='primary' onClick={() => { save() }}>保存</Button>
-          </Flex>
+          })}
+        </Form>
+        <Flex gap="small" justify='center'>
+          <Button type='primary' onClick={() => { setSettingFormItem([...settingFormItem, settingFormItem.length + 1]) }}>增加计数项</Button>
+          <Button type='primary' onClick={() => { setSettingFormItem(settingFormItem.slice(0, settingFormItem.length - 1)) }}>删除计数项</Button>
+          <Button type='primary' onClick={() => { save() }}>保存</Button>
+        </Flex>
       </Spin>
     </div>
   );

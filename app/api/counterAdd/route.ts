@@ -16,11 +16,8 @@ export const POST = async (req: Request) => {
   const typeListjson = JSON.stringify(typeList || '[]');
   try {
     if (opttyp === 'edit' && (!title || !groupName)) return NextResponse.json({ message: "标题或计数组名不能为空！" }, { status: 422 });
-    if (opttyp === 'add' && (!typeList || !groupName)) return NextResponse.json({ message: "计数类型组合或计数组名不能为空！" }, { status: 422 });
+    if (opttyp === 'add' && (!typeList.length || !groupName)) return NextResponse.json({ message: "计数项组合或计数集合名不能为空！" }, { status: 422 });
     await connectToDatabase();
-
-    if (opttyp === 'add') {
-    }
 
     if (opttyp === 'edit') {
       await prisma.counter.create({
@@ -45,10 +42,7 @@ export const POST = async (req: Request) => {
     }
     return NextResponse.json({ message: "successful" }, { status: 200 });
   } catch (error) {
-
-    console.error(error);
-
-    throw NextResponse.json({ message: "Server Error" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
