@@ -1,6 +1,6 @@
 import React, { useState, ReactElement } from 'react';
-import { Button, Flex, Form, Input, Spin, message } from 'antd';
-import { dialogError } from '@/app/utils';
+import { Button, Flex, Form, Input, Spin } from 'antd';
+import { dialogError, message } from '@/app/utils';
 import axios from 'axios';
 
 interface addCounterProps {
@@ -22,7 +22,7 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
     try {
       const values = await form.validateFields();
       if (values.length < 2) {
-        message.error({ content: '请至少添加一个计数项', duration: 2, style: { marginTop: '10vh' }, })
+        message.error('请至少添加一个计数项', 2)
         return
       }
       const typeList = Object.values(values).slice(1);
@@ -35,7 +35,7 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
       }
       await axios.post('/api/counterAdd', params)
       const msgTip = newTypeList.length === typeList.length ? '保存成功!' : '保存成功，计数项有重复，已自动去重！';
-      message.success({ content: msgTip, duration: 3, style: { marginTop: '10vh' }, })
+      message.success(msgTip, 3)
       sessionStorage.setItem('counterTitle', '');
       sessionStorage.setItem('counterGroupName', values.groupName);
       sessionStorage.setItem('counterTypeList', JSON.stringify(Object.values(values).slice(1) || '[]'));

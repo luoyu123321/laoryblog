@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { Button, Input, Flex, message, Modal, Table, InputNumber, Spin, ConfigProvider } from 'antd';
+import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider } from 'antd';
 import { MinusOutlined, PlusOutlined, CheckOutlined } from '@ant-design/icons';
-import { dialogError } from '@/app/utils';
+import { dialogError, message } from '@/app/utils';
 
 import axios from 'axios';
 import moment from 'moment';
@@ -59,7 +59,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       })
       setTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
       if (res.data.counter.length === 0 && isTitleOk) {
-        message.warning({ content: '标题不存在或无记录信息,已自动创建', style: { marginTop: '10vh' }, })
+        message.warning('标题不存在或无记录信息,已自动创建', 3)
         setEditInfoList(typeList.map((item) => { return { text: item, value: 0 } }))
       } else {
         setEditInfoList(typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } }))
@@ -113,7 +113,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const groupname = sessionStorage.getItem('counterGroupName');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     if (!groupname && typeList.length) {
-      message.warning({ content: '还没有选择记录集，请先选择集', duration: 2, style: { marginTop: '10vh' }, })
+      message.warning('还没有选择记录集，请先选择集')
       return;
     }
     setIsModalOpen('title');
@@ -214,12 +214,12 @@ const CounterModel = ({ dataSource, onOk }) => {
     const groupName = sessionStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     if (!groupName || !title) {
-      message.warning({ content: '记录集或标题不存在，请重新进入标题', duration: 2, style: { marginTop: '10vh' }, })
+      message.warning('记录集或标题不存在，请重新进入标题')
       return;
     }
     /* 如果记录项或值不存在，不允许操作 */
     if (!initText || !val) {
-      message.warning({ content: '记录项或值不存在，请稍后重试', duration: 2, style: { marginTop: '10vh' }, })
+      message.warning('记录项或值不存在，请稍后重试')
       return;
     }
     setNum(val);
@@ -232,7 +232,7 @@ const CounterModel = ({ dataSource, onOk }) => {
         accumulate: val,
       })
       saveValue.current = val;
-      message.success({ content: '操作成功', duration: 1.5, style: { marginTop: '10vh' }, })
+      message.success('操作成功', 1.5)
       onOk?.();
     } catch (error) {
       dialogError(error);

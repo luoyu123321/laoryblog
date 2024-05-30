@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react';
-import { Button, Flex, Input, message, Table, ConfigProvider } from 'antd';
-import { dialogError } from '@/app/utils';
+import { Button, Flex, Input, Table, ConfigProvider } from 'antd';
+import { dialogError, message } from '@/app/utils';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -53,7 +53,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
 
   const search = async ({ groupName, title = '', type = '', isSearch = false }) => {
     if (!groupName) {
-      message.warning({ content: '集合名不能为空！', duration: 2, style: { marginTop: '10vh' }, })
+      message.warning('集合名不能为空！')
     }
     const isSearchAll = groupName && !title && !type;
     const isSearchTitle = groupName && title && !type;
@@ -90,9 +90,9 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
     }
   }
 
-  const allDataFormat = (formatData: any, typeList =[]) => {
-    if(!typeList.length) {
-      message.error({ content: '数据异常，请稍后重试', duration: 2, style: { marginTop: '10vh' }, })
+  const allDataFormat = (formatData: any, typeList = []) => {
+    if (!typeList.length) {
+      message.error('数据异常，请稍后重试')
       return [];
     }
     let data = {}
@@ -144,49 +144,49 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           <Button loading={loading} onClick={searchBtn} type="primary" style={{ width: '100%' }}>查询</Button>
         </Flex>
       </div>
-      
+
       <div className='counter-query-body'>
-      <ConfigProvider
-        theme={{
-          components: {
-            Table: {
-              rowHoverBg: '#1bcf0e',
-              cellPaddingBlockSM: 3,
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                rowHoverBg: '#1bcf0e',
+                cellPaddingBlockSM: 3,
+              },
             },
-          },
-        }}
-      >
-        <span className='queryCounter-table-title'>集合数据总览</span>
-        <Table loading={allDataLoading} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
-          rowClassName={(_, index) => {
-            return index === selectKey ? 'queryCounter-table-selected' : null
           }}
-          onRow={(record, index) => {
-            const { groupName, title } = record;
-            return {
-              onClick: () => {
-                setSelectKey(index);
-                search({ groupName, title });
+        >
+          <span className='queryCounter-table-title'>集合数据总览</span>
+          <Table loading={allDataLoading} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
+            rowClassName={(_, index) => {
+              return index === selectKey ? 'queryCounter-table-selected' : null
+            }}
+            onRow={(record, index) => {
+              const { groupName, title } = record;
+              return {
+                onClick: () => {
+                  setSelectKey(index);
+                  search({ groupName, title });
+                }
               }
-            }
-          }} />
-        <span className='queryCounter-table-title'>当前标题数据</span>
-        <Table loading={titleDataLoading} columns={titleColumns as any} dataSource={titleTableData} size="small" pagination={{ pageSize: 5 }}
-          rowClassName={(_, index) => {
-            return index === selectTitleKey ? 'queryCounter-table-selected' : null
-          }}
-          onRow={(record, index) => {
-            const { groupName, title, type } = record;
-            return {
-              onClick: () => {
-                setSelectTitleKey(index);
-                search({ groupName, title, type });
+            }} />
+          <span className='queryCounter-table-title'>当前标题数据</span>
+          <Table loading={titleDataLoading} columns={titleColumns as any} dataSource={titleTableData} size="small" pagination={{ pageSize: 5 }}
+            rowClassName={(_, index) => {
+              return index === selectTitleKey ? 'queryCounter-table-selected' : null
+            }}
+            onRow={(record, index) => {
+              const { groupName, title, type } = record;
+              return {
+                onClick: () => {
+                  setSelectTitleKey(index);
+                  search({ groupName, title, type });
+                }
               }
-            }
-          }} />
-        <span className='queryCounter-table-title'>当前记录项数据</span>
-        <Table loading={typeDataLoading} columns={titleColumns as any} dataSource={typeTableData} size="small" pagination={{ pageSize: 5 }} />
-      </ConfigProvider></div>
+            }} />
+          <span className='queryCounter-table-title'>当前记录项数据</span>
+          <Table loading={typeDataLoading} columns={titleColumns as any} dataSource={typeTableData} size="small" pagination={{ pageSize: 5 }} />
+        </ConfigProvider></div>
     </div>
   );
 }
