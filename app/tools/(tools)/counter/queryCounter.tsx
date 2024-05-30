@@ -91,6 +91,10 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
   }
 
   const allDataFormat = (formatData: any, typeList =[]) => {
+    if(!typeList.length) {
+      message.error({ content: '数据异常，请稍后重试', duration: 2, style: { marginTop: '10vh' }, })
+      return [];
+    }
     let data = {}
     let resArr = []
     /* 首先将同一标题的数据整合 */
