@@ -37,7 +37,7 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
       const msgTip = newTypeList.length === typeList.length ? '保存成功!' : '保存成功，计数项有重复，已自动去重！';
       message.success(msgTip, 3)
       sessionStorage.setItem('counterTitle', '');
-      sessionStorage.setItem('counterGroupName', values.groupName);
+      localStorage.setItem('counterGroupName', values.groupName);
       sessionStorage.setItem('counterTypeList', JSON.stringify(Object.values(values).slice(1) || '[]'));
       onOk?.();
     } catch (error) {

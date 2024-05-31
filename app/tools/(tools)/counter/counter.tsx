@@ -26,7 +26,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [title, setTitle] = useState<string>('');
 
   useEffect(() => {
-    const groupName = sessionStorage.getItem('counterGroupName');
+    const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
@@ -40,7 +40,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   }, []);
 
   const initInfo = () => {
-    const groupName = sessionStorage.getItem('counterGroupName');
+    const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     getEditInfo({ groupName, title, typeList, isTitleOk: false });
@@ -90,7 +90,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         return
       }
       sessionStorage.setItem('counterTitle', '');
-      sessionStorage.setItem('counterGroupName', groupName);
+      localStorage.setItem('counterGroupName', groupName);
       sessionStorage.setItem('counterTypeList', JSON.stringify(res.data?.counter[0]?.typeList || '[]'));
       setIsModalOpen('title');
     } catch (error) {
@@ -104,13 +104,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 进入标题确认按钮，查询并初始化记录信息
    */
   const titleOk = async () => {
-    const groupName = sessionStorage.getItem('counterGroupName');
+    const groupName = localStorage.getItem('counterGroupName');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     getEditInfo({ groupName, typeList, title: title || moment(new Date()).format('YYYYMMDD') })
   };
 
   const enterTitle = () => {
-    const groupname = sessionStorage.getItem('counterGroupName');
+    const groupname = localStorage.getItem('counterGroupName');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     if (!groupname && typeList.length) {
       message.warning('还没有选择记录集，请先选择集')
@@ -211,7 +211,7 @@ const CounterModel = ({ dataSource, onOk }) => {
 
   const save = async (val) => {
     /* 先获取当前的集合和标题 */
-    const groupName = sessionStorage.getItem('counterGroupName');
+    const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     if (!groupName || !title) {
       message.warning('记录集或标题不存在，请重新进入标题')
