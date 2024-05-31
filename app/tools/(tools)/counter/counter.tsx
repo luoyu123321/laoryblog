@@ -145,7 +145,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
           </Flex>
 
           {/* 记录操作部分 */}
-          <Flex gap="small" justify='center' vertical >
+          <Flex gap="small" vertical style={{ maxHeight: '40vh', overflow: 'auto' }}>
             {
               editInfoList.map((item, index) => {
                 return <CounterModel key={index} dataSource={item} onOk={initInfo} />
