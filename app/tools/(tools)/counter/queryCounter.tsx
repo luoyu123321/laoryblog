@@ -117,8 +117,8 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
 
   const columnFormat = (formatData: any) => {
     return [
-      { title: '标题', dataIndex: 'title', key: 'title' ,width:78 ,fixed:'left', align: 'center', },
-      ...formatData.map((item,index) => {
+      { title: '标题', dataIndex: 'title', key: 'title', width: 78, fixed: 'left', align: 'center', },
+      ...formatData.map((item, index) => {
         return {
           title: item,
           dataIndex: item,
@@ -126,7 +126,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           align: 'center',
         }
       }),
-      { title: '操作时间', dataIndex: 'createdAt',key: 'createdAt' ,width:88,fixed:'right', align: 'center', },
+      { title: '操作时间', dataIndex: 'createdAt', key: 'createdAt', width: 88, align: 'center', },
     ]
   }
 
@@ -158,7 +158,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           }}
         >
           <span className='queryCounter-table-title'>集合数据总览</span>
-          <Table loading={allDataLoading}  scroll={{ x: columns.length*62 }} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
+          <Table loading={allDataLoading} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
             rowClassName={(_, index) => {
               return index === selectKey ? 'queryCounter-table-selected' : null
             }}
