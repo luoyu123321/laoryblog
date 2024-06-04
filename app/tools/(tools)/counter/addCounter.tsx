@@ -49,7 +49,8 @@ const AddCounter: React.FC<addCounterProps> = ({ onOk }): ReactElement => {
   };
 
   return (
-    <div className='counter-body'>
+    <div className='counter-body counter-body-add'>
+      <p style={{color:'red',fontSize:'12px'}}>集合名请加自己名字/缩写后缀，防止与他人重复</p>
       <Spin tip="Loading..." spinning={loading}>
         <Form
           form={form}

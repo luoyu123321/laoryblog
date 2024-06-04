@@ -399,6 +399,10 @@
   margin: 15px auto;
 }
 
+.counter-body-add {
+  padding: 2px 7% 20px;
+}
+
 .counter-body .ant-form-item-row {
   justify-content: center;
 }
