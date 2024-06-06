@@ -122,7 +122,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
 
   const columnFormat = (formatData: any) => {
     return [
-      { title: '标题', dataIndex: 'title', key: 'title', width: 80, fixed: 'left', align: 'center', },
+      { title: '标题', dataIndex: 'title', key: 'title', width: 85, fixed: 'left', align: 'center', },
       ...formatData.map((item, index) => {
         return {
           title: item,
@@ -131,7 +131,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           align: 'center',
         }
       }),
-      { title: '操作时间', dataIndex: 'createdAt', key: 'createdAt', width: 90, align: 'center', },
+      { title: '操作时间', dataIndex: 'createdAt', key: 'createdAt', width: 95, align: 'center', },
       { title: '', dataIndex: 'zhanwei', key: 'zhanwei', width: 1, fixed: 'right' },
     ]
   }
