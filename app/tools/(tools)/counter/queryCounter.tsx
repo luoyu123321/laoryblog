@@ -91,6 +91,10 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
   }
 
   const allDataFormat = (formatData: any, typeList = []) => {
+    if (!formatData.length) {
+      message.error('未查询到数据，请稍后重试')
+      return [];
+    }
     if (!typeList.length) {
       message.error('数据异常，请稍后重试')
       return [];
@@ -99,10 +103,11 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
     let resArr = []
     /* 首先将同一标题的数据整合 */
     formatData.map((item) => {
-      if (!data[item.title]) {
-        data[item.title] = []
+      /** 如果不加字符串 key，对象会有自己的排序机制，title如果有日期的话，排序就会打乱 */
+      if (!data['key' + item.title]) {
+        data['key' + item.title] = []
       }
-      data[item.title].push(item)
+      data['key' + item.title].push(item)
     })
     /* 再将每个标题下的数据每个计数项都取最新一条数据，格式化成每种计数项的key value格式 */
     for (const key in data) {
@@ -110,7 +115,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
       typeList.forEach((item) => {
         valueData[item] = data[key].filter(itm => itm.type === item)[0]?.accumulate || 0;
       })
-      resArr.push({ title: key, ...valueData, createdAt: moment(data[key][0]?.createdAt).format('YYYY-MM-DD HH:mm:ss'), groupName: data[key][0]?.groupName })
+      resArr.push({ title: key.slice(3), ...valueData, createdAt: moment(data[key][0]?.createdAt).format('YYYY-MM-DD HH:mm:ss'), groupName: data[key][0]?.groupName })
     }
     return resArr
   }
@@ -127,6 +132,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
         }
       }),
       { title: '操作时间', dataIndex: 'createdAt', key: 'createdAt', width: 88, align: 'center', },
+      { title: '', dataIndex: 'zhanwei', key: 'zhanwei', width: 1, fixed: 'right' },
     ]
   }
 
@@ -158,7 +164,7 @@ const QueryCounter: React.FC<queryCounterProps> = ({ }): ReactElement => {
           }}
         >
           <span className='queryCounter-table-title'>集合数据总览</span>
-          <Table loading={allDataLoading} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
+          <Table loading={allDataLoading} scroll={{ x: 40 * columns.length }} columns={columns as any} dataSource={allTableData} size="small" pagination={{ pageSize: 5 }}
             rowClassName={(_, index) => {
               return index === selectKey ? 'queryCounter-table-selected' : null
             }}

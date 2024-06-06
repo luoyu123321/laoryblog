@@ -27,7 +27,7 @@ export default class message {
    * @param style 样式
    */
   public static error(content, duration = 3, style = { marginTop: '10vh' }) {
-    Message.success({ content, duration, style })
+    Message.error({ content, duration, style })
   }
   /**
    * 

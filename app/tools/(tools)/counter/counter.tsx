@@ -31,7 +31,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
-      initInfo();
+      initInfo(false);
     } else if (groupName && typeList.length && !title) {
       setIsModalOpen('title');
     } else {
@@ -39,17 +39,21 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     }
   }, []);
 
-  const initInfo = () => {
+  /**
+   * 
+   * @param isCounter 是否是记录操作
+   */
+  const initInfo = (isCounter = true) => {
     const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
-    getEditInfo({ groupName, title, typeList, isTitleOk: false });
+    getEditInfo({ groupName, title, typeList, isTitleOk: false, isCounter });
   }
 
   /**
    *  获取当前记录信息
    */
-  const getEditInfo = async ({ groupName, title, typeList, isTitleOk = true }) => {
+  const getEditInfo = async ({ groupName, title, typeList, isTitleOk = true, isCounter = false }) => {
     try {
       setLoading(true);
       const res = await axios.post('/api/counterQuery', {
@@ -58,11 +62,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         title,
       })
       setTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
-      if (res.data.counter.length === 0 && isTitleOk) {
-        message.warning('标题不存在或无记录信息,已自动创建', 3)
-        setEditInfoList(typeList.map((item) => { return { text: item, value: 0 } }))
-      } else {
-        setEditInfoList(typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } }))
+      if (!isCounter) {
+        if (res.data.counter.length === 0 && isTitleOk) {
+          message.warning('标题不存在或无记录信息,已自动创建', 3)
+          setEditInfoList(typeList.map((item) => { return { text: item, value: 0 } }))
+        } else {
+          setEditInfoList(typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } }))
+        }
       }
 
       sessionStorage.setItem('counterTitle', title);
@@ -218,7 +224,7 @@ const CounterModel = ({ dataSource, onOk }) => {
       return;
     }
     /* 如果记录项或值不存在，不允许操作 */
-    if (!initText || !val) {
+    if ((!initText) || (!val && val !== 0)) {
       message.warning('记录项或值不存在，请稍后重试')
       return;
     }
