@@ -118,7 +118,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const enterTitle = () => {
     const groupname = localStorage.getItem('counterGroupName');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
-    if (!groupname && typeList.length) {
+    if (!groupname || !typeList.length) {
       message.warning('还没有选择记录集，请先选择集')
       return;
     }
