@@ -24,6 +24,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [editInfoList, setEditInfoList] = useState<any[]>([]); // 记录信息，包含所有记录项及记录值
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
+  const [settle, setSettle] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
@@ -125,6 +126,16 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     setIsModalOpen('title');
   }
 
+  const settleMoney = () => {
+    const a = settle.sum / 30 * (15 + editInfoList[0].value - editInfoList[1].value)
+    const b = settle.sum / 30 * (15 + editInfoList[1].value - editInfoList[0].value)
+    const obj = {
+      [editInfoList[0].text]: a,
+      [editInfoList[1].text]: b
+    }
+    setSettle({ ...settle, ...obj })
+  }
+
   const columns = [
     {
       title: '记录类型',
@@ -148,6 +159,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
           <Flex gap="small" justify='center'>
             <Button type='primary' onClick={() => setIsModalOpen('groupName')} > 选择集合 </Button>
             <Button type='primary' onClick={enterTitle} > 进入标题 </Button>
+            {groupName === '刘罗台球' && <Button type='primary' onClick={() => setIsModalOpen('isSettlement')} > 结算 </Button>}
           </Flex>
 
           {/* 记录操作部分 */}
@@ -192,6 +204,24 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         onOk={() => { goAdd?.(); setIsModalOpen('') }}
         onCancel={() => setIsGoAdd(false)} cancelText='取消' okText='去创建' style={{ top: '25%' }}>
         <p>{'此集合还未创建哦，是否去创建->'}</p>
+      </Modal>
+      <Modal title="结算" open={isModalOpen === 'isSettlement'}
+        footer={<Button type='primary' onClick={() => setIsModalOpen('')} > 关闭 </Button>}
+        onCancel={() => setIsModalOpen('')} style={{ top: '35%' }}>
+        <Flex gap="small" vertical>
+          <Flex gap='small' justify='center'>
+            <InputNumber addonBefore={
+              <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
+            } value={settle.sum || ''} onChange={(value) => setSettle({ ...settle, sum: value })} />
+            <Button onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
+          </Flex>
+          <InputNumber addonBefore={
+            <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
+          } value={settle[editInfoList[0]?.text] || ''} />
+          <InputNumber addonBefore={
+            <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[1]?.text}</div>
+          } value={settle[editInfoList[1]?.text] || ''} />
+        </Flex>
       </Modal>
     </div>
   );
