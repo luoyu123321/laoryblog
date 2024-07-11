@@ -228,7 +228,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
             } value={settle.moneyList || ''} onChange={(e) => { settleMoney(e.target.value) }}
               placeholder='多个金额请以 + 号分隔' />
             <Button type='text' icon={<ForwardOutlined />} />
-            <Input  style={{ width: '20%' }} value={settle.sum || ''} />
+            <Input  style={{ width: '23%' }} value={settle.sum || ''} />
           </Space.Compact>
           <InputNumber addonBefore={
             <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
