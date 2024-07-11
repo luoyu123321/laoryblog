@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
-import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider } from 'antd';
+import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
 import { MinusOutlined, PlusOutlined, CheckOutlined } from '@ant-design/icons';
 import { dialogError, message } from '@/app/utils';
 
@@ -20,7 +20,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [isGoAdd, setIsGoAdd] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<string>('');
-  const [groupName, setGroupName] = useState<string>('');
+  const [groupNameInput, setGroupNameInput] = useState<string>('');
   const [editInfoList, setEditInfoList] = useState<any[]>([]); // 记录信息，包含所有记录项及记录值
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
@@ -90,14 +90,14 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       setLoading(true);
       const res = await axios.post('/api/counterQuery', {
         opttyp: 'groupName',
-        groupName,
+        groupName: groupNameInput,
       })
       if (res.data.counter.length === 0) {
         setIsGoAdd(true);
         return
       }
       sessionStorage.setItem('counterTitle', '');
-      localStorage.setItem('counterGroupName', groupName);
+      localStorage.setItem('counterGroupName', groupNameInput);
       sessionStorage.setItem('counterTypeList', JSON.stringify(res.data?.counter[0]?.typeList || '[]'));
       setIsModalOpen('title');
     } catch (error) {
@@ -126,14 +126,30 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     setIsModalOpen('title');
   }
 
+  /**
+   * 结算计算金额
+   */
   const settleMoney = () => {
-    const a = settle.sum / 30 * (15 + editInfoList[0].value - editInfoList[1].value)
-    const b = settle.sum / 30 * (15 + editInfoList[1].value - editInfoList[0].value)
+    if(!settle.sum) {
+      message.warning('请输入金额！')
+    }
+    // 获取所有金额
+    const moneyList = settle.sum.split('+');
+    // 使用reduce方法计算数组中所有数字的和，排除非数字的值
+    const totalSum = moneyList.reduce((accumulator, currentValue) => {
+      if (!isNaN(currentValue)) {
+        return Number(accumulator) + Number(currentValue);
+      } else {
+        return Number(accumulator);
+      }
+    }, 0);
+    const a = totalSum / 30 * (15 + editInfoList[1].value - editInfoList[0].value)
+    const b = totalSum / 30 * (15 + editInfoList[0].value - editInfoList[1].value)
     const obj = {
       [editInfoList[0].text]: a,
       [editInfoList[1].text]: b
     }
-    setSettle({ ...settle, ...obj })
+    setSettle({ ...settle, ...obj, sum: settle.sum + '=' + totalSum })
   }
 
   const columns = [
@@ -157,9 +173,9 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       <Flex gap="60px" justify='center' vertical >
         <Flex gap="large" justify='center' vertical >
           <Flex gap="small" justify='center'>
-            <Button type='primary' onClick={() => setIsModalOpen('groupName')} > 选择集合 </Button>
+            <Button type='primary' onClick={() => { setIsModalOpen('groupName'); setGroupNameInput(''); }} > 选择集合 </Button>
             <Button type='primary' onClick={enterTitle} > 进入标题 </Button>
-            {groupName === '刘罗台球' && <Button type='primary' onClick={() => setIsModalOpen('isSettlement')} > 结算 </Button>}
+            {groupNameInput === '刘罗台球' && <Button type='primary' onClick={() => {setIsModalOpen('isSettlement'); setSettle({})}} > 结算 </Button>}
           </Flex>
 
           {/* 记录操作部分 */}
@@ -188,10 +204,10 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
       {/* 弹框部分 */}
       <Modal title="请输入记录集合名" open={isModalOpen === 'groupName'} onOk={groupNameOk}
-        onCancel={() => { setIsModalOpen(''); setGroupName(''); }} cancelText='取消' okText='确认' style={{ top: '20%' }}
+        onCancel={() => { setIsModalOpen(''); }} cancelText='取消' okText='确认' style={{ top: '20%' }}
         confirmLoading={loading}>
         <div style={{ padding: '10px 0' }}>
-          <Input value={groupName} onChange={(e) => setGroupName(e.target.value)} onPressEnter={groupNameOk} maxLength={25} placeholder='请输入您创建的集合名' />
+          <Input value={groupNameInput} onChange={(e) => setGroupNameInput(e.target.value)} onPressEnter={groupNameOk} maxLength={25} placeholder='请输入您创建的集合名' />
         </div>
       </Modal>
       <Modal title="请输入记录标题（不填默认当天日期）" open={isModalOpen === 'title'} onOk={titleOk}
@@ -210,10 +226,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         onCancel={() => setIsModalOpen('')} style={{ top: '35%' }}>
         <Flex gap="small" vertical>
           <Flex gap='small' justify='center'>
-            <InputNumber addonBefore={
-              <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
-            } value={settle.sum || ''} onChange={(value) => setSettle({ ...settle, sum: value })} />
-            <Button onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
+            <Space.Compact>
+              <Input addonBefore={
+                <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
+              } value={settle.sum || ''} onChange={(e) => { setSettle({ ...settle, sum: e.target.value }) }}
+                placeholder='多个金额请以 + 号分隔' />
+              <Button type='primary' onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
+            </Space.Compact>
           </Flex>
           <InputNumber addonBefore={
             <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
