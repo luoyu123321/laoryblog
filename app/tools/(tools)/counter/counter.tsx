@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
 import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
-import { MinusOutlined, PlusOutlined, CheckOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined  } from '@ant-design/icons';
 import { dialogError, message } from '@/app/utils';
 
 import axios from 'axios';
@@ -129,12 +129,9 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   /**
    * 结算计算金额
    */
-  const settleMoney = () => {
-    if (!settle.sum) {
-      message.warning('请输入金额！')
-    }
+  const settleMoney = (value) => {
     // 获取所有金额
-    const moneyList = settle.sum.split('+');
+    const moneyList = value.split('+');
     // 使用reduce方法计算数组中所有数字的和，排除非数字的值
     const totalSum = moneyList.reduce((accumulator, currentValue) => {
       if (!isNaN(currentValue)) {
@@ -149,7 +146,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       [editInfoList[0].text]: a,
       [editInfoList[1].text]: b
     }
-    setSettle({ ...settle, ...obj, sum: settle.sum + '=' + totalSum })
+    setSettle({ ...settle, ...obj, moneyList: value, sum: totalSum })
   }
 
   const columns = [
@@ -227,16 +224,17 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         <Flex gap="small" vertical>
           <Space.Compact>
             <Input addonBefore={
-              <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
-            } value={settle.sum || ''} onChange={(e) => { setSettle({ ...settle, sum: e.target.value }) }}
+              <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
+            } value={settle.moneyList || ''} onChange={(e) => { settleMoney(e.target.value) }}
               placeholder='多个金额请以 + 号分隔' />
-            <Button type='primary' onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
+            <Button type='text' icon={<ForwardOutlined />} />
+            <Input  style={{ width: '20%' }} value={settle.sum || ''} />
           </Space.Compact>
           <InputNumber addonBefore={
-            <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
+            <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
           } value={settle[editInfoList[0]?.text] || ''} />
           <InputNumber addonBefore={
-            <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[1]?.text}</div>
+            <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[1]?.text}</div>
           } value={settle[editInfoList[1]?.text] || ''} />
         </Flex>
       </Modal>
