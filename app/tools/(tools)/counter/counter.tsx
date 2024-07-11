@@ -130,7 +130,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 结算计算金额
    */
   const settleMoney = () => {
-    if(!settle.sum) {
+    if (!settle.sum) {
       message.warning('请输入金额！')
     }
     // 获取所有金额
@@ -175,7 +175,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
           <Flex gap="small" justify='center'>
             <Button type='primary' onClick={() => { setIsModalOpen('groupName'); setGroupNameInput(''); }} > 选择集合 </Button>
             <Button type='primary' onClick={enterTitle} > 进入标题 </Button>
-            {groupNameInput === '刘罗台球' && <Button type='primary' onClick={() => {setIsModalOpen('isSettlement'); setSettle({})}} > 结算 </Button>}
+            {groupNameInput === '刘罗台球' && <Button type='primary' onClick={() => { setIsModalOpen('isSettlement'); setSettle({}) }} > 结算 </Button>}
           </Flex>
 
           {/* 记录操作部分 */}
@@ -225,15 +225,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         footer={<Button type='primary' onClick={() => setIsModalOpen('')} > 关闭 </Button>}
         onCancel={() => setIsModalOpen('')} style={{ top: '35%' }}>
         <Flex gap="small" vertical>
-          <Flex gap='small' justify='center'>
-            <Space.Compact>
-              <Input addonBefore={
-                <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
-              } value={settle.sum || ''} onChange={(e) => { setSettle({ ...settle, sum: e.target.value }) }}
-                placeholder='多个金额请以 + 号分隔' />
-              <Button type='primary' onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
-            </Space.Compact>
-          </Flex>
+          <Space.Compact>
+            <Input addonBefore={
+              <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
+            } value={settle.sum || ''} onChange={(e) => { setSettle({ ...settle, sum: e.target.value }) }}
+              placeholder='多个金额请以 + 号分隔' />
+            <Button type='primary' onClick={() => { settleMoney() }} icon={<CheckOutlined />} />
+          </Space.Compact>
           <InputNumber addonBefore={
             <div style={{ width: '100px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
           } value={settle[editInfoList[0]?.text] || ''} />
