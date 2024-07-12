@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
 import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
-import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined  } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined } from '@ant-design/icons';
 import { dialogError, message } from '@/app/utils';
 
 import axios from 'axios';
@@ -20,6 +20,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [isGoAdd, setIsGoAdd] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<string>('');
+  const [isOpenSettleModal, setIsOpenSettleModal] = useState<boolean>(false); // 结算弹框
   const [groupNameInput, setGroupNameInput] = useState<string>('');
   const [editInfoList, setEditInfoList] = useState<any[]>([]); // 记录信息，包含所有记录项及记录值
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
@@ -149,6 +150,15 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     setSettle({ ...settle, ...obj, moneyList: value, sum: totalSum })
   }
 
+  /**
+   * 打开结算弹框
+   */
+  const openSettle = () => {
+    setIsOpenSettleModal(true);
+    initInfo(false);
+    setSettle({});
+  }
+
   const columns = [
     {
       title: '记录类型',
@@ -172,7 +182,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
           <Flex gap="small" justify='center'>
             <Button type='primary' onClick={() => { setIsModalOpen('groupName'); setGroupNameInput(''); }} > 选择集合 </Button>
             <Button type='primary' onClick={enterTitle} > 进入标题 </Button>
-            {groupNameInput === '刘罗台球' && <Button type='primary' onClick={() => { setIsModalOpen('isSettlement'); setSettle({}) }} > 结算 </Button>}
+            {groupNameInput === '刘罗台球' && <Button type='primary' onClick={openSettle} > 结算 </Button>}
           </Flex>
 
           {/* 记录操作部分 */}
@@ -218,25 +228,27 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         onCancel={() => setIsGoAdd(false)} cancelText='取消' okText='去创建' style={{ top: '25%' }}>
         <p>{'此集合还未创建哦，是否去创建->'}</p>
       </Modal>
-      <Modal title="结算" open={isModalOpen === 'isSettlement'}
-        footer={<Button type='primary' onClick={() => setIsModalOpen('')} > 关闭 </Button>}
-        onCancel={() => setIsModalOpen('')} style={{ top: '35%' }}>
-        <Flex gap="small" vertical>
-          <Space.Compact>
-            <Input addonBefore={
-              <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
-            } value={settle.moneyList || ''} onChange={(e) => { settleMoney(e.target.value) }}
-              placeholder='多个金额请以 + 号分隔' />
-            <Button type='text' icon={<ForwardOutlined />} />
-            <Input  style={{ width: '23%' }} value={settle.sum || ''} />
-          </Space.Compact>
-          <InputNumber addonBefore={
-            <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
-          } value={settle[editInfoList[0]?.text] || ''} />
-          <InputNumber addonBefore={
-            <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[1]?.text}</div>
-          } value={settle[editInfoList[1]?.text] || ''} />
-        </Flex>
+      <Modal title="结算" open={isOpenSettleModal}
+        footer={<Button type='primary' onClick={() => setIsOpenSettleModal(false)} > 关闭 </Button>}
+        onCancel={() => setIsOpenSettleModal(false)} style={{ top: '35%' }}>
+        <Spin spinning={loading}>
+          <Flex gap="small" vertical>
+            <Space.Compact>
+              <Input addonBefore={
+                <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>总金额</div>
+              } value={settle.moneyList || ''} onChange={(e) => { settleMoney(e.target.value) }}
+                placeholder='多个金额请以 + 号分隔' />
+              <Button type='text' icon={<ForwardOutlined />} />
+              <Input style={{ width: '23%' }} value={settle.sum || ''} />
+            </Space.Compact>
+            <InputNumber addonBefore={
+              <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[0]?.text}</div>
+            } value={settle[editInfoList[0]?.text] || ''} />
+            <InputNumber addonBefore={
+              <div style={{ width: '50px', maxWidth: '150px', overflow: "hidden" }}>{editInfoList[1]?.text}</div>
+            } value={settle[editInfoList[1]?.text] || ''} />
+          </Flex>
+        </Spin>
       </Modal>
     </div>
   );
