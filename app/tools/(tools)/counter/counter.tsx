@@ -26,20 +26,83 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
+  const [goEasyChannel, setGoEasyChannel] = useState<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
+    connectGoEasy();
     const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
       initInfo(false);
+      subscribe(groupName + title);
+      setGoEasyChannel(groupName + title);
     } else if (groupName && typeList.length && !title) {
       setIsModalOpen('title');
     } else {
       setIsModalOpen('groupName');
     }
   }, []);
+
+  /**
+   * 连接goeasy
+   */
+  const connectGoEasy = () => {
+    try {
+      window['goEasy'].connect({
+        onProgress: (attempts) => {
+          console.log("GoEasy is connecting", attempts);
+        },
+        onSuccess: () => {
+          console.log("GoEasy connect successfully.")
+        },
+        onFailed: (error) => {
+          console.log("GoEasy connect failed:", error); //连接失败
+        }
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
+   * 订阅接收goeasy长连接消息
+   */
+  const subscribe = (channel) => {
+    window['goEasy'].pubsub.subscribe({
+      channel,
+      onMessage: (message) => {
+        console.log('subscribe', JSON.parse(message.content || '[]'));
+        const infoList = JSON.parse(message.content || '[]');
+        if (infoList.length > 0) {
+          setEditInfoList(infoList);
+        }
+      },
+      onSuccess: () => {
+        console.log('订阅成功.');
+      },
+      onFailed: (error) => {
+        console.log("订阅失败，错误编码：" + error.code + " 错误信息：" + error.content);
+      }
+    });
+  }
+
+  /**
+   * 发送goeasy长连接消息
+   */
+  const updateChannel = (channel, message) => {
+    window['goEasy'].pubsub.publish({
+      channel,
+      message,
+      onSuccess: () => {
+        console.log("send message success");
+      },
+      onFailed: (error) => {
+        console.log("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
+      }
+    });
+  }
 
   /**
    * 
@@ -67,13 +130,18 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       if (!isCounter) {
         if (res.data.counter.length === 0 && isTitleOk) {
           message.warning('标题不存在或无记录信息,已自动创建', 3)
-          setEditInfoList(typeList.map((item) => { return { text: item, value: 0 } }))
+          setEditInfoList(typeList.map((item) => { return { text: item, value: 0 } }));
         } else {
-          setEditInfoList(typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } }))
+          setEditInfoList(typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } }));
+        }
+      } else {
+        /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
+        if (res.data.counter.length > 0) {
+          const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
+          updateChannel(groupName + title, JSON.stringify(infoList || '[]'));
         }
       }
 
-      sessionStorage.setItem('counterTitle', title);
       setIsModalOpen('');
     } catch (error) {
       dialogError(error);
@@ -114,7 +182,11 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const titleOk = async () => {
     const groupName = localStorage.getItem('counterGroupName');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
-    getEditInfo({ groupName, typeList, title: title || moment(new Date()).format('YYYYMMDD') })
+    const fintitle = title || moment(new Date()).format('YYYYMMDD')
+    sessionStorage.setItem('counterTitle', fintitle);
+    getEditInfo({ groupName, typeList, title: fintitle })
+    subscribe(groupName + fintitle);
+    setGoEasyChannel(groupName + fintitle);
   };
 
   const enterTitle = () => {
