@@ -26,7 +26,8 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
-  const [goEasyChannel, setGoEasyChannel] = useState<string>(''); // goeasy创建长连接名
+  // const [goEasyChannel, setGoEasyChannel] = useState<string>(''); // goeasy创建长连接名
+  let { current: goEasyChannel } = useRef<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
     connectGoEasy();
@@ -37,7 +38,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     if (groupName && title && typeList.length) {
       initInfo(false);
       subscribe(groupName + title);
-      setGoEasyChannel(groupName + title);
+      goEasyChannel = groupName + title;
     } else if (groupName && typeList.length && !title) {
       setIsModalOpen('title');
     } else {
@@ -49,21 +50,38 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 连接goeasy
    */
   const connectGoEasy = () => {
-    try {
-      window['goEasy'].connect({
-        onProgress: (attempts) => {
-          console.log("GoEasy is connecting", attempts);
-        },
-        onSuccess: () => {
-          console.log("GoEasy connect successfully.")
-        },
-        onFailed: (error) => {
-          console.log("GoEasy connect failed:", error); //连接失败
-        }
-      });
-    } catch (error) {
-      console.log(error)
-    }
+    window['goEasy'].connect({
+      onProgress: (attempts) => {
+        console.log("GoEasy is connecting", attempts);
+      },
+      onSuccess: () => {
+        console.log("GoEasy connect successfully.")
+        goeasyHistory();
+      },
+      onFailed: (error) => {
+        console.log("GoEasy connect failed:", error); //连接失败
+      }
+    });
+  }
+
+  /**
+   * 获取长连接历史数据，用于断网重新连接后恢复最新数据
+   */
+  const goeasyHistory = () => {
+    if (!goEasyChannel) return;
+    window['goEasy'].pubsub.history({
+      channel: goEasyChannel,
+      limit: 1, //可选项，返回的消息条数，默认为10条，最多30条
+      onSuccess: function (response) {
+        const res = JSON.parse('' + JSON.stringify(response) || '{}');
+        console.log("收到历史消息2: " ,JSON.parse(res?.content?.messages[0]?.content || '[]'));
+        const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
+        setEditInfoList(infoList);
+      },
+      onFailed: function (error) { //获取失败
+        console.log("Failed to obtain history, code:" + error.code + ",error:" + error.content);
+      }
+    });
   }
 
   /**
@@ -73,17 +91,31 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     window['goEasy'].pubsub.subscribe({
       channel,
       onMessage: (message) => {
-        console.log('subscribe', JSON.parse(message.content || '[]'));
         const infoList = JSON.parse(message.content || '[]');
         if (infoList.length > 0) {
           setEditInfoList(infoList);
         }
       },
       onSuccess: () => {
-        console.log('订阅成功.');
+        console.log(channel + '订阅成功.');
       },
       onFailed: (error) => {
         console.log("订阅失败，错误编码：" + error.code + " 错误信息：" + error.content);
+      }
+    });
+  }
+
+  /**
+   * 取消订阅goeasy长连接消息
+   */
+  const unsubscribe = () => {
+    window['goEasy'].pubsub.unsubscribe({
+      channel: goEasyChannel,
+      onSuccess: function () {
+        console.log(goEasyChannel + "订阅取消成功。");
+      },
+      onFailed: function (error) {
+        console.log("取消订阅失败，错误编码：" + error.code + " 错误信息：" + error.content)
       }
     });
   }
@@ -95,6 +127,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     window['goEasy'].pubsub.publish({
       channel,
       message,
+      qos: 1,
       onSuccess: () => {
         console.log("send message success");
       },
@@ -185,8 +218,9 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const fintitle = title || moment(new Date()).format('YYYYMMDD')
     sessionStorage.setItem('counterTitle', fintitle);
     getEditInfo({ groupName, typeList, title: fintitle })
+    goEasyChannel && unsubscribe();
     subscribe(groupName + fintitle);
-    setGoEasyChannel(groupName + fintitle);
+    goEasyChannel = groupName + fintitle;
   };
 
   const enterTitle = () => {
