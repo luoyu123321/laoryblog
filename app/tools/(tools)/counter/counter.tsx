@@ -67,9 +67,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const goeasyHistoryOk = (params) => {
     const res = JSON.parse('' + JSON.stringify(params) || '{}');
     const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
-    if (infoList.length > 0) {
-      setEditInfoList(infoList);
-    }
+    infoList.length > 0 && setEditInfoList(infoList);
   }
 
   /**
@@ -77,9 +75,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    */
   const subscribeMsg = (params) => {
     const infoList = JSON.parse(params.content || '[]');
-    if (infoList.length > 0) {
-      setEditInfoList(infoList);
-    }
+    infoList.length > 0 && setEditInfoList(infoList);
   }
 
   /**
