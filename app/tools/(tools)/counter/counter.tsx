@@ -1,12 +1,21 @@
 import React, { useEffect, useState, useRef, ReactElement } from 'react';
 import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
 import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined } from '@ant-design/icons';
-import { dialogError, message } from '@/app/utils';
+import { dialogError, message, goEasy } from '@/app/utils';
 
 import axios from 'axios';
 import moment from 'moment';
 
 const ButtonGroup = Button.Group;
+
+const {
+  connectGoEasy,
+  goeasyDisconnect,
+  goeasyHistory,
+  subscribe,
+  unsubscribe,
+  updateChannel,
+} = goEasy;
 
 interface counterProps {
   goAdd: () => void;
@@ -26,115 +35,49 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
-  // const [goEasyChannel, setGoEasyChannel] = useState<string>(''); // goeasy创建长连接名
   let { current: goEasyChannel } = useRef<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
-    connectGoEasy();
     const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
+    /* 初始化连接goeasy长连接 */
+    const channel = groupName + title;
+    connectGoEasy(() => goeasyHistory({ channel, onSuccess: goeasyHistoryOk }));
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
       initInfo(false);
-      subscribe(groupName + title);
-      goEasyChannel = groupName + title;
+      /* 如果集合已经初始化过，则直接订阅长连接消息  */
+      subscribe({ channel, onMessage: subscribeMsg });
+      goEasyChannel = channel;
     } else if (groupName && typeList.length && !title) {
       setIsModalOpen('title');
     } else {
       setIsModalOpen('groupName');
     }
+    return () => {
+      /* 页面关闭卸载关闭goeasy长连接 */
+      goeasyDisconnect();
+    }
   }, []);
-
-  /**
-   * 连接goeasy
-   */
-  const connectGoEasy = () => {
-    window['goEasy'].connect({
-      onProgress: (attempts) => {
-        console.log("GoEasy is connecting", attempts);
-      },
-      onSuccess: () => {
-        console.log("GoEasy connect successfully.")
-        goeasyHistory();
-      },
-      onFailed: (error) => {
-        console.log("GoEasy connect failed:", error); //连接失败
-      }
-    });
-  }
 
   /**
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
-  const goeasyHistory = () => {
-    if (!goEasyChannel) return;
-    window['goEasy'].pubsub.history({
-      channel: goEasyChannel,
-      limit: 1, //可选项，返回的消息条数，默认为10条，最多30条
-      onSuccess: function (response) {
-        const res = JSON.parse('' + JSON.stringify(response) || '{}');
-        console.log("收到历史消息2: " ,JSON.parse(res?.content?.messages[0]?.content || '[]'));
-        const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
-        setEditInfoList(infoList);
-      },
-      onFailed: function (error) { //获取失败
-        console.log("Failed to obtain history, code:" + error.code + ",error:" + error.content);
-      }
-    });
+  const goeasyHistoryOk = (params) => {
+    const res = JSON.parse('' + JSON.stringify(params) || '{}');
+    const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
+    setEditInfoList(infoList);
   }
 
   /**
-   * 订阅接收goeasy长连接消息
+   * 订阅接收goeasy长连接消息，更新最新数据
    */
-  const subscribe = (channel) => {
-    window['goEasy'].pubsub.subscribe({
-      channel,
-      onMessage: (message) => {
-        const infoList = JSON.parse(message.content || '[]');
-        if (infoList.length > 0) {
-          setEditInfoList(infoList);
-        }
-      },
-      onSuccess: () => {
-        console.log(channel + '订阅成功.');
-      },
-      onFailed: (error) => {
-        console.log("订阅失败，错误编码：" + error.code + " 错误信息：" + error.content);
-      }
-    });
-  }
-
-  /**
-   * 取消订阅goeasy长连接消息
-   */
-  const unsubscribe = () => {
-    window['goEasy'].pubsub.unsubscribe({
-      channel: goEasyChannel,
-      onSuccess: function () {
-        console.log(goEasyChannel + "订阅取消成功。");
-      },
-      onFailed: function (error) {
-        console.log("取消订阅失败，错误编码：" + error.code + " 错误信息：" + error.content)
-      }
-    });
-  }
-
-  /**
-   * 发送goeasy长连接消息
-   */
-  const updateChannel = (channel, message) => {
-    window['goEasy'].pubsub.publish({
-      channel,
-      message,
-      qos: 1,
-      onSuccess: () => {
-        console.log("send message success");
-      },
-      onFailed: (error) => {
-        console.log("消息发送失败，错误编码：" + error.code + " 错误信息：" + error.content);
-      }
-    });
+  const subscribeMsg = (params) => {
+    const infoList = JSON.parse(params.content || '[]');
+    if (infoList.length > 0) {
+      setEditInfoList(infoList);
+    }
   }
 
   /**
@@ -171,7 +114,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
         if (res.data.counter.length > 0) {
           const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
-          updateChannel(groupName + title, JSON.stringify(infoList || '[]'));
+          updateChannel({ channel: groupName + title, message: JSON.stringify(infoList || '[]') });
         }
       }
 
@@ -218,8 +161,10 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const fintitle = title || moment(new Date()).format('YYYYMMDD')
     sessionStorage.setItem('counterTitle', fintitle);
     getEditInfo({ groupName, typeList, title: fintitle })
-    goEasyChannel && unsubscribe();
-    subscribe(groupName + fintitle);
+    /* 新操作页创建后，先取消原先订阅 */
+    unsubscribe({ channel: goEasyChannel });
+    /* 再重新订阅新操作会话 */
+    subscribe({ channel: groupName + title, onMessage: subscribeMsg });
     goEasyChannel = groupName + fintitle;
   };
 
@@ -362,6 +307,9 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
 export default Counter;
 
+/**
+ * 每个独立的操作项组件
+ */
 const CounterModel = ({ dataSource, onOk }) => {
   const [num, setNum] = useState<number>(0);
   const [initText, setInitText] = useState<string>('');

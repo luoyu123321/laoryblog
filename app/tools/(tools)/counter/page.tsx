@@ -5,24 +5,8 @@ import { Radio } from 'antd';
 import AddCounter from './addCounter';
 import CounterMod from './counter';
 import QueryCounter from './queryCounter';
-import GoEasy from 'goeasy';
-
 const Counter = ({ }) => {
   const [radioSelect, setRadioSelect] = useState<string>('add');
-
-  /**
-   * 创建goeasy实例,websocket连接
-   */
-  const goEasy = GoEasy.getInstance({
-    host: 'hangzhou.goeasy.io',//应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
-    appkey: 'BC-d649a1f9ba94470fad5ad5c9a5c74125',
-    modules: ['pubsub'],
-  });
-
-  useEffect(() => {
-    window['goEasy'] = goEasy;
-  }, [])
-  
 
   return (
     <div style={{ marginTop: '25px' }}>
