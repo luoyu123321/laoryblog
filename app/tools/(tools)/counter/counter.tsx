@@ -67,7 +67,9 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const goeasyHistoryOk = (params) => {
     const res = JSON.parse('' + JSON.stringify(params) || '{}');
     const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
-    setEditInfoList(infoList);
+    if (infoList.length > 0) {
+      setEditInfoList(infoList);
+    }
   }
 
   /**
