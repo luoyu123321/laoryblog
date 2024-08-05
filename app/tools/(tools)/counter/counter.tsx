@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, ReactElement } from 'react';
+import React, { useEffect, useState, useRef, ReactElement, use } from 'react';
 import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
 import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined } from '@ant-design/icons';
 import { dialogError, message, goEasy } from '@/app/utils';
@@ -36,6 +36,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
+  let goEasyInfoListRef = useRef<any[]>([]); // 长连接最新数据缓存
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
@@ -45,7 +46,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     connectGoEasy(() => goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk }));
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
-      initInfo(false);
+      initInfo({ isCounter: false });
       /* 如果集合已经初始化过，则直接订阅长连接消息  */
       const channel = groupName + title;
       subscribe({ channel, onMessage: subscribeMsg });
@@ -64,38 +65,55 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   /**
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
-  const goeasyHistoryOk = (params) => {
-    goEasySetVal(params);
+  const goeasyHistoryOk = (value) => {
+    goEasyInfoListRef.current = value;
   }
 
   /**
    * 订阅接收goeasy长连接消息，更新最新数据
    */
-  const subscribeMsg = (params) => {
-    goEasySetVal(params);
+  const subscribeMsg = (value) => {
+    goEasyInfoListRef.current = value;
   }
 
+  /**
+   * 监听最新数据缓存更新
+   */
+  useEffect(() => {
+    goEasySetVal(goEasyInfoListRef.current)
+  }, [goEasyInfoListRef.current])
+
+  /**
+   * 最新数据与当前数据对比，有差异则更新渲染
+   */
   const goEasySetVal = (value) => {
-    const { infoList, tableData } = value;
-    infoList?.length > 0 && setEditInfoList(infoList);
-    tableData?.length > 0 && setTableData(tableData);
+    /* 如果有数据 */
+    if (value?.length > 0 && (value.some((item) =>
+      /* 判断数据是否有不同的 */
+      editInfoList.some(itm => item.text === itm.text && itm.value !== item.value)
+      /* 或者 操作项有变化 */
+      || editInfoList.every(itm => item.text !== itm.text)))) {
+
+      setEditInfoList(value);
+      initInfo({ isGoEasyUpdate: true })
+    }
   };
 
   /**
    * 
    * @param isCounter 是否是记录操作
    */
-  const initInfo = (isCounter = true) => {
+  const initInfo = ({ isCounter = true, isGoEasyUpdate = false }) => {
     const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
-    getEditInfo({ groupName, title, typeList, isTitleOk: false, isCounter });
+    getEditInfo({ groupName, title, typeList, isTitleOk: false, isCounter, isGoEasyUpdate });
   }
 
   /**
    *  获取当前记录信息
    */
-  const getEditInfo = async ({ groupName, title, typeList, isTitleOk = true, isCounter = false }) => {
+  const getEditInfo = async ({ groupName, title, typeList, isTitleOk = true, isCounter = false, isGoEasyUpdate = false }) => {
     try {
       setLoading(true);
       const res = await axios.post('/api/counterQuery', {
@@ -104,6 +122,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         title,
       })
       setTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
+      if (isGoEasyUpdate) return;
       if (!isCounter) {
         if (res.data.counter.length === 0 && isTitleOk) {
           message.warning('标题不存在或无记录信息,已自动创建', 3)
@@ -115,11 +134,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
         if (res.data.counter.length > 0) {
           const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
-          updateChannel({ channel: groupName + title, message: JSON.stringify({
-            infoList,
-            tableData: res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } })
-          }) });
-          
+          updateChannel({ channel: groupName + title, message: JSON.stringify(infoList) });
         }
       }
 
@@ -211,7 +226,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    */
   const openSettle = () => {
     setIsOpenSettleModal(true);
-    initInfo(false);
+    initInfo({ isCounter: false });
     setSettle({});
   }
 
@@ -245,7 +260,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
           <Flex gap="small" vertical style={{ maxHeight: '40vh', overflow: 'auto' }}>
             {
               editInfoList.map((item, index) => {
-                return <CounterModel key={index} dataSource={item} onOk={initInfo} />
+                return <CounterModel key={index} dataSource={item} onOk={() => initInfo({ isCounter: true })} />
               })
             }
           </Flex>

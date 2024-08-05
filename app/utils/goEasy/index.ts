@@ -52,7 +52,7 @@ const goeasyHistory = ({ channel, onSuccess, onFailed }: any) => {
     limit: 1, //可选项，返回的消息条数，默认为10条，最多30条
     onSuccess: function (response) {
       const jsonrRes = JSON.parse('' + JSON.stringify(response) || '{}');
-      const res = JSON.parse(jsonrRes?.content?.messages[0]?.content || '{}');
+      const res = JSON.parse(jsonrRes?.content?.messages[0]?.content || '[]');
       onSuccess?.(res);
     },
     onFailed: function (error) { //获取失败
@@ -70,7 +70,7 @@ const subscribe = ({ channel, onMessage, onSuccess, onFailed }: any) => {
   goEasy.pubsub.subscribe({
     channel,
     onMessage: (message) => {
-      const res = JSON.parse(message?.content || '{}');
+      const res = JSON.parse(message?.content || '[]');
       onMessage?.(res);
     },
     onSuccess: () => {
