@@ -35,21 +35,21 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
-  let { current: goEasyChannel } = useRef<string>(''); // goeasy创建长连接名
+  let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 初始化连接goeasy长连接 */
-    const channel = groupName + title;
-    connectGoEasy(() => goeasyHistory({ channel, onSuccess: goeasyHistoryOk }));
+    connectGoEasy(() => goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk }));
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
       initInfo(false);
       /* 如果集合已经初始化过，则直接订阅长连接消息  */
+      const channel = groupName + title;
       subscribe({ channel, onMessage: subscribeMsg });
-      goEasyChannel = channel;
+      goEasyChannel.current = channel;
     } else if (groupName && typeList.length && !title) {
       setIsModalOpen('title');
     } else {
@@ -160,10 +160,10 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     sessionStorage.setItem('counterTitle', fintitle);
     getEditInfo({ groupName, typeList, title: fintitle })
     /* 新操作页创建后，先取消原先订阅 */
-    unsubscribe({ channel: goEasyChannel });
+    unsubscribe({ channel: goEasyChannel.current });
     /* 再重新订阅新操作会话 */
-    subscribe({ channel: groupName + title, onMessage: subscribeMsg });
-    goEasyChannel = groupName + fintitle;
+    subscribe({ channel: groupName + fintitle, onMessage: subscribeMsg });
+    goEasyChannel.current = groupName + fintitle;
   };
 
   const enterTitle = () => {
