@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Radio } from 'antd';
 
 import AddCounter from './addCounter';

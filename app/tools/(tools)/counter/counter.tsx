@@ -65,18 +65,21 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
   const goeasyHistoryOk = (params) => {
-    const res = JSON.parse('' + JSON.stringify(params) || '{}');
-    const infoList = JSON.parse(res?.content?.messages[0]?.content || '[]');
-    infoList.length > 0 && setEditInfoList(infoList);
+    goEasySetVal(params);
   }
 
   /**
    * 订阅接收goeasy长连接消息，更新最新数据
    */
   const subscribeMsg = (params) => {
-    const infoList = JSON.parse(params.content || '[]');
-    infoList.length > 0 && setEditInfoList(infoList);
+    goEasySetVal(params);
   }
+
+  const goEasySetVal = (value) => {
+    const { infoList, tableData } = value;
+    infoList?.length > 0 && setEditInfoList(infoList);
+    tableData?.length > 0 && setTableData(tableData);
+  };
 
   /**
    * 
@@ -112,7 +115,11 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
         if (res.data.counter.length > 0) {
           const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
-          updateChannel({ channel: groupName + title, message: JSON.stringify(infoList || '[]') });
+          updateChannel({ channel: groupName + title, message: JSON.stringify({
+            infoList,
+            tableData: res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } })
+          }) });
+          
         }
       }
 
