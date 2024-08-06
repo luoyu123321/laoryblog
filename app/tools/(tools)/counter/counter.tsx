@@ -87,12 +87,16 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 最新数据与当前数据对比，有差异则更新渲染
    */
   const goEasySetVal = (value) => {
+    const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
+    /* 这里用tableData日志数据，是因为当前操作用户日志数据最新最全，用来对比是否变化最准确 */
+    const infoList = typeList.map((item) => { return { text: item, value: tableData.filter((itm) => itm.type === item)[0]?.accumulate || 0 } })
     /* 如果有数据 */
     if (value?.length > 0 && (value.some((item) =>
       /* 判断数据是否有不同的 */
-      editInfoList.some(itm => item.text === itm.text && itm.value !== item.value)
+      infoList.some(itm => item.text === itm.text && itm.value !== item.value)
       /* 或者 操作项有变化 */
-      || editInfoList.every(itm => item.text !== itm.text)))) {
+      || infoList.every(itm => item.text !== itm.text)))) {
+        console.log('执行了')
 
       setEditInfoList(value);
       initInfo({ isGoEasyUpdate: true })
