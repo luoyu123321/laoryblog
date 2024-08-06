@@ -38,6 +38,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [goEasyInfoList, setGoEasyInfoList] = useState<{ [key: string]: any }>({}); // 长连接最新数据缓存
   const [goEasyHistoryInfoList, setGoEasyHistoryInfoList] = useState<{ [key: string]: any }>({}); // 长连接重新连接数据缓存
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
+  let goEasyChannelceshi = useRef<any[]>([]); // 缓存
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
@@ -83,20 +84,24 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    */
   let timeoutRef = useRef<any>(null);
   useEffect(() => {
-    if(timeoutRef.current) {
-      console.log('clearTimeout',timeoutRef.current)
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      console.log('setTimeout',goEasyInfoList)
+    if (goEasyInfoList?.infoList?.some(item =>
+      goEasyChannelceshi.current?.some(itm => item.text === itm.text && item.value !== itm.value)
+    )) {
+      // if (timeoutRef.current) {
+      //   console.log('clearTimeout', timeoutRef.current)
+      //   clearTimeout(timeoutRef.current);
+      // }
+      // timeoutRef.current = setTimeout(() => {
+      //   console.log('setTimeout', goEasyInfoList)
+      //   goEasySetVal(goEasyInfoList)
+      // }, 5000);
       goEasySetVal(goEasyInfoList)
-    }, 5000);
-    // goEasySetVal(goEasyInfoList)
-
+    }
   }, [goEasyInfoList])
 
   /* 断线重连直接更新数据 */
   useEffect(() => {
+    /* 不知为何这样没问题，goEasyHistoryInfo有问题 */
     goEasySetVal(goEasyInfoList)
   }, [goEasyHistoryInfoList])
 
@@ -150,6 +155,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
         if (res.data.counter.length > 0) {
           const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
+          goEasyChannelceshi.current = infoList
           updateChannel({
             channel: groupName + title, message: JSON.stringify({
               infoList,
