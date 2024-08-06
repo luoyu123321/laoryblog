@@ -35,7 +35,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
-  const [goEasyInfoList, setGoEasyInfoList] = useState<any[]>([]); // 长连接最新数据缓存
+  const [goEasyInfoList, setGoEasyInfoList] = useState<{ [key: string]: any }>({}); // 长连接最新数据缓存
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
@@ -87,19 +87,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 最新数据与当前数据对比，有差异则更新渲染
    */
   const goEasySetVal = (value) => {
-    const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
-    /* 这里用tableData日志数据，是因为当前操作用户日志数据最新最全，用来对比是否变化最准确 */
-    const infoList = typeList.map((item) => { return { text: item, value: tableData.filter((itm) => itm.type === item)[0]?.accumulate || 0 } })
-    /* 如果有数据 */
-    if (value?.length > 0 && (value.some((item) =>
-      /* 判断数据是否有不同的 */
-      infoList.some(itm => item.text === itm.text && itm.value !== item.value)
-      /* 或者 操作项有变化 */
-      || infoList.every(itm => item.text !== itm.text)))) {
-        console.log('执行了')
+    const { infoList, latestTableData } = value;
 
-      setEditInfoList(value);
-      initInfo({ isGoEasyUpdate: true })
+    /* 如果有数据，更新记录信息 */
+    if (infoList?.length > 0) {
+      setEditInfoList(infoList);
+      /* 如果最新一条日志数据id不同，更新日志数据 */
+      latestTableData?.id !== tableData[0]?.id && initInfo({ isGoEasyUpdate: true })
     }
   };
 
@@ -126,6 +120,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         title,
       })
       setTableData(res.data.counter.map((item) => { return { ...item, createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') } }))
+      /* 如果是长连接更新日志，到此就结束了 */
       if (isGoEasyUpdate) return;
       if (!isCounter) {
         if (res.data.counter.length === 0 && isTitleOk) {
@@ -138,7 +133,12 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
         /* 如果是计数操作，更新goeasy长连接消息，更新多端数据同步 */
         if (res.data.counter.length > 0) {
           const infoList = typeList.map((item) => { return { text: item, value: res.data.counter.filter((itm) => itm.type === item)[0]?.accumulate || 0 } });
-          updateChannel({ channel: groupName + title, message: JSON.stringify(infoList) });
+          updateChannel({
+            channel: groupName + title, message: JSON.stringify({
+              infoList,
+              latestTableData: res.data.counter[0] // 最新一条日志数据，用于对比是否更新
+            })
+          });
         }
       }
 
