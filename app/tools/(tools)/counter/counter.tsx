@@ -35,8 +35,8 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [tableData, setTableData] = useState<any[]>([]); // 记录信息表格展示，包含所有记录项及记录值
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
+  const [goEasyInfoList, setGoEasyInfoList] = useState<any[]>([]); // 长连接最新数据缓存
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
-  let goEasyInfoListRef = useRef<any[]>([]); // 长连接最新数据缓存
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
@@ -66,22 +66,22 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
   const goeasyHistoryOk = (value) => {
-    goEasyInfoListRef.current = value;
+    setGoEasyInfoList(value);
   }
 
   /**
    * 订阅接收goeasy长连接消息，更新最新数据
    */
   const subscribeMsg = (value) => {
-    goEasyInfoListRef.current = value;
+    setGoEasyInfoList(value);
   }
 
   /**
    * 监听最新数据缓存更新
    */
   useEffect(() => {
-    goEasySetVal(goEasyInfoListRef.current)
-  }, [goEasyInfoListRef.current])
+    goEasySetVal(goEasyInfoList)
+  }, [goEasyInfoList])
 
   /**
    * 最新数据与当前数据对比，有差异则更新渲染
