@@ -36,6 +36,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [title, setTitle] = useState<string>('');
   const [settle, setSettle] = useState<{ [key: string]: any }>({});
   const [goEasyInfoList, setGoEasyInfoList] = useState<{ [key: string]: any }>({}); // 长连接最新数据缓存
+  const [goEasyHistoryInfoList, setGoEasyHistoryInfoList] = useState<{ [key: string]: any }>({}); // 长连接重新连接数据缓存
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
   const goeasyHistoryOk = (value) => {
-    setGoEasyInfoList(value);
+    setGoEasyHistoryInfoList(value);
   }
 
   /**
@@ -93,6 +94,11 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     // goEasySetVal(goEasyInfoList)
 
   }, [goEasyInfoList])
+
+  /* 断线重连直接更新数据 */
+  useEffect(() => {
+    goEasySetVal(goEasyInfoList)
+  }, [goEasyHistoryInfoList])
 
   /**
    * 最新数据与当前数据对比，有差异则更新渲染
