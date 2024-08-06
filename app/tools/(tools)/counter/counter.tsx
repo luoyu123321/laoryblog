@@ -78,9 +78,20 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
   /**
    * 监听最新数据缓存更新
+   * 做了防抖处理
    */
+  let timeoutRef = useRef<any>(null);
   useEffect(() => {
-    goEasySetVal(goEasyInfoList)
+    if(timeoutRef.current) {
+      console.log('clearTimeout',timeoutRef.current)
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      console.log('setTimeout',goEasyInfoList)
+      goEasySetVal(goEasyInfoList)
+    }, 5000);
+    // goEasySetVal(goEasyInfoList)
+
   }, [goEasyInfoList])
 
   /**
@@ -148,7 +159,6 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     } finally {
       setLoading(false);
     }
-
   };
 
   /**
