@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radio } from 'antd';
 
 import AddCounter from './addCounter';
@@ -8,9 +8,20 @@ import QueryCounter from './queryCounter';
 const Counter = ({ }) => {
   const [radioSelect, setRadioSelect] = useState<string>('add');
 
+  useEffect(() => {
+    const radioSelect = sessionStorage.getItem('counterRadioSelect');
+    if (radioSelect) {
+      setRadioSelect(radioSelect);
+    }
+  }, []);
+  const onChange = (e: any) => {
+    setRadioSelect(e.target.value);
+    sessionStorage.setItem('counterRadioSelect', e.target.value);
+  };
+
   return (
     <div style={{ marginTop: '25px' }}>
-      <Radio.Group value={radioSelect} onChange={(e) => setRadioSelect(e.target.value)}>
+      <Radio.Group value={radioSelect} onChange={onChange}>
         <Radio.Button value="add">新增计数集</Radio.Button>
         <Radio.Button value="edit">计数组</Radio.Button>
         <Radio.Button value="query">数据查询</Radio.Button>
