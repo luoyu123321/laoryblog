@@ -80,21 +80,14 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
   /**
    * 监听最新数据缓存更新
-   * 做了防抖处理
    */
-  let timeoutRef = useRef<any>(null);
   useEffect(() => {
-    if (goEasyInfoList?.infoList?.some(item =>
+    /* 如果缓存为空，说明本人只是初始化还没操作过，也要更新 */
+    if ( goEasyChannelceshi.current?.length === 0 ||
+      /* 如果缓存有数据，对比缓存和最新数据，有差异则更新 */
+      goEasyInfoList?.infoList?.some(item =>
       goEasyChannelceshi.current?.some(itm => item.text === itm.text && item.value !== itm.value)
     )) {
-      // if (timeoutRef.current) {
-      //   console.log('clearTimeout', timeoutRef.current)
-      //   clearTimeout(timeoutRef.current);
-      // }
-      // timeoutRef.current = setTimeout(() => {
-      //   console.log('setTimeout', goEasyInfoList)
-      //   goEasySetVal(goEasyInfoList)
-      // }, 5000);
       goEasySetVal(goEasyInfoList)
     }
   }, [goEasyInfoList])
