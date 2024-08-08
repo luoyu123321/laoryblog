@@ -9,11 +9,14 @@ const Counter = ({ }) => {
   const [radioSelect, setRadioSelect] = useState<string>('add');
 
   useEffect(() => {
+    /* 页面刷新后，恢复上次选择的选项 */
     const radioSelect = sessionStorage.getItem('counterRadioSelect');
     if (radioSelect) {
       setRadioSelect(radioSelect);
     }
   }, []);
+
+  /* 切换选项 */
   const onChange = (e: any) => {
     setRadioSelect(e.target.value);
     sessionStorage.setItem('counterRadioSelect', e.target.value);

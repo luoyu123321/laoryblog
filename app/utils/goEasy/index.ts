@@ -12,14 +12,15 @@ const goEasy = GoEasy.getInstance({
 /**
  * 连接goeasy
  */
-const connectGoEasy = (onSuccess?: any, onFailed?: any) => {
+const connectGoEasy = (onSuccess?: any, onProgress?: any, onFailed?: any) => {
   goEasy.connect({
-    onProgress: (attempts) => {
-      console.log("GoEasy is connecting", attempts);
-    },
     onSuccess: () => {
       console.log("GoEasy connect successfully.")
       onSuccess?.();
+    },
+    onProgress: (attempts) => {
+      console.log("GoEasy is connecting", attempts);
+      onProgress?.();
     },
     onFailed: (error) => {
       onFailed?.(error);

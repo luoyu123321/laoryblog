@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, ReactElement, use } from 'react';
-import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space } from 'antd';
-import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined } from '@ant-design/icons';
+import { Button, Input, Flex, Modal, Table, InputNumber, Spin, ConfigProvider, Space, Alert } from 'antd';
+import { MinusOutlined, PlusOutlined, CheckOutlined, ForwardOutlined, SyncOutlined } from '@ant-design/icons';
 import { dialogError, message, goEasy } from '@/app/utils';
 
 import axios from 'axios';
@@ -28,6 +28,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
   const [isGoAdd, setIsGoAdd] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [reconnecting, setReconnecting] = useState<boolean>(false); // 是否正在重连
   const [isModalOpen, setIsModalOpen] = useState<string>('');
   const [isOpenSettleModal, setIsOpenSettleModal] = useState<boolean>(false); // 结算弹框
   const [groupNameInput, setGroupNameInput] = useState<string>('');
@@ -45,7 +46,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const title = sessionStorage.getItem('counterTitle');
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 初始化连接goeasy长连接 */
-    connectGoEasy(() => goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk }));
+    connectGoEasy(() => connectGoEasySuccess(), () => setReconnecting(true));
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
       initInfo({ isCounter: false });
@@ -54,7 +55,12 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       subscribe({ channel, onMessage: subscribeMsg });
       goEasyChannel.current = channel;
     } else if (groupName && typeList.length && !title) {
+      /* 如果选择过集合，但未进入标题，选择标题 */
+      message.success('已自动进入上次集合：' + groupName, 1.5)
       setIsModalOpen('title');
+    } else if (groupName) {
+      /* 如果使用过集合，自动进入上次集合，选择标题 */
+      groupNameOk(groupName, true);
     } else {
       setIsModalOpen('groupName');
     }
@@ -65,11 +71,28 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   }, []);
 
   /**
+   * 连接goeasy成功回调
+   * 获取长连接历史数据
+   * 关闭重连提示
+   */
+  let reconnectTip = useRef<any>(null);
+  const connectGoEasySuccess = () => {
+    // goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk })
+    setReconnecting(false);
+    /* 一秒后如果没有新数据提示，则提示已是最新数据 */
+    reconnectTip.current = setTimeout(() => {
+      message.success('已是最新数据', 1.5);
+      clearTimeout(reconnectTip.current);
+    }, 1000);
+  };
+
+  /**
    * 获取长连接历史数据，用于断网重新连接后恢复最新数据
    */
-  const goeasyHistoryOk = (value) => {
-    setGoEasyHistoryInfoList(value);
-  }
+  // const goeasyHistoryOk = (value) => {
+  //   console.log('goeasyHistoryOk', value);
+  //   setGoEasyHistoryInfoList(value);
+  // }
 
   /**
    * 订阅接收goeasy长连接消息，更新最新数据
@@ -83,20 +106,21 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
    */
   useEffect(() => {
     /* 如果缓存为空，说明本人只是初始化还没操作过，也要更新 */
-    if ( goEasyChannelceshi.current?.length === 0 ||
+    if (goEasyChannelceshi.current?.length === 0 ||
       /* 如果缓存有数据，对比缓存和最新数据，有差异则更新 */
       goEasyInfoList?.infoList?.some(item =>
-      goEasyChannelceshi.current?.some(itm => item.text === itm.text && item.value !== itm.value)
-    )) {
+        goEasyChannelceshi.current?.some(itm => item.text === itm.text && item.value !== itm.value)
+      )) {
       goEasySetVal(goEasyInfoList)
+      reconnectTip.current && clearTimeout(reconnectTip.current);
     }
   }, [goEasyInfoList])
 
   /* 断线重连直接更新数据 */
-  useEffect(() => {
-    /* 不知为何这样没问题，goEasyHistoryInfo有问题 */
-    goEasySetVal(goEasyInfoList)
-  }, [goEasyHistoryInfoList])
+  // useEffect(() => {
+  //   /* 不知为何这样没问题，goEasyHistoryInfo有问题 */
+  //   goEasySetVal(goEasyInfoList)
+  // }, [goEasyHistoryInfoList])
 
   /**
    * 最新数据与当前数据对比，有差异则更新渲染
@@ -106,6 +130,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
     /* 如果有数据，更新记录信息 */
     if (infoList?.length > 0) {
+      message.success('数据已同步', 1.5)
       setEditInfoList(infoList);
       /* 如果最新一条日志数据id不同，更新日志数据 */
       latestTableData?.id !== tableData[0]?.id && initInfo({ isGoEasyUpdate: true })
@@ -169,20 +194,21 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   /**
    * 选择集合确认按钮
    */
-  const groupNameOk = async () => {
+  const groupNameOk = async (value, isInit = false) => {
     try {
       setLoading(true);
       const res = await axios.post('/api/counterQuery', {
         opttyp: 'groupName',
-        groupName: groupNameInput,
+        groupName: value,
       })
       if (res.data.counter.length === 0) {
         setIsGoAdd(true);
         return
       }
       sessionStorage.setItem('counterTitle', '');
-      localStorage.setItem('counterGroupName', groupNameInput);
+      localStorage.setItem('counterGroupName', value);
       sessionStorage.setItem('counterTypeList', JSON.stringify(res.data?.counter[0]?.typeList || '[]'));
+      isInit && message.success('已自动进入上次集合：' + value, 1.5)
       setIsModalOpen('title');
     } catch (error) {
       dialogError(error);
@@ -275,6 +301,8 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
             {groupNameInput === '刘罗台球' && <Button type='primary' onClick={openSettle} > 结算 </Button>}
           </Flex>
 
+          {reconnecting && <Button type="primary" size="small" danger ghost iconPosition='start' icon={<SyncOutlined spin />}> 断 线 重 连 中 ...</Button>}
+
           {/* 记录操作部分 */}
           <Flex gap="small" vertical style={{ maxHeight: '40vh', overflow: 'auto' }}>
             {
@@ -300,11 +328,11 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       </Flex>
 
       {/* 弹框部分 */}
-      <Modal title="请输入记录集合名" open={isModalOpen === 'groupName'} onOk={groupNameOk}
+      <Modal title="请输入记录集合名" open={isModalOpen === 'groupName'} onOk={() => groupNameOk(groupNameInput)}
         onCancel={() => { setIsModalOpen(''); }} cancelText='取消' okText='确认' style={{ top: '20%' }}
         confirmLoading={loading}>
         <div style={{ padding: '10px 0' }}>
-          <Input value={groupNameInput} onChange={(e) => setGroupNameInput(e.target.value)} onPressEnter={groupNameOk} maxLength={25} placeholder='请输入您创建的集合名' />
+          <Input value={groupNameInput} onChange={(e) => setGroupNameInput(e.target.value)} onPressEnter={() => groupNameOk(groupNameInput)} maxLength={25} placeholder='请输入您创建的集合名' />
         </div>
       </Modal>
       <Modal title="请输入记录标题（不填默认当天日期）" open={isModalOpen === 'title'} onOk={titleOk}
