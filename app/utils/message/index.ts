@@ -8,7 +8,7 @@ export default class message {
    * @param duration 延迟秒数 默认2s
    * @param style 样式
    */
-  public static success(content, duration = 2, style = { marginTop: '10vh' }) {
+  public static success(content, duration = 2, style = { marginTop: '12vh' }) {
     Message.success({ content, duration, style })
   }
   /**
@@ -17,7 +17,7 @@ export default class message {
    * @param duration 延迟秒数 默认2s
    * @param style 样式
    */
-  public static warning(content, duration = 2, style = { marginTop: '10vh' }) {
+  public static warning(content, duration = 2, style = { marginTop: '12vh' }) {
     Message.warning({ content, duration, style })
   }
   /**
@@ -26,7 +26,7 @@ export default class message {
    * @param duration 延迟秒数 默认3s
    * @param style 样式
    */
-  public static error(content, duration = 3, style = { marginTop: '10vh' }) {
+  public static error(content, duration = 3, style = { marginTop: '12vh' }) {
     Message.error({ content, duration, style })
   }
   /**
@@ -35,7 +35,7 @@ export default class message {
    * @param duration 延迟秒数 默认2s
    * @param style 样式
    */
-  public static info(content, duration = 2, style = { marginTop: '10vh' }) {
+  public static info(content, duration = 2, style = { marginTop: '12vh' }) {
     Message.info({ content, duration, style })
   }
 }

@@ -56,7 +56,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       goEasyChannel.current = channel;
     } else if (groupName && typeList.length && !title) {
       /* 如果选择过集合，但未进入标题，选择标题 */
-      message.success('已自动进入上次集合：' + groupName, 1.5)
+      message.success('已自动进入上次集合：' + groupName)
       setIsModalOpen('title');
     } else if (groupName) {
       /* 如果使用过集合，自动进入上次集合，选择标题 */
@@ -80,7 +80,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     /* 如果是重连，一秒后如果没有新数据提示，则提示已是最新数据 */
     if (reconnecting) {
       reconnectTip.current = setTimeout(() => {
-        message.success('已是最新数据', 1.5);
+        message.success('已是最新数据');
         clearTimeout(reconnectTip.current);
       }, 1000);
     }
@@ -132,7 +132,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
     /* 如果有数据，更新记录信息 */
     if (infoList?.length > 0) {
-      message.success('数据已同步', 1.5)
+      message.success('数据已同步')
       setEditInfoList(infoList);
       /* 如果最新一条日志数据id不同，更新日志数据 */
       latestTableData?.id !== tableData[0]?.id && initInfo({ isGoEasyUpdate: true })
@@ -210,7 +210,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       sessionStorage.setItem('counterTitle', '');
       localStorage.setItem('counterGroupName', value);
       sessionStorage.setItem('counterTypeList', JSON.stringify(res.data?.counter[0]?.typeList || '[]'));
-      isInit && message.success('已自动进入上次集合：' + value, 1.5)
+      isInit && message.success('已自动进入上次集合：' + value)
       setIsModalOpen('title');
     } catch (error) {
       dialogError(error);
