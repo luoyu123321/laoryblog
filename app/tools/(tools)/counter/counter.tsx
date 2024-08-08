@@ -303,7 +303,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
             {groupNameInput === '刘罗台球' && <Button type='primary' onClick={openSettle} > 结算 </Button>}
           </Flex>
 
-          {reconnecting && <Button type="primary" size="small" danger ghost iconPosition='start' icon={<SyncOutlined spin />}> 断 线 重 连 中 ...</Button>}
+          {reconnecting && <Button type="primary" size="small" danger ghost icon={<SyncOutlined spin />}> 断 线 重 连 中 ...</Button>}
 
           {/* 记录操作部分 */}
           <Flex gap="small" vertical style={{ maxHeight: '40vh', overflow: 'auto' }}>
