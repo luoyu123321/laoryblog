@@ -72,18 +72,20 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
 
   /**
    * 连接goeasy成功回调
-   * 获取长连接历史数据
-   * 关闭重连提示
    */
   let reconnectTip = useRef<any>(null);
   const connectGoEasySuccess = () => {
+    /* 获取长连接历史数据 */
     // goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk })
+    /* 如果是重连，一秒后如果没有新数据提示，则提示已是最新数据 */
+    if (reconnecting) {
+      reconnectTip.current = setTimeout(() => {
+        message.success('已是最新数据', 1.5);
+        clearTimeout(reconnectTip.current);
+      }, 1000);
+    }
+    /* 关闭重连提示 */
     setReconnecting(false);
-    /* 一秒后如果没有新数据提示，则提示已是最新数据 */
-    reconnectTip.current = setTimeout(() => {
-      message.success('已是最新数据', 1.5);
-      clearTimeout(reconnectTip.current);
-    }, 1000);
   };
 
   /**
@@ -328,7 +330,8 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
       </Flex>
 
       {/* 弹框部分 */}
-      <Modal title="请输入记录集合名" open={isModalOpen === 'groupName'} onOk={() => groupNameOk(groupNameInput)}
+      <Modal title={<div>请输入记录集合名<span style={{ color: 'rgb(255 24 65 / 60%)', fontSize: '12px' }}>(首次使用点击 <a onClick={() => goAdd?.()}>去创建</a> )</span></div>}
+        open={isModalOpen === 'groupName'} onOk={() => groupNameOk(groupNameInput)}
         onCancel={() => { setIsModalOpen(''); }} cancelText='取消' okText='确认' style={{ top: '20%' }}
         confirmLoading={loading}>
         <div style={{ padding: '10px 0' }}>

@@ -6,7 +6,7 @@ import AddCounter from './addCounter';
 import CounterMod from './counter';
 import QueryCounter from './queryCounter';
 const Counter = ({ }) => {
-  const [radioSelect, setRadioSelect] = useState<string>('add');
+  const [radioSelect, setRadioSelect] = useState<string>('edit');
 
   useEffect(() => {
     /* 页面刷新后，恢复上次选择的选项 */
