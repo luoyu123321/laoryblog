@@ -40,6 +40,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const [goEasyHistoryInfoList, setGoEasyHistoryInfoList] = useState<{ [key: string]: any }>({}); // 长连接重新连接数据缓存
   let goEasyChannel = useRef<string>(''); // goeasy创建长连接名
   let goEasyChannelceshi = useRef<any[]>([]); // 缓存
+  let isFirstInit = useRef<boolean>(true); // 是否首次初始化
 
   useEffect(() => {
     const groupName = localStorage.getItem('counterGroupName');
@@ -78,12 +79,13 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     /* 获取长连接历史数据 */
     // goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk })
     /* 如果是重连，一秒后如果没有新数据提示，则提示已是最新数据 */
-    if (reconnecting) {
+    if (!isFirstInit.current) {
       reconnectTip.current = setTimeout(() => {
         message.success('已是最新数据');
         clearTimeout(reconnectTip.current);
       }, 1000);
     }
+    isFirstInit.current = false;
     /* 关闭重连提示 */
     setReconnecting(false);
   };
