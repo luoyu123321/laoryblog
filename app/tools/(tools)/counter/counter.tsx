@@ -48,6 +48,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
     const typeList = JSON.parse(sessionStorage.getItem('counterTypeList') || '[]');
     /* 初始化连接goeasy长连接 */
     connectGoEasy(() => connectGoEasySuccess(), () => setReconnecting(true));
+    setGroupNameInput(groupName || '');
     /* 如果本地有集合名和标题说明进入过标题，直接初始化 */
     if (groupName && title && typeList.length) {
       initInfo({ isCounter: false });
@@ -78,7 +79,7 @@ const Counter: React.FC<counterProps> = ({ goAdd }): ReactElement => {
   const connectGoEasySuccess = () => {
     /* 获取长连接历史数据 */
     // goeasyHistory({ channel: goEasyChannel.current, onSuccess: goeasyHistoryOk })
-    /* 如果是重连，一秒后如果没有新数据提示，则提示已是最新数据 */
+    /* 如果非初始化，重连一秒后如果没有新数据提示，则提示已是最新数据 */
     if (!isFirstInit.current) {
       reconnectTip.current = setTimeout(() => {
         message.success('已是最新数据');
