@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Form, Input, Space, Flex, Radio, notification } from 'antd';
 import { LuckyWheel, LuckyGrid, SlotMachine } from '@lucky-canvas/react';
+import config from './config';
 
 const COLORS = ['#DD4E15', '#F9B508', '#FDE429', '#76BA0A', '#008C9D', '#5AB2EB', '#7487D5'];
 
@@ -22,14 +23,20 @@ export default function LuckCanvas() {
   const [blocks] = useState([
     { padding: '10px', background: '#869cfa'},
   ])
-  const [prizes, setPrizes] = useState([
-    { background: COLORS[0], fonts: [{ text: '0', top: 30 }] },
-    { background: COLORS[1], fonts: [{ text: '1', top: 30 }] },
-    { background: COLORS[2], fonts: [{ text: '2', top: 30 }] },
-    { background: COLORS[3], fonts: [{ text: '3', top: 30 }] },
-    { background: COLORS[4], fonts: [{ text: '4', top: 30 }] },
-    { background: COLORS[5], fonts: [{ text: '5', top: 30 }] },
-  ])
+  // const [prizes, setPrizes] = useState([
+  //   { background: COLORS[0], fonts: [{ text: '0', top: 30 }] },
+  //   { background: COLORS[1], fonts: [{ text: '1', top: 30 }] },
+  //   { background: COLORS[2], fonts: [{ text: '2', top: 30 }] },
+  //   { background: COLORS[3], fonts: [{ text: '3', top: 30 }] },
+  //   { background: COLORS[4], fonts: [{ text: '4', top: 30 }] },
+  //   { background: COLORS[5], fonts: [{ text: '5', top: 30 }] },
+  // ])
+  const [prizes, setPrizes] = useState(config.map((item, index) => {
+    return {
+      background: COLORS[index % 7],
+      fonts: [{ text: item ? item : '无奖品', top: 30, fontSize: '0.8rem' }]
+    }
+  }))
   const [buttons] = useState([
     { radius: '40%', background: '#617df2' },
     { radius: '35%', background: '#afc8ff' },
@@ -76,16 +83,23 @@ export default function LuckCanvas() {
     }]  },
   ])
 
-  const [slotMachinePrizes, setSlotMachinePrizes] = useState([
-    { background: COLORS[0], fonts: [{ text: '0', top: '35%' }], borderRadius: '10px', },
-    { background: COLORS[1], fonts: [{ text: '1', top: '35%' }], borderRadius: '20px', },
-    { background: COLORS[2], fonts: [{ text: '2', top: '35%' }], borderRadius: Infinity, },
-    { background: COLORS[3], fonts: [{ text: '3', top: '35%' }], borderRadius: '30px', },
-    { background: COLORS[4], fonts: [{ text: '4', top: '35%' }], borderRadius: '40px', },
-    { background: COLORS[5], fonts: [{ text: '5', top: '35%' }], borderRadius: 'Infinity', },
-    { background: COLORS[6], fonts: [{ text: '6', top: '35%' }], borderRadius: '50px', },
-    { fonts: [{ text: '7', top: '35%' }], },
-  ])
+  // const [slotMachinePrizes, setSlotMachinePrizes] = useState([
+  //   { background: COLORS[0], fonts: [{ text: '0', top: '35%' }], borderRadius: '10px', },
+  //   { background: COLORS[1], fonts: [{ text: '1', top: '35%' }], borderRadius: '20px', },
+  //   { background: COLORS[2], fonts: [{ text: '2', top: '35%' }], borderRadius: Infinity, },
+  //   { background: COLORS[3], fonts: [{ text: '3', top: '35%' }], borderRadius: '30px', },
+  //   { background: COLORS[4], fonts: [{ text: '4', top: '35%' }], borderRadius: '40px', },
+  //   { background: COLORS[5], fonts: [{ text: '5', top: '35%' }], borderRadius: 'Infinity', },
+  //   { background: COLORS[6], fonts: [{ text: '6', top: '35%' }], borderRadius: '50px', },
+  //   { fonts: [{ text: '7', top: '35%' }], },
+  // ])
+  const [slotMachinePrizes, setSlotMachinePrizes] = useState(config.map((item, index) => {
+    return {
+      background: COLORS[index % 7],
+      fonts: [{ text: item ? item : '无奖品', top: '35%', fontSize: '0.8rem' }],
+      borderRadius: `${index % 5 * 25}px`,
+    }
+  }))
   const [slotMachineButtons] = useState([
     {
       x: 1, y: 1,
@@ -204,7 +218,7 @@ export default function LuckCanvas() {
         <Button type="primary" onClick={() => setIsModalOpen(false)}>确定</Button>
       </div>}
     >
-      <div style={{ textAlign: 'center', fontSize: '20px', lineHeight: '100px', minHeight: '100px' }}>
+      <div style={{ textAlign: 'center', fontSize: '60px', lineHeight: '200px', minHeight: '100px' }}>
         {bingoPrize}
       </div>
     </Modal>
@@ -266,7 +280,8 @@ export default function LuckCanvas() {
           if (prize.fonts[0].text === '无奖品') {
             setBingoPrize('可惜了！没中奖( ⊙ o ⊙ )')
           } else {
-            setBingoPrize('恭喜你抽到奖品： ' + prize.fonts[0].text)
+            // setBingoPrize('恭喜你抽到奖品： ' + prize.fonts[0].text)
+            setBingoPrize(prize.fonts[0].text)
           }
         }}
       />
@@ -335,7 +350,8 @@ export default function LuckCanvas() {
         onEnd={prize => { // 抽奖结束会触发end回调
           setIsModalOpen(true)
           if (prize) {
-            setBingoPrize('恭喜你抽到奖品： ' + prize?.fonts[0]?.text)
+            // setBingoPrize('恭喜你抽到奖品： ' + prize?.fonts[0]?.text)
+            setBingoPrize(prize?.fonts[0]?.text);
           } else {
             setBingoPrize('很遗憾，没有抽到奖品!')
           }
