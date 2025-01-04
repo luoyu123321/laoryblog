@@ -67,21 +67,21 @@ export default Header;
 const navList = [{
   name: '个人博客',
   url: '/blog',
-  isPrefetch: true,
+  isPrefetch: false,
 }, {
   name: '小工具',
   url: '/tools',
-  isPrefetch: true,
+  isPrefetch: false,
 }, {
   name: '前端导航集合',
   url: '/navigation_collect',
-  isPrefetch: true,
+  isPrefetch: false,
 }, {
   name: '留言板',
   url: '/guestbook',
-  isPrefetch: true,
+  isPrefetch: false,
 }, {
   name: '请求测试',
   url: '/request_test',
-  isPrefetch: true,
+  isPrefetch: false,
 }];
