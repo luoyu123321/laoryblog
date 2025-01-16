@@ -179,6 +179,7 @@ export default function LuckCanvas() {
   };
 
   const startGame = () => {
+    setSlotMachinePrizes(slotMachinePrizes.filter(item => item.fonts[0].text !== bingoPrize))
     setBingoPrize('');
     slotMachineRef.current?.play()
     const index = Math.random() * slotMachinePrizes.length >> 0;
@@ -268,6 +269,7 @@ export default function LuckCanvas() {
         prizes={prizes}
         buttons={buttons}
         onStart={() => { // 点击抽奖按钮会触发star回调
+          setPrizes(prizes.filter((item, index) => item.fonts[0].text !== bingoPrize))
           setBingoPrize('');
           luckyWheelRef.current?.play()
           setTimeout(() => {
