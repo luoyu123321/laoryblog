@@ -29,12 +29,12 @@ export const POST = async (req: Request) => {
     console.log(222,response.data);
     return NextResponse.json(response.data , { status: 200 });
     await connectToDatabase();
-    const newuser = await prisma.user.create({
-      data: {
-        email,
-        name
-      }
-    });
+    // const newuser = await prisma.user.create({
+    //   data: {
+    //     email,
+    //     name
+    //   }
+    // });
     return NextResponse.json({ message: "User Created" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
