@@ -44,9 +44,7 @@ model Countergroup {
 }
 
 // 小程序数据库
-/**
- * 用户登录信息
- */
+//用户登录信息
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   user_id      String // 用户唯一标识
@@ -63,9 +61,7 @@ model User {
   updatedAt    DateTime @updatedAt // 用户信息更新时间
 }
 
-/**
- * 小程序登录会话信息
- */
+// 小程序登录会话信息
 model UserSession {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   session_id  String // 会话唯一标识
@@ -77,9 +73,7 @@ model UserSession {
   update_time DateTime @updatedAt // 更新时间
 }
 
-/**
- * 五子棋对战记录
- */
+// 五子棋对战记录
 model WuziqiRecord {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   player1_id  String // 玩家1 ID（外键，关联 user 表）
