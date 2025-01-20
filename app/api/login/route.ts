@@ -27,8 +27,8 @@ export const POST = async (req: Request) => {
       // }),
     })
     console.log(222,response.data);
-    return NextResponse.json(response.data , { status: 200 });
     await connectToDatabase();
+    return NextResponse.json(response.data , { status: 200 });
     // const newuser = await prisma.user.create({
     //   data: {
     //     email,
