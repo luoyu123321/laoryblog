@@ -46,12 +46,12 @@ model Countergroup {
 // 小程序数据库
 //用户登录信息
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  user_id      String // 用户唯一标识
-  openid       String // 用户在当前小程序的唯一标识
+  // id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id      String   @id @map("_id") // 用户唯一标识
+  openid       String   @unique // 用户在当前小程序的唯一标识
   unionid      String? // 用户在微信开放平台的唯一标识
   nickName     String? // 用户昵称
-  avatarUrl   String? // 用户头像 URL
+  avatarUrl    String? // 用户头像 URL
   gender       Int? // 性别（0：未知，1：男，2：女）
   country      String? // 国家
   province     String? //	省份
@@ -64,8 +64,8 @@ model User {
 // 小程序登录会话信息
 model UserSession {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  session_id  String // 会话唯一标识
-  user_id     String // 用户 ID（外键，关联 user 表）
+  session_id  String   @unique // 会话唯一标识
+  user_id     String   @unique // 用户 ID（外键，关联 user 表）
   session_key String // 微信会话密钥
   token       String // 自定义登录态 Token
   expires_in  Int // Token 有效期（秒）
