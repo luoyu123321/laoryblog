@@ -1,11 +1,33 @@
 import { connectToDatabase } from "@/helpers/server-helpers";
 import { NextResponse } from "next/server";
+import axios from "axios";
 import prisma from '@/prisma';
 
+// 微信接口地址
+const WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session'
+const appid = process.env.APPID
+const secret = process.env.AppSecret
 export const POST = async (req: Request) => {
-  const { email, name } = await req.json();
+  const { code  } = await req.json();
   try {
-    if (!email || !name) return NextResponse.json({ message: "Invalid Data" }, { status: 422 });
+    if (!code) return NextResponse.json({ message: "code字段不能为空" }, { status: 422 });
+    const response = await axios.get(WX_API_URL, {
+      params: {
+        appid,
+        secret,
+        js_code: code,
+        grant_type: 'authorization_code',
+      },
+      // method: 'POST',
+      // body: JSON.stringify({
+      //   appid: process.env.APPID,
+      //   secret: process.env.AppSecret,
+      //   js_code: code,
+      //   grant_type: 'authorization_code'
+      // }),
+    })
+    console.log(222,response.data);
+    return NextResponse.json(response.data , { status: 200 });
     await connectToDatabase();
     const newuser = await prisma.user.create({
       data: {

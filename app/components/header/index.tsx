@@ -80,8 +80,4 @@ const navList = [{
   name: '留言板',
   url: '/guestbook',
   isPrefetch: false,
-}, {
-  name: '请求测试',
-  url: '/request_test',
-  isPrefetch: false,
 }];

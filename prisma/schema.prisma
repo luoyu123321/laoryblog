@@ -13,14 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Guestbook {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
@@ -49,4 +41,51 @@ model Countergroup {
   groupName String    @unique
   typeList  String
   counters  Counter[]
+}
+
+// 小程序数据库
+/**
+ * 用户登录信息
+ */
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id      String // 用户唯一标识
+  openid       String // 用户在当前小程序的唯一标识
+  unionid      String // 用户在微信开放平台的唯一标识
+  nickname     String // 用户昵称
+  avatar_url   String // 用户头像 URL
+  gender       Int? // 性别（0：未知，1：男，2：女）
+  country      String? // 国家
+  province     String? //	省份
+  city         String? //	城市
+  phone_number String? //	用户手机号（加密存储）
+  createdAt    DateTime @default(now()) //用户注册时间
+  updatedAt    DateTime @updatedAt // 用户信息更新时间
+}
+
+/**
+ * 小程序登录会话信息
+ */
+model UserSession {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  session_id  String // 会话唯一标识
+  user_id     String // 用户 ID（外键，关联 user 表）
+  session_key String // 微信会话密钥
+  token       String // 自定义登录态 Token
+  expires_in  Int // Token 有效期（秒）
+  create_time DateTime @default(now()) // 登录时间
+  update_time DateTime @updatedAt // 更新时间
+}
+
+/**
+ * 五子棋对战记录
+ */
+model WuziqiRecord {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  player1_id  String // 玩家1 ID（外键，关联 user 表）
+  player2_id  String // 玩家2 ID（外键，关联 user 表）
+  winner_id   String // 获胜者 ID（外键，关联 user 表）
+  start_time  DateTime @default(now()) // 对战开始时间
+  end_time    DateTime @updatedAt // 对战结束时间
+  total_steps Int // 总步数
 }
