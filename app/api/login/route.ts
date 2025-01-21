@@ -30,10 +30,10 @@ export const POST = async (req: Request) => {
       // 如果用户不存在，存库，并随机生成初始化用户名
       nickName = '用户' + new Date().getTime()
       await prisma.user.create({
-        data: { user_id: openid, openid, nickName }
+        data: { userId: openid, openid, nickName }
       });
     }
-    return NextResponse.json({ user_id: openid, nickName: nickName }, { status: 200 });
+    return NextResponse.json({ userId: openid, nickName: nickName }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {

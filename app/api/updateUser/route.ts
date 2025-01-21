@@ -3,13 +3,13 @@ import { NextResponse } from "next/server";
 import prisma from '@/prisma';
 
 export const POST = async (req: Request) => {
-  const { user_id, avatarUrl, nickName } = await req.json();
+  const { userId, avatarUrl, nickName } = await req.json();
   try {
-    if (!user_id) return NextResponse.json({ message: "user_id字段不能同时为空" }, { status: 422 });
+    if (!userId) return NextResponse.json({ message: "userId字段不能同时为空" }, { status: 422 });
     await connectToDatabase();
     // 校验用户信息是否以存在
     const currentUser = await prisma.user.findUnique({
-      where: { user_id },
+      where: { userId },
     });
     // 用户不存在直接报错
     if (!currentUser) {
@@ -28,7 +28,7 @@ export const POST = async (req: Request) => {
     }
 
     await prisma.user.update({
-      where: { user_id },
+      where: { userId },
       data: updateData,
     });
     return NextResponse.json({ message: "更新成功！", data: updateData }, { status: 200 });
