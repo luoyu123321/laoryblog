@@ -28,7 +28,12 @@ export const POST = async (req: Request) => {
     let res: any = userInfo[0] || {};
     if (userInfo.length === 0) {
       // 如果用户不存在，存库，并随机生成初始化用户名
-      res = { userId: openid, openid, nickName: '用户' + new Date().getTime() }
+      res = {
+        userId: openid,
+        openid,
+        nickName: '用户' + new Date().getTime(),
+        avatarUrl: 'https://gitee.com/luoyu123321/cdn/raw/master/image/miniProgram/laoryTools/default_avatar.jpg',
+      };
       await prisma.user.create({
         data: res
       });
