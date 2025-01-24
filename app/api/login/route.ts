@@ -25,15 +25,15 @@ export const POST = async (req: Request) => {
     const userInfo = await prisma.user.findMany({
       where: { openid },
     });
-    let nickName = userInfo[0]?.nickName;
+    let res: any = userInfo[0] || {};
     if (userInfo.length === 0) {
       // 如果用户不存在，存库，并随机生成初始化用户名
-      nickName = '用户' + new Date().getTime()
+      res = { userId: openid, openid, nickName: '用户' + new Date().getTime() }
       await prisma.user.create({
-        data: { userId: openid, openid, nickName }
+        data: res
       });
     }
-    return NextResponse.json({ userId: openid, nickName: nickName }, { status: 200 });
+    return NextResponse.json(res, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
   } finally {
