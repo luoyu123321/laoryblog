@@ -7,6 +7,11 @@ import prisma from '@/prisma';
 const WX_API_URL = 'https://api.weixin.qq.com/sns/jscode2session'
 const appid = process.env.APPID
 const secret = process.env.AppSecret
+
+/**
+ * 登陆接口存储及初始化用户信息
+ * @param req code 微信登陆接口返回的code
+ */
 export const POST = async (req: Request) => {
   const { code } = await req.json();
   try {

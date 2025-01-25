@@ -2,6 +2,11 @@ import { connectToDatabase } from "@/helpers/server-helpers";
 import { NextResponse } from "next/server";
 import prisma from '@/prisma';
 
+/**
+ * 更新用户信息
+ * @param req  userId必填
+ * @returns 
+ */
 export const POST = async (req: Request) => {
   const { userId, avatarUrl, nickName } = await req.json();
   try {

@@ -46,9 +46,9 @@ model Countergroup {
 // 小程序数据库
 //用户登录信息
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String   @unique // 用户唯一标识
-  openid       String   @unique // 用户在当前小程序的唯一标识
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String         @unique // 用户唯一标识
+  openid       String         @unique // 用户在当前小程序的唯一标识
   unionid      String? // 用户在微信开放平台的唯一标识
   nickName     String? // 用户昵称
   avatarUrl    String? // 用户头像 URL
@@ -57,8 +57,10 @@ model User {
   province     String? //	省份
   city         String? //	城市
   phone_number String? //	用户手机号（加密存储）
-  createdAt    DateTime @default(now()) //用户注册时间
-  updatedAt    DateTime @updatedAt // 用户信息更新时间
+  createdAt    DateTime       @default(now()) //用户注册时间
+  updatedAt    DateTime       @updatedAt // 用户信息更新时间
+  Player1Games WuziqiRecord[] @relation("Player1Games")
+  Player2Games WuziqiRecord[] @relation("Player2Games")
 }
 
 // 小程序登录会话信息
@@ -82,4 +84,7 @@ model WuziqiRecord {
   startTime  DateTime @default(now()) // 对战开始时间
   endTime    DateTime @updatedAt // 对战结束时间
   totalSteps Int // 总步数
+  // 关联到 User 模型, 获取对战双方信息
+  player1    User     @relation(name:"Player1Games", fields: [player1Id], references: [userId])
+  player2    User     @relation(name:"Player2Games", fields: [player2Id], references: [userId])
 }
