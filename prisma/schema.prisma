@@ -78,12 +78,13 @@ model UserSession {
 // 五子棋对战记录
 model WuziqiRecord {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  gameId     String   @unique
   player1Id  String // 玩家1 ID（外键，关联 user 表）
   player2Id  String // 玩家2 ID（外键，关联 user 表）
   winnerId   String // 获胜者 ID（外键，关联 user 表）
+  totalSteps Int // 总步数
   startTime  DateTime @default(now()) // 对战开始时间
   endTime    DateTime @updatedAt // 对战结束时间
-  totalSteps Int // 总步数
   // 关联到 User 模型, 获取对战双方信息
   player1    User     @relation(name:"Player1Games", fields: [player1Id], references: [userId])
   player2    User     @relation(name:"Player2Games", fields: [player2Id], references: [userId])

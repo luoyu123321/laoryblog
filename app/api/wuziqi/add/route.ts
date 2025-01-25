@@ -8,20 +8,27 @@ import prisma from '@/prisma';
  * @returns 
  */
 export const POST = async (req: Request) => {
-  const { player1Id, player2Id, winnerId, totalSteps } = await req.json();
+  const { gameId, player1Id, player2Id, winnerId, totalSteps } = await req.json();
   try {
-    let checkmsg = [player1Id, player2Id, winnerId].filter((item) => !item);
-    if (checkmsg.length > 0) return NextResponse.json({ message: `${checkmsg.join('、')}字段不能同时为空` }, { status: 422 });
+    if (!gameId || (!player1Id && !player2Id)) {
+      let checkmsg = !gameId ? 'gameId字段不能为空' : 'player1Id、player2Id字段不能同时为空';
+      return NextResponse.json({ message: checkmsg }, { status: 422 });
+    }
     await connectToDatabase();
 
     const newRecord = {
-      player1Id,
-      player2Id,
-      winnerId,
-      totalSteps
+      gameId,
+      ...(player1Id && { player1Id }),
+      ...(player2Id && { player2Id }),
+      ...(winnerId && { winnerId }),
+      ...(totalSteps && { totalSteps }),
     }
-    await prisma.wuziqiRecord.create({
-      data: newRecord
+    await prisma.wuziqiRecord.upsert({
+      where: {
+        gameId
+      },
+      update: newRecord,
+      create: newRecord,
     });
     return NextResponse.json({ message: "保存对局成功！", data: newRecord }, { status: 200 });
   } catch (error) {
