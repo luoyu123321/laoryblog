@@ -59,8 +59,8 @@ model User {
   phone_number String? //	用户手机号（加密存储）
   createdAt    DateTime       @default(now()) //用户注册时间
   updatedAt    DateTime       @updatedAt // 用户信息更新时间
-  Player1Games WuziqiRecord[] @relation("Player1Games")
-  Player2Games WuziqiRecord[] @relation("Player2Games")
+  Player1Games Wuziqirecord[] @relation("Player1Games")
+  Player2Games Wuziqirecord[] @relation("Player2Games")
 }
 
 // 小程序登录会话信息
@@ -76,16 +76,16 @@ model UserSession {
 }
 
 // 五子棋对战记录
-model WuziqiRecord {
+model Wuziqirecord {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   gameId     String   @unique
-  player1Id  String // 玩家1 ID（外键，关联 user 表）
-  player2Id  String // 玩家2 ID（外键，关联 user 表）
-  winnerId   String // 获胜者 ID（外键，关联 user 表）
-  totalSteps Int // 总步数
-  startTime  DateTime @default(now()) // 对战开始时间
-  endTime    DateTime @updatedAt // 对战结束时间
+  player1Id  String? // 玩家1 ID（外键，关联 user 表）
+  player2Id  String? // 玩家2 ID（外键，关联 user 表）
+  winnerId   String? // 获胜者 ID（外键，关联 user 表）
+  totalSteps Int? // 总步数
+  createdAt  DateTime @default(now()) // 对战时间
+  updatedAt  DateTime @updatedAt // 更新时间
   // 关联到 User 模型, 获取对战双方信息
-  player1    User     @relation(name:"Player1Games", fields: [player1Id], references: [userId])
-  player2    User     @relation(name:"Player2Games", fields: [player2Id], references: [userId])
+  player1    User?    @relation(name: "Player1Games", fields: [player1Id], references: [userId])
+  player2    User?    @relation(name: "Player2Games", fields: [player2Id], references: [userId])
 }

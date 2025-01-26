@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
       ...(winnerId && { winnerId }),
       ...(totalSteps && { totalSteps }),
     }
-    await prisma.wuziqiRecord.upsert({
+    await prisma.wuziqirecord.upsert({
       where: {
         gameId
       },

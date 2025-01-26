@@ -12,7 +12,7 @@ export const POST = async (req: Request) => {
   try {
     if (!userId) return NextResponse.json({ message: "userId字段不能同时为空" }, { status: 422 });
     await connectToDatabase();
-    const records = await prisma.wuziqiRecord.findMany({
+    const records = await prisma.wuziqirecord.findMany({
       where: {
         OR: [
           { player1Id: userId },
@@ -24,7 +24,7 @@ export const POST = async (req: Request) => {
         player2: { select: { nickName: true, avatarUrl: true } }, // 只查询玩家2的nickName
       },
       orderBy: {
-        startTime: 'desc', // 按时间降序排列
+        createdAt: 'desc', // 按时间降序排列
       },
       skip: (page - 1) * pageSize, // 跳过前面的记录
       take: pageSize, // 每页的记录数量
