@@ -79,8 +79,8 @@ model Wuziqirecord {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   gameId     String
   userId     String // 玩家 ID（外键，关联 user 表）
-  playerType String // 玩家类型（1：白子，2：黑子）
-  isWinner   String // 是否是胜利者（0：否，1：是）
+  playerType Int // 玩家类型（1：白子，2：黑子）
+  isWinner   String // 是否是胜利者（loser：否，winner：是）
   totalSteps Int? // 总步数
   createdAt  DateTime @default(now()) // 对战时间
   updatedAt  DateTime @updatedAt // 更新时间
