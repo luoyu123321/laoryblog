@@ -23,12 +23,15 @@ export const POST = async (req: Request) => {
       ...(winnerId && { winnerId }),
       ...(totalSteps && { totalSteps }),
     }
-    await prisma.wuziqirecord.upsert({
-      where: {
-        gameId
-      },
-      update: newRecord,
-      create: newRecord,
+    /* 事务防止并发插入重复数据 */
+    await prisma.$transaction(async (prisma) => {
+      await prisma.wuziqirecord.upsert({
+        where: {
+          gameId
+        },
+        update: newRecord,
+        create: newRecord,
+      });
     });
     return NextResponse.json({ message: "保存对局成功！", data: newRecord }, { status: 200 });
   } catch (error) {
