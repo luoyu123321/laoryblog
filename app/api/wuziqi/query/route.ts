@@ -10,7 +10,7 @@ import prisma from '@/prisma';
 export const POST = async (req: Request) => {
   const { userId, page = 1, pageSize = 10 } = await req.json();
   try {
-    if (!userId) return NextResponse.json({ message: "userId字段不能同时为空" }, { status: 422 });
+    if (!userId) return NextResponse.json({ message: "userId字段不能为空" }, { status: 422 });
     await connectToDatabase();
     /* 查询用户五子棋对局记录 */
     const records = await prisma.wuziqirecord.findMany({
