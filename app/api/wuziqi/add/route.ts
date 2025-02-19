@@ -10,9 +10,15 @@ import prisma from '@/prisma';
 export const POST = async (req: Request) => {
   const { gameId, userId, playerType, isWinner, totalSteps } = await req.json();
   try {
-    let checkmsg = [gameId, userId, playerType, isWinner].filter((item) => !item);
+    let ckeckKeys = { gameId, userId, playerType, isWinner };
+    let checkmsg = Object.values(ckeckKeys).filter((item) => !item);
     if (checkmsg.length > 0) {
-      return NextResponse.json({ message: `${checkmsg.join('、')}字段不能为空` }, { status: 422 });
+      let keyarr = Object.keys(ckeckKeys).map(item => {
+        if (ckeckKeys[item]) {
+          return item;
+        }
+      });
+      return NextResponse.json({ message: `${keyarr.join('、')}字段不能为空` }, { status: 422 });
     }
     await connectToDatabase();
 
