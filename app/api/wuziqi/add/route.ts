@@ -18,6 +18,7 @@ export const POST = async (req: Request) => {
           return item;
         }
       });
+      keyarr = keyarr.filter((item) => item);
       return NextResponse.json({ message: `${keyarr.join('、')}字段不能为空` }, { status: 422 });
     }
     await connectToDatabase();
