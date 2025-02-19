@@ -14,7 +14,7 @@ export const POST = async (req: Request) => {
     let checkmsg = Object.values(ckeckKeys).filter((item) => !item);
     if (checkmsg.length > 0) {
       let keyarr = Object.keys(ckeckKeys).map(item => {
-        if (ckeckKeys[item]) {
+        if (!ckeckKeys[item]) {
           return item;
         }
       });
