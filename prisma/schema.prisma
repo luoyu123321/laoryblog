@@ -87,3 +87,16 @@ model Wuziqirecord {
   // 关联到 User 模型, 获取对战双方信息
   userInfo   User?    @relation(name: "wuziqiGames", fields: [userId], references: [userId])
 }
+
+// 计课时工具数据库
+model ClassRecord {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String
+  month      String // 记录所属月份，格式 YYYY-MM
+  handleTime String // 最后一次操作时间，时间戳用于对比本地和服务器数据
+  slots      String // JSON 字符串，存储课时数据
+  createdAt  DateTime @default(now()) // 创建时间
+  updatedAt  DateTime @updatedAt // 更新时间
+
+  @@unique([userId, month])
+}
