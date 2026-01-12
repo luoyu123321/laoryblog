@@ -60,6 +60,7 @@ model User {
   createdAt    DateTime       @default(now()) //用户注册时间
   updatedAt    DateTime       @updatedAt // 用户信息更新时间
   wuziqiGames  Wuziqirecord[] @relation("wuziqiGames")
+  classRecords ClassRecord[]  @relation("classRecords")
 }
 
 // 小程序登录会话信息
@@ -93,10 +94,11 @@ model ClassRecord {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String
   month      String // 记录所属月份，格式 YYYY-MM
-  handleTime String // 最后一次操作时间，时间戳用于对比本地和服务器数据
+  handleTime Int    // 最后一次操作时间，时间戳用于对比本地和服务器数据
   slots      String // JSON 字符串，存储课时数据
   createdAt  DateTime @default(now()) // 创建时间
   updatedAt  DateTime @updatedAt // 更新时间
+  userInfo   User?    @relation(name: "classRecords", fields: [userId], references: [userId])
 
   @@unique([userId, month])
 }
