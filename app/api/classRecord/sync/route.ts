@@ -18,18 +18,15 @@ export const POST = async (req: Request) => {
       );
     }
     await connectToDatabase();
-    console.log('connectToDatabase',userId, month, handleTime, slots);
     await prisma.classRecord.upsert({
       where: { userId_month: { userId, month } },
-      create: { userId, month, handleTime, slots: JSON.stringify(slots) },
-      update: { handleTime, slots: JSON.stringify(slots) },
+      create: { userId, month, handleTime, slots },
+      update: { handleTime, slots },
     });
-    console.log('upsert');
 
     return NextResponse.json({ message: "同步成功！" }, { status: 200 });
   } catch (error) {
-    console.error('Error in /api/classRecord/sync:', error);
-    return NextResponse.json({ message: "服务器错误，请稍后重试！" }, { status: 500 });
+    return NextResponse.json({ message: "服务器错误:" + error }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
