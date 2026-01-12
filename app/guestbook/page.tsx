@@ -145,18 +145,6 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
       .finally(() => setPostLoading(false))
   }
 
-  const test = () => {
-    fetch('/api/classRecord/get', {
-      method: 'POST',
-      body: JSON.stringify({
-        handleTime: 1768194693661,
-        month: "2026-01",
-        userId: "o7nQN4zXTN7xSBxGcuXNDcooZJ34",
-        // slots: "{\"2026-01-11\":[{\"time\":\"08:00-09:00\",\"className\":\"数学\"},{\"time\":\"09:00-10:00\",\"className\":\"语文\"}]}"
-      })
-    })
-  }
-
   const resetData = () => {
     setInputName('');
     setInputEmail('');
@@ -173,7 +161,7 @@ const Guestbook: FC<guestbookProps> = ({ }) => {
         <div>
           <TextArea className="guestbook-search-textarea" showCount value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} maxLength={200} rows={4} placeholder="您说两句" />
         </div>
-        <Button className="guestbook-search-btn" type="primary" onClick={test}>add</Button>
+        <Button className="guestbook-search-btn" type="primary" onClick={add}>add</Button>
       </div>
     </Spin>
     <div className="guestbook-card-container" >
