@@ -29,16 +29,16 @@ export const POST = async (req: Request) => {
       },
     });
 
+
     // 筛选出 handleTime 中月份时间戳大于传入 handleTime 的记录，或传入时间戳不存在的记录
     const filteredData = targetData.filter(record => {
       const recordMonth = record.month;
-      const recordTimestamp = record.handleTime && record.handleTime[recordMonth];
       const inputTimestamp = handleTime[recordMonth];
       // 如果传入的时间戳不存在，认为需要更新；如果存在，则比较时间戳
       if (!inputTimestamp) {
         return true;
       }
-      return recordTimestamp && recordTimestamp > inputTimestamp;
+      return record.handleTime && record.handleTime > inputTimestamp;
     });
 
     // 按月份分组 slots
