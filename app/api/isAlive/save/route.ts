@@ -30,6 +30,7 @@ export const POST = async (req: Request) => {
       updateData.aliveEmail = aliveEmail;
     }
 
+    let todaySignNbr = 0;
     // 如果提供了最后签到时间，则更新签到相关信息
     if (lastCheckIn) {
       updateData.lastCheckIn = lastCheckIn;
@@ -39,10 +40,28 @@ export const POST = async (req: Request) => {
       updateData.checkInCount = {
         increment: 1
       };
+
+      // 获取今天的开始时间和结束时间
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // 查询当天签到的记录数量
+      todaySignNbr = await prisma.isAlive.count({
+        where: {
+          lastCheckIn: {
+            gte: startOfDay.getTime(), // 大于等于今天开始时间
+            lte: endOfDay.getTime()    // 小于等于今天结束时间
+          }
+        }
+      });
+
     }
 
     // 使用upsert更新或创建记录
-    const result = await prisma.isAlive.upsert({
+    await prisma.isAlive.upsert({
       where: {
         userId
       },
@@ -59,7 +78,7 @@ export const POST = async (req: Request) => {
       }
     });
 
-    return NextResponse.json({ message: "保存成功！", data: result }, { status: 200 });
+    return NextResponse.json({ message: "保存成功！", data: { todaySignNbr } }, { status: 200 });
   } catch (error) {
     console.error("保存用户数据时发生错误:", error);
     return NextResponse.json({ message: "服务器错误:" + error }, { status: 500 });
