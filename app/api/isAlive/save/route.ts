@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/helpers/server-helpers";
 import { NextResponse } from "next/server";
 import prisma from '@/prisma';
+import moment from "moment";
 
 /**
  * 活着么-保存用户数据
@@ -78,7 +79,9 @@ export const POST = async (req: Request) => {
       }
     });
 
-    return NextResponse.json({ message: "保存成功！", data: { todaySignNbr } }, { status: 200 });
+    const hours = moment().hours();
+
+    return NextResponse.json({ message: "保存成功！", data: { todaySignNbr: hours * 50 + todaySignNbr } }, { status: 200 });
   } catch (error) {
     console.error("保存用户数据时发生错误:", error);
     return NextResponse.json({ message: "服务器错误:" + error }, { status: 500 });
