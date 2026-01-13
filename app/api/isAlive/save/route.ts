@@ -1,7 +1,7 @@
 import { connectToDatabase } from "@/helpers/server-helpers";
 import { NextResponse } from "next/server";
 import prisma from '@/prisma';
-import moment from "moment";
+import moment from 'moment-timezone';
 
 /**
  * 活着么-保存用户数据
@@ -79,7 +79,7 @@ export const POST = async (req: Request) => {
       }
     });
 
-    const hours = moment().hours();
+    const hours = moment().tz('Asia/Shanghai').hours();
 
     return NextResponse.json({ message: "保存成功！", data: { todaySignNbr: hours * 50 + todaySignNbr } }, { status: 200 });
   } catch (error) {
