@@ -61,6 +61,7 @@ model User {
   updatedAt    DateTime       @updatedAt // 用户信息更新时间
   wuziqiGames  Wuziqirecord[] @relation("wuziqiGames")
   classRecords ClassRecord[]  @relation("classRecords")
+  isAlive      IsAlive[]      @relation("isAlive")
 }
 
 // 小程序登录会话信息
@@ -94,11 +95,24 @@ model ClassRecord {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String
   month      String // 记录所属月份，格式 YYYY-MM
-  handleTime Int    // 最后一次操作时间，时间戳用于对比本地和服务器数据
+  handleTime Int // 最后一次操作时间，时间戳用于对比本地和服务器数据
   slots      String // JSON 字符串，存储课时数据
   createdAt  DateTime @default(now()) // 创建时间
   updatedAt  DateTime @updatedAt // 更新时间
   userInfo   User?    @relation(name: "classRecords", fields: [userId], references: [userId])
 
   @@unique([userId, month])
+}
+
+// 活着么用户数据
+model IsAlive {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String    @unique // 用户唯一标识
+  userName     String? // 用户姓名
+  userEmail    String? // 用户邮箱
+  status       Int       @default(0) // 用户状态（0：已发送或不需要发送，1：待发送状态）
+  lastCheckIn  DateTime? // 最后签到时间
+  checkInCount Int       @default(0) //签到次数
+  createdAt    DateTime  @default(now()) //用户注册时间
+  userInfo     User?     @relation(name: "isAlive", fields: [userId], references: [userId])
 }
