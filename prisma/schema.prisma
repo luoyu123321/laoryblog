@@ -111,7 +111,7 @@ model IsAlive {
   aliveName    String? // 用户姓名
   aliveEmail   String? // 用户邮箱
   status       Int       @default(0) // 用户状态（0：已发送或不需要发送，1：待发送状态）
-  lastCheckIn  DateTime? // 最后签到时间
+  lastCheckIn  Int?    // 最后签到时间.时间戳格式
   checkInCount Int       @default(0) //签到次数
   createdAt    DateTime  @default(now()) //用户注册时间
   userInfo     User?     @relation(name: "isAlive", fields: [userId], references: [userId])
