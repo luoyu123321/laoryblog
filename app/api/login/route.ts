@@ -29,6 +29,18 @@ export const POST = async (req: Request) => {
     // 校验用户信息是否以存在
     const userInfo = await prisma.user.findMany({
       where: { openid },
+      select: {
+        userId: true,
+        nickName: true,
+        avatarUrl: true,
+        gender: true,
+        country: true,
+        province: true,
+        city: true,
+        createdAt: true,
+        updatedAt: true,
+        isAlive: true,
+      }
     });
     let res: any = userInfo[0] || {};
     if (userInfo.length === 0) {
