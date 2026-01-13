@@ -8,7 +8,7 @@ import prisma from '@/prisma';
  * @returns 
  */
 export const POST = async (req: Request) => {
-  const { userId, userName, userEmail, lastCheckIn } = await req.json();
+  const { userId, aliveName, aliveEmail, lastCheckIn } = await req.json();
   try {
     // 参数验证
     if (!userId) {
@@ -23,11 +23,11 @@ export const POST = async (req: Request) => {
     const updateData: any = {};
 
     // 如果提供了用户名和邮箱，则更新它们
-    if (userName) {
-      updateData.userName = userName;
+    if (aliveName) {
+      updateData.aliveName = aliveName;
     }
-    if (userEmail) {
-      updateData.userEmail = userEmail;
+    if (aliveEmail) {
+      updateData.aliveEmail = aliveEmail;
     }
 
     // 如果提供了最后签到时间，则更新签到相关信息
@@ -49,8 +49,8 @@ export const POST = async (req: Request) => {
       update: updateData,
       create: {
         userId,
-        userName: userName || '',
-        userEmail: userEmail || '',
+        aliveName: aliveName || '',
+        aliveEmail: aliveEmail || '',
         ...(lastCheckIn && {
           lastCheckIn,
           status: 1, // 如果提供了lastCheckIn，默认状态为1
