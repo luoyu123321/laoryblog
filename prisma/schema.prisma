@@ -116,3 +116,12 @@ model IsAlive {
   createdAt    DateTime  @default(now()) //用户注册时间
   userInfo     User?     @relation(name: "isAlive", fields: [userId], references: [userId])
 }
+
+// 邮件每日发送记录
+model SendRecord {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  date      String   @unique
+  number    Int      @default(0) // 记录发送次数
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // 更新时间
+}

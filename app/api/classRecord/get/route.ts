@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from '@/prisma';
 
 /**
- * 查询弹幕信息
+ * 查询前后一年的计课时信息
  * @param req 
  * @returns 
  */
