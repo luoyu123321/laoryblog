@@ -14,6 +14,7 @@ export const POST = async (req: Request) => {
   try {
     await connectToDatabase();
 
+    console.log('userId:', userId);
     // 获取用户信息
     const userRecord = await prisma.isAlive.findUnique({
       where: { userId },
@@ -49,6 +50,7 @@ export const POST = async (req: Request) => {
 
     // 发送微信通知
     const accessToken = await getAccessToken(); // 获取access token的函数
+    console.log('accessToken:', accessToken);
     const response = await axios.post(
       `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${accessToken}`,
       wechatMessage,
@@ -58,6 +60,7 @@ export const POST = async (req: Request) => {
         }
       }
     );
+    console.log('response:', response);
 
     if (response.data.errcode !== 0) {
       throw new Error(`发送微信通知失败: ${response.data.errmsg}`);
