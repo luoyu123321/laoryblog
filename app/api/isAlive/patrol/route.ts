@@ -18,6 +18,8 @@ export const POST = async (req: Request) => {
         where: {
           status: 1,
           checkInCount: { gt: 1 },
+          aliveName: { not: "" },
+          aliveEmail: { not: "" },
           lastCheckIn: { lte: moment().tz('Asia/Shanghai').subtract(3, 'days').valueOf() },
         },
         select: {
