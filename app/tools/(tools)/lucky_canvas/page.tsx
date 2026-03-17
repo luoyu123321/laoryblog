@@ -3,13 +3,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Form, Input, Space, Flex, Radio, notification } from 'antd';
 import { LuckyWheel, LuckyGrid, SlotMachine } from '@lucky-canvas/react';
-import config from './config';
+import { class1, class2 } from './config';
 
 const COLORS = ['#DD4E15', '#F9B508', '#FDE429', '#76BA0A', '#008C9D', '#5AB2EB', '#7487D5'];
 
 export default function LuckCanvas() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [luckyType, setLuckyType] = useState<string>('luckyWheel');
+  const [classType, setClassType] = useState<string>('class1');
   const [settingModal, setSettingModal] = useState<boolean>(false);
   const [bingoPrize, setBingoPrize] = useState<string>('');
 
@@ -21,7 +22,7 @@ export default function LuckCanvas() {
   const [settingZCPrizes, setSettingZCPrizes] = useState<string[] | undefined[]>(['0', '1', '2', '3', '4', '5']);
 
   const [blocks] = useState([
-    { padding: '10px', background: '#869cfa'},
+    { padding: '10px', background: '#869cfa' },
   ])
   // const [prizes, setPrizes] = useState([
   //   { background: COLORS[0], fonts: [{ text: '0', top: 30 }] },
@@ -31,7 +32,7 @@ export default function LuckCanvas() {
   //   { background: COLORS[4], fonts: [{ text: '4', top: 30 }] },
   //   { background: COLORS[5], fonts: [{ text: '5', top: 30 }] },
   // ])
-  const [prizes, setPrizes] = useState(config.map((item, index) => {
+  const [prizes, setPrizes] = useState(class1.map((item, index) => {
     return {
       background: COLORS[index % 7],
       fonts: [{ text: item ? item : '无奖品', top: 30, fontSize: '0.8rem' }]
@@ -75,12 +76,14 @@ export default function LuckCanvas() {
     { padding: '30px', background: '#617df2', borderRadius: '50px' },
     { padding: '25px', background: '#869cfa', borderRadius: '30px' },
     { padding: '20px', background: '#afc8ff', borderRadius: '30px' },
-    { padding: '15px', background: '#e9e8fe', borderRadius: '30px',
-    imgs: [{
-      src: '/img/tools/slot-bg1.jpg',
-      width: '100%',
-      height: '100%'
-    }]  },
+    {
+      padding: '15px', background: '#e9e8fe', borderRadius: '30px',
+      imgs: [{
+        src: '/img/tools/slot-bg1.jpg',
+        width: '100%',
+        height: '100%'
+      }]
+    },
   ])
 
   // const [slotMachinePrizes, setSlotMachinePrizes] = useState([
@@ -93,7 +96,7 @@ export default function LuckCanvas() {
   //   { background: COLORS[6], fonts: [{ text: '6', top: '35%' }], borderRadius: '50px', },
   //   { fonts: [{ text: '7', top: '35%' }], },
   // ])
-  const [slotMachinePrizes, setSlotMachinePrizes] = useState(config.map((item, index) => {
+  const [slotMachinePrizes, setSlotMachinePrizes] = useState(class1.map((item, index) => {
     return {
       background: COLORS[index % 7],
       fonts: [{ text: item ? item : '无奖品', top: '35%', fontSize: '0.8rem' }],
@@ -111,6 +114,11 @@ export default function LuckCanvas() {
   const luckyGridRef = useRef<any>()
   const slotMachineRef = useRef<any>()
 
+  useEffect(() => {
+    changeClass('class1');
+  }, [])
+  
+
   /**
    * 添加奖项时滚到最底部
    */
@@ -120,6 +128,23 @@ export default function LuckCanvas() {
       ele[0].scrollTop = ele[0].scrollHeight;
     }
   }, [settingPrizes])
+
+  const changeClass = (value: string) => {
+    const classArr = value === 'class1' ? class1 : class2;
+    setPrizes(classArr.map((item, index) => {
+      return {
+        background: COLORS[index % 7],
+        fonts: [{ text: item ? item : '无奖品', top: 30, fontSize: '0.8rem' }]
+      }
+    }))
+    setSlotMachinePrizes(classArr.map((item, index) => {
+      return {
+        background: COLORS[index % 7],
+        fonts: [{ text: item ? item : '无奖品', top: '35%', fontSize: '0.8rem' }],
+        borderRadius: `${index % 5 * 25}px`,
+      }
+    }))
+  }
 
   /**
    * 删除奖项
@@ -198,6 +223,12 @@ export default function LuckCanvas() {
 
   return <div style={{ marginTop: '30px', fontSize: '20px' }}>
     {contextHolder}
+    <div>
+      <Radio.Group style={{ marginBottom: '20px' }} size='large' value={classType} onChange={(e) => setClassType(e.target.value)}>
+        <Radio.Button checked value="class1" onClick={() => changeClass('class1')} >班级一</Radio.Button>
+        <Radio.Button value="class2" onClick={() => changeClass('class2')}>班级二</Radio.Button>
+      </Radio.Group>
+    </div>
     <Radio.Group style={{ marginBottom: '20px' }} size='large' value={luckyType} onChange={(e) => setLuckyType(e.target.value)}>
       <Radio.Button checked value="luckyWheel" onClick={() => setSettingPrizes(settingZCPrizes)} >大转盘抽奖</Radio.Button>
       <Radio.Button value="luckyGrid" onClick={() => {
@@ -366,6 +397,6 @@ export default function LuckCanvas() {
       {luckyType === 'slotMachine' && <Button type="primary" size='large' style={{ width: '200px', marginTop: '20px' }} onClick={startGame}>开始游戏</Button>}
       <Button type="primary" size='large' style={{ width: '200px' }} onClick={() => { setSettingModal(true) }}>设置奖项</Button>
     </Flex>
-      <span className='nav-container-back-btn' onClick={() => { window.history.back() }}> 返回上一页 </span>
+    <span className='nav-container-back-btn' onClick={() => { window.history.back() }}> 返回上一页 </span>
   </div>
 }
