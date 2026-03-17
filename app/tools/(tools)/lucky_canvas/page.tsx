@@ -225,8 +225,8 @@ export default function LuckCanvas() {
     {contextHolder}
     <div>
       <Radio.Group style={{ marginBottom: '20px' }} size='large' value={classType} onChange={(e) => setClassType(e.target.value)}>
-        <Radio.Button checked value="class1" onClick={() => changeClass('class1')} >24电子商务</Radio.Button>
-        <Radio.Button value="class2" onClick={() => changeClass('class2')}>25电子商务</Radio.Button>
+        <Radio.Button checked value="class1" onClick={() => changeClass('class1')} >24级电子商务</Radio.Button>
+        <Radio.Button value="class2" onClick={() => changeClass('class2')}>25级电子商务</Radio.Button>
       </Radio.Group>
     </div>
     <Radio.Group style={{ marginBottom: '20px' }} size='large' value={luckyType} onChange={(e) => setLuckyType(e.target.value)}>
